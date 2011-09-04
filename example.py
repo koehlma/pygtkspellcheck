@@ -5,6 +5,9 @@ import locale
 from gtkspellcheck import SpellChecker, languages, language_exists
 from gi.repository import Gtk as gtk
 
+def quit(*args):
+    gtk.main_quit()
+
 for code, name in languages:
     print('code: %5s, language: %s' % (code, name))
 
@@ -17,5 +20,5 @@ else:
 window.set_default_size(600, 400)
 window.add(view)
 window.show_all()
-window.connect('delete-event', lambda widget, event: gtk.main_quit)
+window.connect('delete-event', quit)
 gtk.main()

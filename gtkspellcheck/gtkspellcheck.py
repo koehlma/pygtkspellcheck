@@ -15,8 +15,6 @@
 
 import os.path
 import re
-import logging
-logging.getLogger('pycountry.db').setLevel(logging.CRITICAL)
 import gettext
 
 import enchant
