@@ -56,6 +56,8 @@ class SpellChecker(object):
         self._broker = enchant.Broker()
         self._dictionary = self._broker.request_dict(language)
         self._deferred_check = False
+        self._ignore_regex = re.compile('')
+        self._ignore_expressions = []
     
     @property
     def language(self):
@@ -66,6 +68,14 @@ class SpellChecker(object):
         self._language = language
         self._dictionary = self._broker.request_dict(language)
         self.recheck_all()
+    
+    def append_ignore_regex(self, regex):
+        self._ignore_expressions.append(regex)
+        self._ignore_regex = re.compile('|'.join(self._ignore_expressions))
+    
+    def remove_ignore_regex(self, regex):
+        self._ignore_expressions.remove(regex)
+        self._ignore_regex = re.compile('|'.join(self._ignore_expressions))
     
     def recheck_all(self):
         start, end = self._buffer.get_bounds()
@@ -198,7 +208,7 @@ class SpellChecker(object):
         
     def _check_word(self, start, end):
         word = self._buffer.get_text(start, end, False)
-        if not NUMBER.match(word):
+        if not NUMBER.match(word) and (not self._ignore_regex.match(word) or not len(self._ignore_expressions)):
             if not self._dictionary.check(word):
                 self._buffer.apply_tag(self._misspelled, start, end)
     
