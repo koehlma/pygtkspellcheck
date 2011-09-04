@@ -33,7 +33,7 @@ _language_map = dict(languages)
 
 def language_exists(language):
     return language in _language_map
-
+    
 class SpellChecker(object):
     def __init__(self, view, language='en', prefix='gtkspellchecker'):
         self._view = view
@@ -120,7 +120,7 @@ class SpellChecker(object):
             menu.append(item)
         return menu
     
-    def _build_suffestion_menu(self, word):
+    def _build_suggestion_menu(self, word):
         menu = gtk.Menu.new()
         menu.show()
         suggestions = self._dictionary.suggest(word)
@@ -171,7 +171,7 @@ class SpellChecker(object):
             if start.has_tag(self._misspelled):
                 word = self._buffer.get_text(start, end, False)
                 suggestions = gtk.MenuItem.new_with_label(_('Suggestions'))
-                suggestions.set_submenu(self._build_suffestion_menu(word))
+                suggestions.set_submenu(self._build_suggestion_menu(word))
                 suggestions.show()
                 menu.prepend(suggestions)
     
