@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkspellchecker\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-04 02:09+0100\n"
-"PO-Revision-Date: 2011-09-04 02:10+0100\n"
+"POT-Creation-Date: 2011-09-04 11:18+0100\n"
+"PO-Revision-Date: 2011-09-04 11:18+0100\n"
 "Last-Translator: Maximilian Köhl <linuxmaxi@googlemail.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -16,24 +16,24 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-SearchPath-0: ./gtkspellcheck\n"
 
-#: gtkspellcheck/gtkspellcheck.py:119
+#: gtkspellcheck/gtkspellcheck.py:130
 msgid "no suggestions"
 msgstr "keine Vorschläge"
 
-#: gtkspellcheck/gtkspellcheck.py:132
+#: gtkspellcheck/gtkspellcheck.py:143
 #, python-format
 msgid "Add \"%s\" to Dictionary"
 msgstr "\"%s\" zum Wörterbuch hinzufügen"
 
-#: gtkspellcheck/gtkspellcheck.py:134
+#: gtkspellcheck/gtkspellcheck.py:146
 msgid "Ignore All"
 msgstr "Alles ignorieren"
 
-#: gtkspellcheck/gtkspellcheck.py:152
+#: gtkspellcheck/gtkspellcheck.py:165
 msgid "Languages"
 msgstr "Sprachen"
 
-#: gtkspellcheck/gtkspellcheck.py:160
+#: gtkspellcheck/gtkspellcheck.py:173
 msgid "Suggestions"
 msgstr "Vorschläge"
 

@@ -26,7 +26,7 @@ from gi.repository import Gtk as gtk
 
 NUMBER = re.compile('[0-9.,]+')
 
-_ = gettext.translation('gtkspellcheck', os.path.join(os.path.dirname(__file__), 'locale')).gettext
+_ = gettext.translation('gtkspellcheck', os.path.join(os.path.dirname(__file__), 'locale'), fallback=True).gettext
 
 languages = [(language, pylocale.code_to_name(language)) for language in enchant.list_languages()]
 _language_map = dict(languages)

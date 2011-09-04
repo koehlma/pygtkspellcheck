@@ -19,9 +19,14 @@ import gettext
 
 _database = sqlite3.connect(os.path.join(os.path.dirname(__file__), 'locales.db'))
 
+class Translator(object):
+    def gettext(self, text):
+        return text
+    
 _locales = os.path.join(os.path.dirname(__file__), 'locales')
-_translator_language = gettext.translation('iso639', _locales)
-_translator_country = gettext.translation('iso3166', _locales)
+
+_translator_language = gettext.translation('iso639', _locales, fallback=True)
+_translator_country = gettext.translation('iso3166', _locales, fallback=True)
 
 class LanguageNotFound(Exception): pass
 class CountryNotFound(Exception): pass
