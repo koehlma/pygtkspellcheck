@@ -41,23 +41,13 @@ class SpellChecker(object):
         self._prefix = prefix
         self._misspelled = gtk.TextTag.new('%s-misspelled' % (self._prefix))
         self._misspelled.set_property('underline', 4)
-        self._buffer = self._view.get_buffer()
-        self._buffer.connect('insert-text', self._insert_text_before)
-        self._buffer.connect_after('insert-text', self._insert_text_after)
-        self._buffer.connect_after('delete-range', self._delete_range_after)
-        self._buffer.connect_after('mark-set', self._mark_set)
-        start = self._buffer.get_bounds()[0]
-        self._mark_insert_start = self._buffer.create_mark('%s-insert-start' % (self._prefix), start, True)
-        self._mark_insert_end = self._buffer.create_mark('%s-insert-end' % (self._prefix), start, True)
-        self._mark_click = self._buffer.create_mark('%s-click' % (self._prefix), start, True)
         self._language = language
-        self._table = self._buffer.get_tag_table()
-        self._table.add(self._misspelled)
         self._broker = enchant.Broker()
         self._dictionary = self._broker.request_dict(language)
         self._deferred_check = False
         self._ignore_regex = re.compile('')
         self._ignore_expressions = []
+        self.buffer_setup()
     
     @property
     def language(self):
@@ -80,6 +70,20 @@ class SpellChecker(object):
     def recheck_all(self):
         start, end = self._buffer.get_bounds()
         self._check_range(start, end, True)
+    
+    def buffer_setup(self):
+        self._buffer = self._view.get_buffer()
+        self._buffer.connect('insert-text', self._insert_text_before)
+        self._buffer.connect_after('insert-text', self._insert_text_after)
+        self._buffer.connect_after('delete-range', self._delete_range_after)
+        self._buffer.connect_after('mark-set', self._mark_set)
+        start = self._buffer.get_bounds()[0]
+        self._mark_insert_start = self._buffer.create_mark('%s-insert-start' % (self._prefix), start, True)
+        self._mark_insert_end = self._buffer.create_mark('%s-insert-end' % (self._prefix), start, True)
+        self._mark_click = self._buffer.create_mark('%s-click' % (self._prefix), start, True)
+        self._table = self._buffer.get_tag_table()
+        self._table.add(self._misspelled)
+        self.recheck_all()
     
     def _ignore_all(self, item, word):
         self._dictionary.add_to_session(word)

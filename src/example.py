@@ -17,6 +17,12 @@ if language_exists(locale.getdefaultlocale()[0]):
     spellchecker = SpellChecker(view, locale.getdefaultlocale()[0])
 else:
     spellchecker = SpellChecker(view)
+
+# Change TextBuffer...
+buffer = gtk.TextBuffer.new(None)
+view.set_buffer(buffer)
+spellchecker.buffer_setup()
+
 window.set_default_size(600, 400)
 window.add(view)
 window.show_all()
