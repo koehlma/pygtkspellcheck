@@ -188,6 +188,16 @@ class SpellChecker(object):
                        'click' : SpellChecker._Mark(self._buffer, '%s-click' % (self._prefix), start)}
         self._table = self._buffer.get_tag_table()
         self._table.add(self._misspelled)
+        self.ignored_tags = []
+        def tag_added(tag, *args):
+            if hasattr(tag, 'spell_check') and not getattr(tag, 'spell_check'):
+                self.ignored_tags.append(tag) 
+        def tag_removed(tag, *args):
+            if tag in self.ignored_tags:
+                self.ignored_tags.remove(tag)
+        self._table.connect('tag-added', tag_added)
+        self._table.connect('tag-removed', tag_removed)
+        self._table.foreach(tag_added, None)
         self.no_spell_check = self._table.lookup('no-spell-check')
         if not self.no_spell_check:
             self.no_spell_check = gtk.TextTag.new('no-spell-check')
@@ -254,6 +264,28 @@ class SpellChecker(object):
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]), re.MULTILINE)
         else:
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]))
+    
+    def append_ignore_tag(self, tag):
+        '''
+        Appends a tag to the list of ignored tabs.
+        A string will be automatic resolved into a tab object.
+        
+        :param tag: tab object or tab name
+        '''
+        if isinstance(tag, str):
+            tag = self._table.lookup(tag)
+        self.ignored_tags.append(tag)
+    
+    def remove_ignore_tag(self, tag):
+        '''
+        Removes a tag to the list of ignored tabs.
+        A string will be automatic resolved into a tab object.
+        
+        :param tag: tab object or tab name
+        '''
+        if isinstance(tag, str):
+            tag = self._table.lookup(tag)
+        self.ignored_tags.remove(tag)
     
     def add_to_dictionary(self, word):
         '''
@@ -416,6 +448,9 @@ class SpellChecker(object):
     def _check_word(self, start, end):
         if start.has_tag(self.no_spell_check):
             return
+        for tag in self.ignored_tags:
+            if start.has_tag(tag):
+                return
         word = self._buffer.get_text(start, end, False)
         if len(self._filters[SpellChecker.FILTER_WORD]):
             if self._regexes[SpellChecker.FILTER_WORD].match(word):
