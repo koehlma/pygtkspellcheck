@@ -184,7 +184,7 @@ class SpellChecker(object):
         Rechecks the spelling of the whole text.
         '''
         start, end = self._buffer.get_bounds()
-        self._check_range(start, end, True)
+        self.check_range(start, end, True)
     
     def disable(self):
         '''
@@ -249,6 +249,53 @@ class SpellChecker(object):
         self._dictionary.add_to_pwl(word)
         self.recheck()
     
+    def ignore_all(self, word):
+        '''
+        Ignores a word for the current session.
+        
+        :param word: the word to ignore
+        '''
+        self._dictionary.add_to_session(word)
+        self.recheck()       
+    
+    def check_range(self, start, end, force_all=False):
+        '''
+        Checks a specified range between two GtkTextIters.
+        
+        :param start: start iter - checking starts here
+        :param end: end iter - checking ends here
+        '''
+        if not self._enabled:
+            return
+        if end.inside_word(): end.forward_word_end()
+        if not start.starts_word() and (start.inside_word() or start.ends_word()): start.backward_word_start()
+        self._buffer.remove_tag(self._misspelled, start, end)
+        cursor = self._buffer.get_iter_at_mark(self._buffer.get_insert())
+        precursor = cursor.copy()
+        precursor.backward_char()
+        highlight = cursor.has_tag(self._misspelled) or precursor.has_tag(self._misspelled)
+        if not start.get_offset():
+            start.forward_word_end()
+            start.backward_word_start()
+        word_start = start.copy()
+        while word_start.compare(end) < 0:
+            word_end = word_start.copy()
+            word_end.forward_word_end()
+            in_word = (word_start.compare(cursor) < 0) and (cursor.compare(word_end) <= 0)
+            if in_word and not force_all:
+                if highlight:
+                    self._check_word(word_start, word_end)
+                else:
+                    self._deferred_check = True
+            else:
+                self._check_word(word_start, word_end)
+                self._deferred_check = False
+            word_end.forward_word_end()
+            word_end.backward_word_start()
+            if word_start.equal(word_end):
+                break
+            word_start = word_end.copy() 
+    
     def _languages_menu(self):
         def _set_language(item, code):
             self.language = code
@@ -285,11 +332,9 @@ class SpellChecker(object):
         item = gtk.MenuItem.new_with_label(_('Add "%s" to Dictionary') % word)
         item.connect('activate', lambda *args: self.add_to_dictionary(word))
         menu.append(item)
-        def _ignore_all(item):
-            self._dictionary.add_to_session(word)
-            self.recheck()        
+ 
         item = gtk.MenuItem.new_with_label(_('Ignore All'))
-        item.connect('activate', _ignore_all)
+        item.connect('activate', lambda *args: self.ignore_all(word))
         menu.append(item)
         menu.show_all()
         return menu
@@ -329,11 +374,11 @@ class SpellChecker(object):
     
     def _after_text_insert(self, textbuffer, location, text, length):
         start = self._marks['insert-start'].iter
-        self._check_range(start, location)
+        self.check_range(start, location)
         self._marks['insert-end'].move(location)
     
     def _range_delete(self, textbuffer, start, end):
-        self._check_range(start, end)
+        self.check_range(start, end)
         
     def _mark_set(self, textbuffer, location, mark):
         if mark == self._buffer.get_insert() and self._deferred_check:
@@ -351,40 +396,8 @@ class SpellChecker(object):
     def _check_deferred_range(self, force_all):
         start = self._marks['insert-start'].iter
         end = self._marks['insert-end'].iter 
-        self._check_range(start, end, force_all)
-    
-    def _check_range(self, start, end, force_all=False):
-        if not self._enabled:
-            return
-        if end.inside_word(): end.forward_word_end()
-        if not start.starts_word() and (start.inside_word() or start.ends_word()): start.backward_word_start()
-        self._buffer.remove_tag(self._misspelled, start, end)
-        cursor = self._buffer.get_iter_at_mark(self._buffer.get_insert())
-        precursor = cursor.copy()
-        precursor.backward_char()
-        highlight = cursor.has_tag(self._misspelled) or precursor.has_tag(self._misspelled)
-        if not start.get_offset():
-            start.forward_word_end()
-            start.backward_word_start()
-        word_start = start.copy()
-        while word_start.compare(end) < 0:
-            word_end = word_start.copy()
-            word_end.forward_word_end()
-            in_word = (word_start.compare(cursor) < 0) and (cursor.compare(word_end) <= 0)
-            if in_word and not force_all:
-                if highlight:
-                    self._check_word(word_start, word_end)
-                else:
-                    self._deferred_check = True
-            else:
-                self._check_word(word_start, word_end)
-                self._deferred_check = False
-            word_end.forward_word_end()
-            word_end.backward_word_start()
-            if word_start.equal(word_end):
-                break
-            word_start = word_end.copy() 
-        
+        self.check_range(start, end, force_all)
+            
     def _check_word(self, start, end):
         word = self._buffer.get_text(start, end, False)
         if len(self._filters[SpellChecker.FILTER_WORD]):
