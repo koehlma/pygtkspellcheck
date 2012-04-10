@@ -34,8 +34,8 @@ from gi.repository import Gtk as gtk
 __author__ = 'Maximilian Köhl'
 __copyright__ = 'Copyright (C) 2012, Maximilian Köhl'
 __license__ = 'GPLv3'
-__version__ = '2.0'
-__status__ = 'Production'
+__version__ = '2.1a'
+__status__ = 'Development'
 __all__ = ['SpellChecker']
 
 _ = gettext.translation('gtkspellcheck', os.path.join(os.path.dirname(__file__), 'locale'), fallback=True).gettext
