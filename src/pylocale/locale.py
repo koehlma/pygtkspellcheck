@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
-
+#
+# Copyright (C) 2012, Maximilian Köhl <linuxmaxi@googlemail.com>
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -17,11 +19,14 @@ import os.path
 import sqlite3
 import gettext
 
-_database = sqlite3.connect(os.path.join(os.path.dirname(__file__), 'locales.db'))
+__author__ = 'Maximilian Köhl'
+__copyright__ = 'Copyright (C) 2012, Maximilian Köhl'
+__license__ = 'GPLv3'
+__version__ = '1.0'
+__status__ = 'Production'
+__all__ = ['Country', 'Language', 'LanguageNotFound', 'CountryNotFound', 'code_to_name']
 
-class Translator(object):
-    def gettext(self, text):
-        return text
+_database = sqlite3.connect(os.path.join(os.path.dirname(__file__), 'locales.db'))
     
 _locales = os.path.join(os.path.dirname(__file__), 'locales')
 
