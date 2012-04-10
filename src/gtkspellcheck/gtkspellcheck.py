@@ -267,10 +267,10 @@ class SpellChecker(object):
     
     def append_ignore_tag(self, tag):
         '''
-        Appends a tag to the list of ignored tabs.
-        A string will be automatic resolved into a tab object.
+        Appends a tag to the list of ignored tags.
+        A string will be automatic resolved into a tag object.
         
-        :param tag: tab object or tab name
+        :param tag: tag object or tag name
         '''
         if isinstance(tag, str):
             tag = self._table.lookup(tag)
@@ -278,10 +278,10 @@ class SpellChecker(object):
     
     def remove_ignore_tag(self, tag):
         '''
-        Removes a tag to the list of ignored tabs.
-        A string will be automatic resolved into a tab object.
+        Removes a tag to the list of ignored tags.
+        A string will be automatic resolved into a tag object.
         
-        :param tag: tab object or tab name
+        :param tag: tag object or tag name
         '''
         if isinstance(tag, str):
             tag = self._table.lookup(tag)
