@@ -38,7 +38,18 @@ __version__ = '2.1a'
 __status__ = 'Development'
 __all__ = ['SpellChecker']
 
-_ = gettext.translation('gtkspellcheck', os.path.join(os.path.dirname(__file__), 'locale'), fallback=True).gettext
+_GEDIT_MAP = {'Languages' : 'Languages',
+              'Ignore All' : 'Ignore _All',
+              'Suggestions' : 'Suggestions',
+              'no suggestions' : '(no suggested words)',
+              'Add "{word}" to Dictionary' : 'Add w_ord'}
+
+if gettext.find('gedit'):
+    _gedit = gettext.translation('gedit', fallback=True).gettext
+    _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
+else:
+    _ = gettext.translation('gtkspellcheck', os.path.join(os.path.dirname(__file__), 'locale'), fallback=True).gettext
+
 
 class SpellChecker(object):
     '''
@@ -333,7 +344,7 @@ class SpellChecker(object):
                 item.connect('activate', self._replace_word, word, suggestion)
                 menu.append(item)
         menu.append(gtk.SeparatorMenuItem.new())
-        item = gtk.MenuItem.new_with_label(_('Add "%s" to Dictionary') % word)
+        item = gtk.MenuItem.new_with_label(_('Add "{word}" to Dictionary').format(word=word))
         item.connect('activate', lambda *args: self.add_to_dictionary(word))
         menu.append(item)
  
