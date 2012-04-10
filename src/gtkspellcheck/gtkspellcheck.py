@@ -240,6 +240,15 @@ class SpellChecker(object):
         else:
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]))
     
+    def add_to_dictionary(self, word):
+        '''
+        Adds a word to user's dictionary.
+        
+        :param word: the word to add
+        '''
+        self._dictionary.add_to_pwl(word)
+        self.recheck()
+    
     def _languages_menu(self):
         def _set_language(item, code):
             self.language = code
@@ -273,11 +282,8 @@ class SpellChecker(object):
                 item.connect('activate', self._replace_word, word, suggestion)
                 menu.append(item)
         menu.append(gtk.SeparatorMenuItem.new())
-        def _add_to_dictionary():
-            self._dictionary.add_to_pwl(word)
-            self.recheck()
         item = gtk.MenuItem.new_with_label(_('Add "%s" to Dictionary') % word)
-        item.connect('activate', _add_to_dictionary)
+        item.connect('activate', lambda *args: self.add_to_dictionary(word))
         menu.append(item)
         def _ignore_all(item):
             self._dictionary.add_to_session(word)
@@ -347,9 +353,6 @@ class SpellChecker(object):
         end = self._marks['insert-end'].iter 
         self._check_range(start, end, force_all)
     
-    def _clone_iter(self, iter):
-        return self._buffer.get_iter_at_offset(iter.get_offset())
-    
     def _check_range(self, start, end, force_all=False):
         if not self._enabled:
             return
@@ -357,15 +360,15 @@ class SpellChecker(object):
         if not start.starts_word() and (start.inside_word() or start.ends_word()): start.backward_word_start()
         self._buffer.remove_tag(self._misspelled, start, end)
         cursor = self._buffer.get_iter_at_mark(self._buffer.get_insert())
-        precursor = self._clone_iter(cursor)
+        precursor = cursor.copy()
         precursor.backward_char()
         highlight = cursor.has_tag(self._misspelled) or precursor.has_tag(self._misspelled)
         if not start.get_offset():
             start.forward_word_end()
             start.backward_word_start()
-        word_start = self._clone_iter(start)
+        word_start = start.copy()
         while word_start.compare(end) < 0:
-            word_end = self._clone_iter(word_start)
+            word_end = word_start.copy()
             word_end.forward_word_end()
             in_word = (word_start.compare(cursor) < 0) and (cursor.compare(word_end) <= 0)
             if in_word and not force_all:
@@ -380,7 +383,7 @@ class SpellChecker(object):
             word_end.backward_word_start()
             if word_start.equal(word_end):
                 break
-            word_start = self._clone_iter(word_end) 
+            word_start = word_end.copy() 
         
     def _check_word(self, start, end):
         word = self._buffer.get_text(start, end, False)
@@ -389,7 +392,7 @@ class SpellChecker(object):
                 return
         if len(self._filters[SpellChecker.FILTER_LINE]):
             line_start = self._buffer.get_iter_at_line(start.get_line())
-            line_end = self._clone_iter(end)
+            line_end = end.copy()
             line_end.forward_to_line_end()
             line = self._buffer.get_text(line_start, line_end, False)
             for match in self._regexes[SpellChecker.FILTER_LINE].finditer(line):
