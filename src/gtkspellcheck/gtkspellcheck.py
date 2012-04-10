@@ -177,6 +177,10 @@ class SpellChecker(object):
                        'click' : SpellChecker._Mark(self._buffer, '%s-click' % (self._prefix), start)}
         self._table = self._buffer.get_tag_table()
         self._table.add(self._misspelled)
+        self.no_spell_check = self._table.lookup('no-spell-check')
+        if not self.no_spell_check:
+            self.no_spell_check = gtk.TextTag.new('no-spell-check')
+            self._table.add(self.no_spell_check)
         self.recheck()
     
     def recheck(self):
@@ -399,6 +403,8 @@ class SpellChecker(object):
         self.check_range(start, end, force_all)
             
     def _check_word(self, start, end):
+        if start.has_tag(self.no_spell_check):
+            return
         word = self._buffer.get_text(start, end, False)
         if len(self._filters[SpellChecker.FILTER_WORD]):
             if self._regexes[SpellChecker.FILTER_WORD].match(word):
