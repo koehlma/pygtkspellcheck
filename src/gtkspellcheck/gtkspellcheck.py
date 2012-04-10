@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
-
-# Copyright (c) 2012 Maximilian Köhl <linuxmaxi@googlemail.com>
+#
+# Copyright (C) 2012, Maximilian Köhl <linuxmaxi@googlemail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,139 +15,247 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import os.path
 import re
 import gettext
+
+try:
+    from collections import UserList
+    _list = UserList
+except:
+    _list = list
 
 import enchant
 import pylocale
 
 from gi.repository import Gtk as gtk
 
-
-NUMBER = re.compile('[0-9.,]+')
+__author__ = 'Maximilian Köhl'
+__copyright__ = 'Copyright (C) 2012, Maximilian Köhl'
+__license__ = 'GPLv3'
+__version__ = '2.0'
+__status__ = 'Production'
+__all__ = ['SpellChecker']
 
 _ = gettext.translation('gtkspellcheck', os.path.join(os.path.dirname(__file__), 'locale'), fallback=True).gettext
 
-languages = [(language, pylocale.code_to_name(language)) for language in enchant.list_languages()]
-_language_map = dict(languages)
-
-def language_exists(language):
-    return language in _language_map
-    
 class SpellChecker(object):
-    def __init__(self, view, language='en', prefix='gtkspellchecker'):
+    '''
+    Main spellchecking class, everything important happens here.
+        
+    :param view: GtkTextView the SpellChecker should be attached to
+    :param language: the language which should be used for spellchecking (use codes like en_US or de_DE)
+    :param prefix: a prefix for some internal GtkTextMarks
+    :param params: dictionary for enchant params that should be set e.g. `enchant.myspell.dictionary.path`
+    
+    .. attribute:: languages
+        
+        A list of supported languages.
+        
+        .. function:: exists(language)
+        
+            checks if a language exists
+            
+            :param language: language to check
+    '''
+    FILTER_WORD = 0
+    FILTER_LINE = 1
+    FILTER_TEXT = 2
+    
+    DEFAULT_FILTERS = {FILTER_WORD : [r'[0-9.,]+'],
+                       FILTER_LINE : [r'(https?|ftp|file):((//)|(\\\\))+[\w\d:#@%/;$()~_?+-=\\.&]+',
+                                      r'[\w\d]+@[\w\d.]+'],
+                       FILTER_TEXT : []}
+    
+    class _LanguageList(_list):
+        def __init__(self, *args, **kwargs):
+            if sys.version_info.major == 3:
+                super().__init__(*args, **kwargs)
+            else:
+                super(_list, self).__init__(*args, **kwargs)
+            self.mapping = dict(self)
+        
+        @classmethod
+        def from_broker(cls, broker):
+            return cls([(language, pylocale.code_to_name(language))
+                        for language in broker.list_languages()])
+        
+        def exists(self, language):
+            return language in self.mapping
+    
+    class _Mark():
+        def __init__(self, buffer, name, start):
+            self._buffer = buffer
+            self._name = name
+            self._mark = self._buffer.create_mark(self._name, start, True)
+        
+        @property
+        def iter(self):
+            return self._buffer.get_iter_at_mark(self._mark)
+        
+        @property
+        def inside_word(self):
+            return self.iter.inside_word()            
+     
+        @property
+        def word(self):
+            start = self.iter
+            if not start.starts_word():
+                start.backward_word_start()
+            end = self.iter
+            if end.inside_word():
+                end.forward_word_end()
+            return start, end
+        
+        def move(self, location):
+            self._buffer.move_mark(self._mark, location)    
+    
+    def __init__(self, view, language='en', prefix='gtkspellchecker', params={}):
         self._view = view
-        self._view.connect('button-press-event', self._button_press_event)
-        self._view.connect('populate-popup', self._populate_popup)
-        self._view.connect('popup-menu', self._popup_menu)
+        self._view.connect('populate-popup', lambda entry, menu: self._extend_menu(menu))
+        self._view.connect('popup-menu', self._click_move_popup)
+        self._view.connect('button-press-event', self._click_move_button)
         self._prefix = prefix
         self._misspelled = gtk.TextTag.new('%s-misspelled' % (self._prefix))
         self._misspelled.set_property('underline', 4)
         self._language = language
         self._broker = enchant.Broker()
+        for param, value in params: self._broker.set_param(param, value)       
+        self.languages = SpellChecker._LanguageList.from_broker(self._broker)
+        self._language = language if self.languages.exists(language) else 'en'
         self._dictionary = self._broker.request_dict(language)
         self._deferred_check = False
-        self._ignore_regex = re.compile('')
-        self._ignore_expressions = []
-        self._line_regex = re.compile('')
-        self._line_expressions = []
-        self.buffer_setup()
+        self._filters = dict(SpellChecker.DEFAULT_FILTERS)
+        self._regexes = {SpellChecker.FILTER_WORD : re.compile('|'.join(self._filters[SpellChecker.FILTER_WORD])),
+                         SpellChecker.FILTER_LINE : re.compile('|'.join(self._filters[SpellChecker.FILTER_LINE])),
+                         SpellChecker.FILTER_TEXT : re.compile('|'.join(self._filters[SpellChecker.FILTER_TEXT]), re.MULTILINE)}
+        self._enabled = True
+        self.buffer_initialize()
     
     @property
     def language(self):
+        '''
+        The language used for spellchecking
+        '''
         return self._language
     
     @language.setter
     def language(self, language):
-        self._language = language
-        self._dictionary = self._broker.request_dict(language)
-        self.recheck_all()
+        if self.languages.exists(language):
+            self._language = language
+            self._dictionary = self._broker.request_dict(language)
+            self.recheck()
     
-    def append_ignore_regex(self, regex):
-        self._ignore_expressions.append(regex)
-        self._ignore_regex = re.compile('|'.join(self._ignore_expressions))
+    @property
+    def enabled(self):
+        '''
+        Enable or disable spellchecking
+        '''
+        return self._enabled
     
-    def remove_ignore_regex(self, regex):
-        self._ignore_expressions.remove(regex)
-        self._ignore_regex = re.compile('|'.join(self._ignore_expressions))
+    @enabled.setter
+    def enabled(self, enabled):
+        if enabled and not self._enabled:
+            self.enable()
+        elif not enabled and self._enabled:
+            self.disable()
     
-    def append_line_regex(self, regex):
-        self._line_expressions.append(regex)
-        self._line_regex = re.compile('|'.join(self._line_expressions))
-        
-    def remove_line_regex(self, regex):
-        self._line_expressions.remove(regex)
-        self._line_regex = re.compile('|'.join(self._line_expressions))
+    def buffer_initialize(self):
+        '''
+        Initialize the GtkTextBuffer associated with the GtkTextView.
+        If you associate a new GtkTextBuffer with the GtkTextView call this method.
+        ''' 
+        self._buffer = self._view.get_buffer()
+        self._buffer.connect('insert-text', self._before_text_insert)
+        self._buffer.connect_after('insert-text', self._after_text_insert)
+        self._buffer.connect_after('delete-range', self._range_delete)
+        self._buffer.connect_after('mark-set', self._mark_set)
+        start = self._buffer.get_bounds()[0]
+        self._marks = {'insert-start' : SpellChecker._Mark(self._buffer, '%s-insert-start' % (self._prefix), start),
+                       'insert-end' : SpellChecker._Mark(self._buffer, '%s-insert-end' % (self._prefix), start),
+                       'click' : SpellChecker._Mark(self._buffer, '%s-click' % (self._prefix), start)}
+        self._table = self._buffer.get_tag_table()
+        self._table.add(self._misspelled)
+        self.recheck()
     
-    def recheck_all(self):
+    def recheck(self):
+        '''
+        Rechecks the spelling of the whole text.
+        '''
         start, end = self._buffer.get_bounds()
         self._check_range(start, end, True)
     
-    def buffer_setup(self):
-        self._buffer = self._view.get_buffer()
-        self._buffer.connect('insert-text', self._insert_text_before)
-        self._buffer.connect_after('insert-text', self._insert_text_after)
-        self._buffer.connect_after('delete-range', self._delete_range_after)
-        self._buffer.connect_after('mark-set', self._mark_set)
-        start = self._buffer.get_bounds()[0]
-        self._mark_insert_start = self._buffer.create_mark('%s-insert-start' % (self._prefix), start, True)
-        self._mark_insert_end = self._buffer.create_mark('%s-insert-end' % (self._prefix), start, True)
-        self._mark_click = self._buffer.create_mark('%s-click' % (self._prefix), start, True)
-        self._table = self._buffer.get_tag_table()
-        self._table.add(self._misspelled)
-        self.recheck_all()
+    def disable(self):
+        '''
+        Disable spellchecking.
+        '''
+        self._enabled = False
+        start, end = self._buffer.get_bounds()
+        self._buffer.remove_tag(self._misspelled, start, end)
     
-    def _ignore_all(self, item, word):
-        self._dictionary.add_to_session(word)
-        self.recheck_all()
+    def enable(self):
+        '''
+        Enable spellchecking.
+        '''
+        self._enable = True
+        self.recheck()
     
-    def _add_to_dictionary(self, item, word):
-        self._dictionary.add_to_pwl(word)
-        self.recheck_all()
-    
-    def _language_change_callback(self, item, language):
-        self.language = language
-    
-    def _replace_word(self, item, oldword, newword):
-        start, end = self._word_extents_from_mark(self._mark_click)
-        offset = start.get_offset()
-        self._buffer.begin_user_action()
-        self._buffer.delete(start, end)
-        self._buffer.insert(self._buffer.get_iter_at_offset(offset), newword)
-        self._buffer.end_user_action()
-        self._dictionary.store_replacement(oldword, newword)
+    def append_filter(self, regex, filter_type):
+        '''
+        Append a new filter to the filter list.
+        Filters are useful to ignore some misspelled words based on regular expressions.
+              
+        :param regex: the regex which used for filtering
+        :param filter_type: the type of the filter
         
-    def _word_extents_from_mark(self, mark):
-        start = self._buffer.get_iter_at_mark(mark)
-        if not start.starts_word():
-            start.backward_word_start()
-        end = self._clone_iter(start)
-        if end.inside_word():
-            end.forward_word_end()
-        return start, end
+        Filter Types:
+             
+        :const:`SpellChecker.FILTER_WORD`: The regex must match the whole word you want to filter.
+        The word separation is done by Pangos so for example urls don't work here because they, are separated in many words.
+        
+        :const:`SpellChecker.FILTER_LINE`: If the expression you want to match is a single line expression use this type.
+        It should not be an open end expression because then the rest of the line with the text you want to filter become correct to.
+         
+        :const:`SpellChecker.FILTER_TEXT`: Use this if you want to filter multiline expressions.
+        The regex will be compiled with the `MULTILINE` flag.
+        Don't use open end expressions here, too.
+        '''
+        self._filters[filter_type].append(regex)
+        if filter_type == SpellChecker.FILTER_TEXT:
+            self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]), re.MULTILINE)
+        else:
+            self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]))
     
-    def _mark_inside_word(self, mark):
-        iter = self._buffer.get_iter_at_mark(mark)
-        return iter.inside_word()
+    def remove_filter(self, regex, filter_type):
+        '''
+        Remove a filter from the filter list.
+              
+        :param regex: the regex which used for filtering
+        :param filter_type: the type of the filter
+        '''
+        self._filters[filter_type].remove(regex)
+        if filter_type == SpellChecker.FILTER_TEXT:
+            self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]), re.MULTILINE)
+        else:
+            self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]))
     
-    def _build_languages_menu(self):
+    def _languages_menu(self):
+        def _set_language(item, code):
+            self.language = code
         menu = gtk.Menu.new()
-        menu.show()
         group = []
-        for code, name in languages:
+        for code, name in self.languages:
             item = gtk.RadioMenuItem.new_with_label(group, name)
-            item.connect('activate', self._language_change_callback, code)
-            item.show()
+            item.connect('activate', _set_language, code)
             if code == self.language:
                 item.set_active(True)
             group.append(item)
             menu.append(item)
         return menu
     
-    def _build_suggestion_menu(self, word):
+    def _suggestion_menu(self, word):
         menu = gtk.Menu.new()
-        menu.show()
         suggestions = self._dictionary.suggest(word)
         if not suggestions:
             item = gtk.MenuItem.new()
@@ -165,116 +273,139 @@ class SpellChecker(object):
                 item.connect('activate', self._replace_word, word, suggestion)
                 menu.append(item)
         menu.append(gtk.SeparatorMenuItem.new())
+        def _add_to_dictionary():
+            self._dictionary.add_to_pwl(word)
+            self.recheck()
         item = gtk.MenuItem.new_with_label(_('Add "%s" to Dictionary') % word)
-        item.connect('activate', self._add_to_dictionary, word)
+        item.connect('activate', _add_to_dictionary)
         menu.append(item)
+        def _ignore_all(item):
+            self._dictionary.add_to_session(word)
+            self.recheck()        
         item = gtk.MenuItem.new_with_label(_('Ignore All'))
-        item.connect('activate', self._ignore_all, word)
+        item.connect('activate', _ignore_all)
         menu.append(item)
         menu.show_all()
         return menu
     
-    def _button_press_event(self, widget, event):
-        if event.button == 3:
-            if self._deferred_check:
-                self._check_deferred_range(True)
-            x, y = self._view.window_to_buffer_coords(2, event.x, event.y)
-            iter = self._view.get_iter_at_location(x, y)
-            self._buffer.move_mark(self._mark_click, iter)
-        return False
-    
-    def _populate_popup(self, entry, menu):
+    def _extend_menu(self, menu):
+        if not self._enabled:
+            return
         separator = gtk.SeparatorMenuItem.new()
         separator.show()
         menu.prepend(separator)
         languages = gtk.MenuItem.new_with_label(_('Languages'))
-        languages.set_submenu(self._build_languages_menu())
-        languages.show()
+        languages.set_submenu(self._languages_menu())
+        languages.show_all()
         menu.prepend(languages)
-        if self._mark_inside_word(self._mark_click):
-            start, end = self._word_extents_from_mark(self._mark_click)
+        if self._marks['click'].inside_word:
+            start, end = self._marks['click'].word
             if start.has_tag(self._misspelled):
                 word = self._buffer.get_text(start, end, False)
                 suggestions = gtk.MenuItem.new_with_label(_('Suggestions'))
-                suggestions.set_submenu(self._build_suggestion_menu(word))
-                suggestions.show()
+                suggestions.set_submenu(self._suggestion_menu(word))
+                suggestions.show_all()
                 menu.prepend(suggestions)
     
-    def _popup_menu(self, *args):
-        iter = self._buffer.get_iter_at_mark(self._buffer.get_insert())
-        self._buffer.move_mark(self._mark_click, iter)
-        return False 
+    def _click_move_popup(self, *args):
+        self._marks['click'].move(self._buffer.get_iter_at_mark(self._buffer.get_insert()))
+        return False
     
-    def _insert_text_before(self, textbuffer, location, text, len):
-        self._buffer.move_mark(self._mark_insert_start, location)
+    def _click_move_button(self, widget, event):
+        if event.button == 3:
+            if self._deferred_check:  self._check_deferred_range(True)
+            x, y = self._view.window_to_buffer_coords(2, event.x, event.y)
+            self._marks['click'].move(self._view.get_iter_at_location(x, y))
+        return False
     
-    def _insert_text_after(self, textbuffer, location, text, len):
-        start = self._buffer.get_iter_at_mark(self._mark_insert_start)
-        self._check_range(start, location);
-        self._buffer.move_mark(self._mark_insert_end, location);
+    def _before_text_insert(self, textbuffer, location, text, length):
+        self._marks['insert-start'].move(location)
     
-    def _delete_range_after(self, textbuffer, start, end):
-        self._check_range(start, end);
+    def _after_text_insert(self, textbuffer, location, text, length):
+        start = self._marks['insert-start'].iter
+        self._check_range(start, location)
+        self._marks['insert-end'].move(location)
     
+    def _range_delete(self, textbuffer, start, end):
+        self._check_range(start, end)
+        
     def _mark_set(self, textbuffer, location, mark):
         if mark == self._buffer.get_insert() and self._deferred_check:
-            self._check_deferred_range(False);
+            self._check_deferred_range(False)
+    
+    def _replace_word(self, item, old_word, new_word):
+        start, end = self._marks['click'].word
+        offset = start.get_offset()
+        self._buffer.begin_user_action()
+        self._buffer.delete(start, end)
+        self._buffer.insert(self._buffer.get_iter_at_offset(offset), new_word)
+        self._buffer.end_user_action()
+        self._dictionary.store_replacement(old_word, new_word)
+    
+    def _check_deferred_range(self, force_all):
+        start = self._marks['insert-start'].iter
+        end = self._marks['insert-end'].iter 
+        self._check_range(start, end, force_all)
     
     def _clone_iter(self, iter):
         return self._buffer.get_iter_at_offset(iter.get_offset())
-        
-    def _check_word(self, start, end):
-        word = self._buffer.get_text(start, end, False)
-        if not NUMBER.match(word) and (not self._ignore_regex.match(word) or not len(self._ignore_expressions)):
-            if len(self._line_expressions):
-                lstart = self._buffer.get_iter_at_line(start.get_line())
-                lend = self._clone_iter(end)
-                lend.forward_to_line_end()
-                line = self._buffer.get_text(lstart, lend, False)
-                for match in self._line_regex.finditer(line):
-                    if match.start() <= start.get_line_offset() <= match.end():
-                        return
-            if not self._dictionary.check(word):
-                self._buffer.apply_tag(self._misspelled, start, end)
     
     def _check_range(self, start, end, force_all=False):
-        if end.inside_word():
-            end.forward_word_end()
-        if not start.starts_word():
-            if start.inside_word() or start.ends_word():
-                start.backward_word_start()
-            else:
-                if start.forward_word_end():
-                    start.backward_word_start()
+        if not self._enabled:
+            return
+        if end.inside_word(): end.forward_word_end()
+        if not start.starts_word() and (start.inside_word() or start.ends_word()): start.backward_word_start()
+        self._buffer.remove_tag(self._misspelled, start, end)
         cursor = self._buffer.get_iter_at_mark(self._buffer.get_insert())
         precursor = self._clone_iter(cursor)
         precursor.backward_char()
         highlight = cursor.has_tag(self._misspelled) or precursor.has_tag(self._misspelled)
-        self._buffer.remove_tag(self._misspelled, start, end)
         if not start.get_offset():
             start.forward_word_end()
             start.backward_word_start()
-        wstart = self._clone_iter(start)
-        while wstart.compare(end) < 0:
-            wend = self._clone_iter(wstart)
-            wend.forward_word_end()
-            inword = (wstart.compare(cursor) < 0) and (cursor.compare(wend) <= 0)
-            if inword and not force_all:
+        word_start = self._clone_iter(start)
+        while word_start.compare(end) < 0:
+            word_end = self._clone_iter(word_start)
+            word_end.forward_word_end()
+            in_word = (word_start.compare(cursor) < 0) and (cursor.compare(word_end) <= 0)
+            if in_word and not force_all:
                 if highlight:
-                    self._check_word(wstart, wend)
+                    self._check_word(word_start, word_end)
                 else:
                     self._deferred_check = True
             else:
-                self._check_word(wstart, wend)
+                self._check_word(word_start, word_end)
                 self._deferred_check = False
-            wend.forward_word_end()
-            wend.backward_word_start()
-            if wstart.equal(wend):
+            word_end.forward_word_end()
+            word_end.backward_word_start()
+            if word_start.equal(word_end):
                 break
-            wstart = self._clone_iter(wend) 
-    
-    def _check_deferred_range(self, force_all):
-        start = self._buffer.get_iter_at_mark(self._mark_insert_start)
-        end = self._buffer.get_iter_at_mark(self._mark_insert_end)
-        self._check_range(start, end, force_all)
-  
+            word_start = self._clone_iter(word_end) 
+        
+    def _check_word(self, start, end):
+        word = self._buffer.get_text(start, end, False)
+        if len(self._filters[SpellChecker.FILTER_WORD]):
+            if self._regexes[SpellChecker.FILTER_WORD].match(word):
+                return
+        if len(self._filters[SpellChecker.FILTER_LINE]):
+            line_start = self._buffer.get_iter_at_line(start.get_line())
+            line_end = self._clone_iter(end)
+            line_end.forward_to_line_end()
+            line = self._buffer.get_text(line_start, line_end, False)
+            for match in self._regexes[SpellChecker.FILTER_LINE].finditer(line):
+                if match.start() <= start.get_line_offset() <= match.end():
+                    start = self._buffer.get_iter_at_line_offset(start.get_line(), match.start())
+                    end = self._buffer.get_iter_at_line_offset(start.get_line(), match.end())
+                    self._buffer.remove_tag(self._misspelled, start, end)
+                    return
+        if len(self._filters[SpellChecker.FILTER_TEXT]):
+            text_start, text_end = self._buffer.get_bounds()
+            text = self._buffer.get_text(text_start, text_end, False)
+            for match in self._regexes[SpellChecker.FILTER_TEXT].finditer(text):
+                if match.start() <= start.get_offset() <= match.end():
+                    start = self._buffer.get_iter_at_offset(match.start())
+                    end = self._buffer.get_iter_at_offset(match.end())
+                    self._buffer.remove_tag(self._misspelled, start, end)
+                    return
+        if not self._dictionary.check(word):
+            self._buffer.apply_tag(self._misspelled, start, end)
