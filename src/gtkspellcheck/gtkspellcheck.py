@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
 
+# Copyright (c) 2012 Maximilian Köhl <linuxmaxi@googlemail.com>
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -21,6 +23,7 @@ import enchant
 import pylocale
 
 from gi.repository import Gtk as gtk
+
 
 NUMBER = re.compile('[0-9.,]+')
 
@@ -47,6 +50,8 @@ class SpellChecker(object):
         self._deferred_check = False
         self._ignore_regex = re.compile('')
         self._ignore_expressions = []
+        self._line_regex = re.compile('')
+        self._line_expressions = []
         self.buffer_setup()
     
     @property
@@ -66,6 +71,14 @@ class SpellChecker(object):
     def remove_ignore_regex(self, regex):
         self._ignore_expressions.remove(regex)
         self._ignore_regex = re.compile('|'.join(self._ignore_expressions))
+    
+    def append_line_regex(self, regex):
+        self._line_expressions.append(regex)
+        self._line_regex = re.compile('|'.join(self._line_expressions))
+        
+    def remove_line_regex(self, regex):
+        self._line_expressions.remove(regex)
+        self._line_regex = re.compile('|'.join(self._line_expressions))
     
     def recheck_all(self):
         start, end = self._buffer.get_bounds()
@@ -213,6 +226,14 @@ class SpellChecker(object):
     def _check_word(self, start, end):
         word = self._buffer.get_text(start, end, False)
         if not NUMBER.match(word) and (not self._ignore_regex.match(word) or not len(self._ignore_expressions)):
+            if len(self._line_expressions):
+                lstart = self._buffer.get_iter_at_line(start.get_line())
+                lend = self._clone_iter(end)
+                lend.forward_to_line_end()
+                line = self._buffer.get_text(lstart, lend, False)
+                for match in self._line_regex.finditer(line):
+                    if match.start() <= start.get_line_offset() <= match.end():
+                        return
             if not self._dictionary.check(word):
                 self._buffer.apply_tag(self._misspelled, start, end)
     
@@ -255,4 +276,5 @@ class SpellChecker(object):
     def _check_deferred_range(self, force_all):
         start = self._buffer.get_iter_at_mark(self._mark_insert_start)
         end = self._buffer.get_iter_at_mark(self._mark_insert_end)
-        self._check_range(start, end, force_all)       
+        self._check_range(start, end, force_all)
+  

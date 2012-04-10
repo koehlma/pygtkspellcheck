@@ -22,6 +22,8 @@ else:
 buffer = gtk.TextBuffer.new(None)
 view.set_buffer(buffer)
 spellchecker.buffer_setup()
+# Ignore URLs
+spellchecker.append_line_regex('http://[a-zA-Z.0-9/]*')
 
 window.set_default_size(600, 400)
 window.add(view)
