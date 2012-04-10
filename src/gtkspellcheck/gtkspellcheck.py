@@ -272,8 +272,12 @@ class SpellChecker(object):
         
         :param tag: tag object or tag name
         '''
-        if isinstance(tag, str):
-            tag = self._table.lookup(tag)
+        if sys.version_info.major == 3:
+            if isinstance(tag, str):
+                tag = self._table.lookup(tag)
+        else:
+            if isinstance(tag, basestring):
+                tag = self._table.lookup(tag)        
         self.ignored_tags.append(tag)
     
     def remove_ignore_tag(self, tag):
@@ -283,8 +287,12 @@ class SpellChecker(object):
         
         :param tag: tag object or tag name
         '''
-        if isinstance(tag, str):
-            tag = self._table.lookup(tag)
+        if sys.version_info.major == 3:
+            if isinstance(tag, str):
+                tag = self._table.lookup(tag)
+        else:
+            if isinstance(tag, basestring):
+                tag = self._table.lookup(tag)
         self.ignored_tags.remove(tag)
     
     def add_to_dictionary(self, word):
