@@ -1,0 +1,113 @@
+
+Welcome to Python GTK Spellchecker's documentation!
+***************************************************
+
+class class gtkspellcheck.SpellChecker(view, language='en', prefix='gtkspellchecker', params={})
+
+   Main spellchecking class, everything important happens here.
+
+   Parameters:
+      * **view** -- GtkTextView the SpellChecker should be attached to
+
+      * **language** -- the language which should be used for
+        spellchecking (use codes like en_US or de_DE)
+
+      * **prefix** -- a prefix for some internal GtkTextMarks
+
+      * **params** -- dictionary for enchant params that should be set
+        e.g. *enchant.myspell.dictionary.path*
+
+   languages
+
+      A list of supported languages.
+
+      exists(language)
+
+         checks if a language exists
+
+         Parameters:
+            **language** -- language to check
+
+   add_to_dictionary(word)
+
+      Adds a word to user's dictionary.
+
+      Parameters:
+         **word** -- the word to add
+
+   append_filter(regex, filter_type)
+
+      Append a new filter to the filter list. Filters are useful to
+      ignore some misspelled words based on regular expressions.
+
+      Parameters:
+         * **regex** -- the regex which used for filtering
+
+         * **filter_type** -- the type of the filter
+
+      Filter Types:
+
+      "SpellChecker.FILTER_WORD": The regex must match the whole word
+      you want to filter. The word separation is done by Pangos so for
+      example urls don't work here because they, are separated in many
+      words.
+
+      "SpellChecker.FILTER_LINE": If the expression you want to match
+      is a single line expression use this type. It should not be an
+      open end expression because then the rest of the line with the
+      text you want to filter become correct to.
+
+      "SpellChecker.FILTER_TEXT": Use this if you want to filter
+      multiline expressions. The regex will be compiled with the
+      *MULTILINE* flag. Don't use open end expressions here, too.
+
+   buffer_initialize()
+
+      Initialize the GtkTextBuffer associated with the GtkTextView. If
+      you associate a new GtkTextBuffer with the GtkTextView call this
+      method.
+
+   check_range(start, end, force_all=False)
+
+      Checks a specified range between two GtkTextIters.
+
+      Parameters:
+         * **start** -- start iter - checking starts here
+
+         * **end** -- end iter - checking ends here
+
+   disable()
+
+      Disable spellchecking.
+
+   enable()
+
+      Enable spellchecking.
+
+   enabled
+
+      Enable or disable spellchecking
+
+   ignore_all(word)
+
+      Ignores a word for the current session.
+
+      Parameters:
+         **word** -- the word to ignore
+
+   language
+
+      The language used for spellchecking
+
+   recheck()
+
+      Rechecks the spelling of the whole text.
+
+   remove_filter(regex, filter_type)
+
+      Remove a filter from the filter list.
+
+      Parameters:
+         * **regex** -- the regex which used for filtering
+
+         * **filter_type** -- the type of the filter
