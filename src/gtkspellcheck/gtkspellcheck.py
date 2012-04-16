@@ -379,7 +379,10 @@ class SpellChecker(object):
                 item = gtk.MenuItem.new()
                 label = gtk.Label.new('')
                 label.set_markup('<b>%s</b>' % (suggestion))
-                label.set_halign(gtk.Align(1))
+                try:
+                    label.set_halign(gtk.Align(1))
+                except AttributeError:
+                    label.set_justify(gtk.Justification(2))
                 item.add(label)
                 item.connect('activate', self._replace_word, word, suggestion)
                 menu.append(item)
