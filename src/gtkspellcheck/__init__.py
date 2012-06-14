@@ -27,7 +27,6 @@ import gettext
 import os.path
 import re
 
-import enchant
 import pylocale
 
 try:
@@ -37,10 +36,12 @@ except ImportError:
     import gtk
     _gobject = False
 
+import enchant
+
 __author__ = 'Maximilian Köhl'
 __copyright__ = 'Copyright (C) 2012, Maximilian Köhl'
 __license__ = 'GPLv3'
-__version__ = '2.2'
+__version__ = '2.2.1'
 __status__ = 'Production'
 __all__ = ['SpellChecker']
 
