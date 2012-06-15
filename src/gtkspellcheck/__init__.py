@@ -512,7 +512,7 @@ class SpellChecker(object):
         for tag in self.ignored_tags:
             if start.has_tag(tag):
                 return
-        word = self._buffer.get_text(start, end, False)
+        word = self._buffer.get_text(start, end, False).strip()
         if len(self._filters[SpellChecker.FILTER_WORD]):
             if self._regexes[SpellChecker.FILTER_WORD].match(word):
                 return
