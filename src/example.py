@@ -33,7 +33,7 @@ if __name__ == '__main__':
         gtk.main_quit()
     
     if _gobject:
-        window = gtk.Window.new(gtk.WindowType(0))
+        window = gtk.Window.new(gtk.WindowType.TOPLEVEL)
         view = gtk.TextView.new()
     else:
         window = gtk.Window(gtk.WINDOW_TOPLEVEL)
