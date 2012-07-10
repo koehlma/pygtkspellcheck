@@ -19,20 +19,20 @@ from __future__ import print_function
 
 import locale
 
-# PyGObject example
-from gi.repository import Gtk
+# PyGtk example
+import gtk
 
 from gtkspellcheck import SpellChecker
 
 if __name__ == '__main__':
     def quit(*args):
-        Gtk.main_quit()
-        
-    window = Gtk.Window.new(Gtk.WindowType.TOPLEVEL)
-    view = Gtk.TextView.new()
+        gtk.main_quit()
+    
+    window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    view = gtk.TextView()
     
     spellchecker = SpellChecker(view, locale.getdefaultlocale()[0])
-    
+        
     for code, name in spellchecker.languages:
         print('code: %5s, language: %s' % (code, name))
     
@@ -40,4 +40,4 @@ if __name__ == '__main__':
     window.add(view)
     window.show_all()
     window.connect('delete-event', quit)
-    Gtk.main()
+    gtk.main()
