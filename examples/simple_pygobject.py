@@ -23,7 +23,14 @@ import locale
 # PyGObject example
 from gi.repository import Gtk
 
-from gtkspellcheck import SpellChecker
+try:
+    from gtkspellcheck import SpellChecker
+# Load example if running from source, ignore this
+except ImportError:
+    import sys
+    from os.path import join, dirname
+    sys.path.append(join(dirname(__file__), '../src/'))
+    from gtkspellcheck import SpellChecker
 
 if __name__ == '__main__':
     def quit(*args):

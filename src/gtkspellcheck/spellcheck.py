@@ -78,9 +78,12 @@ class SpellChecker(object):
     Main spellchecking class, everything important happens here.
         
     :param view: GtkTextView the SpellChecker should be attached to
-    :param language: the language which should be used for spellchecking (use codes like en_US or de_DE)
+    :param language: the language which should be used for spellchecking
+    (use a combination of two letter lower-case ISO 639 language code with a
+    two letter upper-case ISO 3166 country code, for example en_US or de_DE)
     :param prefix: a prefix for some internal GtkTextMarks
-    :param params: enchant broker parameters that should be set e.g. `enchant.myspell.dictionary.path`
+    :param collapse: enclose suggestions in its own menu
+    :param params: dictionary with Enchant broker parameters that should be set e.g. `enchant.myspell.dictionary.path`
     
     .. attribute:: languages
         
@@ -144,8 +147,9 @@ class SpellChecker(object):
         def move(self, location):
             self._buffer.move_mark(self._mark, location)    
     
-    def __init__(self, view, language='en', prefix='gtkspellchecker', params={}):
+    def __init__(self, view, language='en', prefix='gtkspellchecker', collapse=True, params={}):
         self._view = view
+        self.collapse = collapse
         self._view.connect('populate-popup', lambda entry, menu: self._extend_menu(menu))
         self._view.connect('popup-menu', self._click_move_popup)
         self._view.connect('button-press-event', self._click_move_button)
