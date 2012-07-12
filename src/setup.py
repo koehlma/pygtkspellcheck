@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 #
 # Copyright (C) 2012, Maximilian Köhl <linuxmaxi@googlemail.com>
+# Copyright (C) 2012, Carlos Jenkins <carlos@jenkins.co.cr>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,19 +18,23 @@
 
 from distutils.core import setup
 
-from gtkspellcheck import __version__
+version = '2.3'
+long_description = \
+"""\
+It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both Python \
+2 and 3 with automatic switching and binding autodetection. For automatic \
+translation of the user interface it can use GEdit's translation files.\
+"""
 
 setup(name='pygtkspellchecker',
-      version=__version__,
-      description='a simple but quite powerful python spell checking library for gtktextviews based on enchant',
-      long_description=('PyGtkSpellCheck is a spellchecking library written in pure Python for Gtk based on Enchant.'
-                        'It works with PyGObject and PyGtk and of course with Python 2 and 3 (automatic switching).'
-                        'I wrote this because there was no spellchecking library for Python 3 and PyGObject before.'
-                        'For automatic translation of the user interface it can use GEdit\'s translation files.'),
-      author='Maximilian Köhl',
+      version=version,
+      description='A spellchecking library written in pure Python for Gtk based on Enchant',
+      long_description=long_description,
+      author='Maximilian Köhl & Carlos Jenkins',
       author_email='linuxmaxi@googlemail.com',
       url='http://www.github.com/koehlma/pygtkspellcheck',
       license='GPLv3',
-      packages=['gtkspellcheck', 'pylocale'],     
-      package_data={'pylocale' : ['locales.db', 'locales/*/*/*']})
+      packages=['gtkspellcheck'],     
+      package_data={'gtkspellcheck' : ['locales.db']}
+)
 

@@ -150,9 +150,9 @@ class SpellChecker(object):
         self._view.connect('button-press-event', self._click_move_button)
         self._prefix = prefix
         if _pygobject:
-            self._misspelled = gtk.TextTag.new('%s-misspelled' % (self._prefix))
+            self._misspelled = gtk.TextTag.new('{prefix}-misspelled'.format(prefix=self._prefix))
         else:
-            self._misspelled = gtk.TextTag('%s-misspelled' % (self._prefix))
+            self._misspelled = gtk.TextTag('{prefix}-misspelled'.format(prefix=self._prefix))
         self._misspelled.set_property('underline', 4)
         self._language = language
         self._broker = enchant.Broker()
@@ -207,9 +207,9 @@ class SpellChecker(object):
         self._buffer.connect_after('delete-range', self._range_delete)
         self._buffer.connect_after('mark-set', self._mark_set)
         start = self._buffer.get_bounds()[0]
-        self._marks = {'insert-start' : SpellChecker._Mark(self._buffer, '%s-insert-start' % (self._prefix), start),
-                       'insert-end' : SpellChecker._Mark(self._buffer, '%s-insert-end' % (self._prefix), start),
-                       'click' : SpellChecker._Mark(self._buffer, '%s-click' % (self._prefix), start)}
+        self._marks = {'insert-start' : SpellChecker._Mark(self._buffer, '{prefix}-insert-start'.format(prefix=self._prefix), start),
+                       'insert-end' : SpellChecker._Mark(self._buffer, '{prefix}-insert-end'.format(prefix=self._prefix), start),
+                       'click' : SpellChecker._Mark(self._buffer, '{prefix}-click'.format(prefix=self._prefix), start)}
         self._table = self._buffer.get_tag_table()
         self._table.add(self._misspelled)
         self.ignored_tags = []
@@ -405,7 +405,7 @@ class SpellChecker(object):
                 label.set_halign(gtk.Align.LEFT)
             except AttributeError:
                 label.set_alignment(0.0, 0.5)
-            label.set_markup('<i>%s</i>' % (_('(no suggestions)')))
+            label.set_markup('<i>{text}</i>'.format(text=_('(no suggestions)')))
             item.add(label)
             menu.append(item)
         else:
@@ -416,7 +416,7 @@ class SpellChecker(object):
                 else:
                     item = gtk.MenuItem()
                     label = gtk.Label()
-                label.set_markup('<b>%s</b>' % (suggestion))
+                label.set_markup('<b>{text}</b>'.format(text=suggestion))
                 try:
                     label.set_halign(gtk.Align.LEFT)
                 except AttributeError:
