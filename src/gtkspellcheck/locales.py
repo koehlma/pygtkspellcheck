@@ -16,35 +16,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""@package locales
+"""locales.py: Query the ISO 639/3166 database.
 Query the locales database about a country or a language. The locales database
 contains ISO 639 languages definitions and ISO 3166 countries definitions.
 This package provides translation for countries and languages names if
 iso-codes package is installed (Ubuntu/Debian).
-@see build.py to know the database tables and structure.
+@see utils/locales/build.py to know the database tables and structure.
 """
 
-import sys
 import os
+import sys
 import sqlite3
+from .context import AppContext
 
+# Base module information
 __author__ = 'Maximilian Köhl & Carlos Jenkins'
 __copyright__ = 'Copyright (C) 2012, Maximilian Köhl & Carlos Jenkins'
-__license__ = 'GPLv3'
-__version__ = '1.0'
+__license__ = 'GPL'
+__version__ = '1.3'
 __status__ = 'Production'
 __all__ = ['Country', 'Language', 'LanguageNotFound', 'CountryNotFound', 'code_to_name']
 
-####################################
-# Use application context
-from context import AppContext
-
-WHERE_AM_I = AppContext.where_am_i(__file__)
+# Translation
 _translator_language = AppContext('iso_639').what_do_i_speak()
 _translator_country = AppContext('iso_3166').what_do_i_speak()
-####################################
 
 # Locales database
+WHERE_AM_I = AppContext.where_am_i(__file__)
 _database = sqlite3.connect(os.path.join(WHERE_AM_I, 'locales.db'))
 
 class LanguageNotFound(Exception): pass
@@ -113,7 +111,9 @@ def code_to_name(code, separator='_'):
     
     code = code.split(separator)
     if len(code) > 1:
-        return '%s (%s)' % (Language.by_iso_639_1(code[0]).translation,
-                            Country.by_alpha_2(code[1]).translation)
+        print(code)
+        lang = Language.by_iso_639_1(code[0]).translation
+        country = Country.by_alpha_2(code[1]).translation
+        return '{lang} ({country})'.format(lang=lang, country=country)
     else:
         return Language.by_iso_639_1(code[0]).translation

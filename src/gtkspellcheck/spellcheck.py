@@ -16,7 +16,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""spellcheck.py: Module for PyGtk/PyGObject spell checking."""
+
 import sys
+import re
+import enchant
+import gettext
+from .locales import code_to_name
+from .context import AppContext
+
+# Base module information
+__author__ = 'Maximilian Köhl & Carlos Jenkins'
+__copyright__ = 'Copyright (C) 2012, Maximilian Köhl & Carlos Jenkins'
+__license__ = 'GPL'
+__version__ = '2.3'
+__status__ = 'Production'
+__all__ = ['SpellChecker']
 
 # Find which Gtk binding to use based on client's binding
 if 'gi.repository.Gtk' in sys.modules:
@@ -39,25 +54,6 @@ except ImportError:
 if sys.version_info.major == 3:
     basestring = str
 
-# Base imports
-import gettext
-import os.path
-import re
-
-# Included module
-import pylocale
-
-# Spellchecking
-import enchant
-
-# Base module information
-__author__ = 'Maximilian Köhl & Carlos Jenkins'
-__copyright__ = 'Copyright (C) 2012, Maximilian Köhl & Carlos Jenkins'
-__license__ = 'GPLv3'
-__version__ = '2.3'
-__status__ = 'Production'
-__all__ = ['SpellChecker']
-
 # Map between Gedit keys and current module keys
 _GEDIT_MAP = {'Languages' : 'Languages',
               'Ignore All' : 'Ignore _All',
@@ -67,11 +63,10 @@ _GEDIT_MAP = {'Languages' : 'Languages',
 
 # Get translation of GUI elements
 if gettext.find('gedit'):
-    _gedit = gettext.translation('gedit', fallback=True).gettext
+    _gedit = AppContext('gedit').what_do_i_speak()
     _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
 else:
-    _ = gettext.translation('gtkspellcheck', os.path.join(os.path.dirname(__file__), 'locale'), fallback=True).gettext
-
+    _ = AppContext('gtkspellcheck').what_do_i_speak()
 
 class SpellChecker(object):
     '''
@@ -114,7 +109,7 @@ class SpellChecker(object):
         
         @classmethod
         def from_broker(cls, broker):
-            return cls([(language, pylocale.code_to_name(language))
+            return cls([(language, code_to_name(language))
                         for language in broker.list_languages()])
         
         def exists(self, language):
@@ -132,7 +127,7 @@ class SpellChecker(object):
         
         @property
         def inside_word(self):
-            return self.iter.inside_word()            
+            return self.iter.inside_word()
      
         @property
         def word(self):
@@ -145,7 +140,7 @@ class SpellChecker(object):
             return start, end
         
         def move(self, location):
-            self._buffer.move_mark(self._mark, location)    
+            self._buffer.move_mark(self._mark, location)
     
     def __init__(self, view, language='en', prefix='gtkspellchecker', collapse=True, params={}):
         self._view = view
@@ -397,10 +392,6 @@ class SpellChecker(object):
         return menu
     
     def _suggestion_menu(self, word):
-        #~ if _pygobject:
-            #~ menu = gtk.Menu.new()
-        #~ else:
-            #~ menu = gtk.Menu()
         menu = []
         suggestions = self._dictionary.suggest(word)
         if not suggestions:
@@ -447,7 +438,6 @@ class SpellChecker(object):
             item = gtk.MenuItem(_('Ignore All'))
         item.connect('activate', lambda *args: self.ignore_all(word))
         menu.append(item)
-        #~ menu.show_all()
         return menu
     
     def _extend_menu(self, menu):
@@ -561,3 +551,4 @@ class SpellChecker(object):
                     return
         if not self._dictionary.check(word):
             self._buffer.apply_tag(self._misspelled, start, end)
+

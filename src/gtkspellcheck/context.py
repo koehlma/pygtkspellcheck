@@ -15,14 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""@package context
-Context class for a complex application.
-"""
+"""context.py: Context class for a multiplatform and multilanguage applications."""
 
 import os
 import sys
 import gettext
 import logging
+
+# Base module information
+__author__ = 'Carlos Jenkins'
+__copyright__ = 'Copyright (C) 2012, Carlos Jenkins'
+__license__ = 'GPL'
+__version__ = '1.5'
+__status__ = 'Production'
+__all__ = ['AppContext']
 
 _loggers = {}
 _loggers_level = logging.WARNING
@@ -144,3 +150,4 @@ if sys.platform.startswith('win'):
         os.environ['LANG'] = lang
     # Set LOCALE_DIR for MS Windows
     AppContext.LOCALE_DIR = AppContext.DEFAULT_LOCALE['win']
+

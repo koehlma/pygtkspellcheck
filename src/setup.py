@@ -32,3 +32,4 @@ setup(name='pygtkspellchecker',
       license='GPLv3',
       packages=['gtkspellcheck', 'pylocale'],     
       package_data={'pylocale' : ['locales.db', 'locales/*/*/*']})
+
