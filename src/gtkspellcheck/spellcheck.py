@@ -397,10 +397,11 @@ class SpellChecker(object):
         return menu
     
     def _suggestion_menu(self, word):
-        if _pygobject:
-            menu = gtk.Menu.new()
-        else:
-            menu = gtk.Menu()
+        #~ if _pygobject:
+            #~ menu = gtk.Menu.new()
+        #~ else:
+            #~ menu = gtk.Menu()
+        menu = []
         suggestions = self._dictionary.suggest(word)
         if not suggestions:
             if _pygobject:
@@ -446,7 +447,7 @@ class SpellChecker(object):
             item = gtk.MenuItem(_('Ignore All'))
         item.connect('activate', lambda *args: self.ignore_all(word))
         menu.append(item)
-        menu.show_all()
+        #~ menu.show_all()
         return menu
     
     def _extend_menu(self, menu):
@@ -469,13 +470,24 @@ class SpellChecker(object):
             start, end = self._marks['click'].word
             if start.has_tag(self._misspelled):
                 word = self._buffer.get_text(start, end, False)
-                if _pygobject:
-                    suggestions = gtk.MenuItem.new_with_label(_('Suggestions'))
+                submenu_items = self._suggestion_menu(word)
+                if self.collapse:
+                    if _pygobject:
+                        suggestions = gtk.MenuItem.new_with_label(_('Suggestions'))
+                        submenu = gtk.Menu.new()
+                    else:
+                        suggestions = gtk.MenuItem(_('Suggestions'))
+                        submenu = gtk.Menu()
+                    for i in submenu_items:
+                        submenu.append(i)
+                    suggestions.set_submenu(submenu)
+                    suggestions.show_all()
+                    menu.prepend(suggestions)
                 else:
-                    suggestions = gtk.MenuItem(_('Suggestions'))
-                suggestions.set_submenu(self._suggestion_menu(word))
-                suggestions.show_all()
-                menu.prepend(suggestions)
+                    submenu_items.reverse()
+                    for i in submenu_items:
+                        menu.prepend(i)
+                        menu.show_all()
     
     def _click_move_popup(self, *args):
         self._marks['click'].move(self._buffer.get_iter_at_mark(self._buffer.get_insert()))
