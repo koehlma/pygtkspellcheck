@@ -6,3 +6,4 @@ MANIFEST
 .directory
 __pycache__
 dist/*.tar.gz
+doc/build/

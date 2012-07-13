@@ -2,4 +2,4 @@ include LICENSE.txt
 include MANIFEST.in
 include README.md
 graft l10n/pygtkspellcheck
-
+graft examples

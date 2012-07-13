@@ -41,7 +41,7 @@ elif 'gtk' in sys.modules:
     gtk = sys.modules['gtk']
     _pygobject = False
 else:
-    raise Exception('No Gtk module found.')
+    print('No Gtk module found. Spellcheck will be unusable.')
 
 # Select base list class for Python3/2
 try:
@@ -73,9 +73,9 @@ class SpellChecker(object):
     Main spellchecking class, everything important happens here.
         
     :param view: GtkTextView the SpellChecker should be attached to
-    :param language: the language which should be used for spellchecking
-    (use a combination of two letter lower-case ISO 639 language code with a
-    two letter upper-case ISO 3166 country code, for example en_US or de_DE)
+    :param language: the language which should be used for spellchecking (use a 
+      combination of two letter lower-case ISO 639 language code with a two 
+      letter upper-case ISO 3166 country code, for example en_US or de_DE)
     :param prefix: a prefix for some internal GtkTextMarks
     :param collapse: enclose suggestions in its own menu
     :param params: dictionary with Enchant broker parameters that should be set e.g. `enchant.myspell.dictionary.path`

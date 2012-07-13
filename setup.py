@@ -16,9 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 from distutils.core import setup
+sys.path.append('./src/')
+import gtkspellcheck
 
-version = '2.3'
+version = gtkspellcheck.__version__
 long_description = \
 """\
 It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both Python \
