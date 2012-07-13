@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+%:
+	dh $@ --with python2
+
+override_dh_auto_install:
+	# Install into a private directory
+	dh_auto_install -- install --root=$(CURDIR)/debian/nested \
+		--install-lib=/usr/share/nested \
+		--install-scripts=/usr/bin
+	# "--install-scripts=/usr/share/nested" will not work here
+	# as binary name is the same as module name
+	mv $(CURDIR)/debian/nested/usr/bin/nested \
+		$(CURDIR)/debian/nested/usr/share/nested/nested.run
+
+	#~ # l10n
+	#~ python -B l10n/compile_mo.py
+	#~ mv $(CURDIR)/l10n/mo $(CURDIR)/debian/nested/usr/share/locale/

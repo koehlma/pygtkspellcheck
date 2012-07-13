@@ -34,7 +34,8 @@ setup(name='pygtkspellchecker',
       author_email='linuxmaxi@googlemail.com',
       url='http://www.github.com/koehlma/pygtkspellcheck',
       license='GPLv3',
-      packages=['gtkspellcheck'],     
+      package_dir = {'': 'src'},
+      packages=['gtkspellcheck'],
       package_data={'gtkspellcheck' : ['locales.db']}
 )
 

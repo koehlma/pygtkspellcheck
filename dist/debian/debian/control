@@ -1,0 +1,28 @@
+Source: pygtkspellcheck
+Section: python
+Priority: optional
+Maintainer: Carlos Jenkins <carlos@jenkins.co.cr>
+Build-Depends: python (>=2.6), debhelper (>= 8)
+Standards-Version: 3.9.4
+Homepage: https://github.com/carlos-jenkins/pygtkspellcheck
+Vcs-Browser: https://github.com/carlos-jenkins/pygtkspellcheck
+Vcs-Git: git://github.com/carlos-jenkins/pygtkspellcheck.git
+
+Package: python-gtkspellcheck
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}, python-enchant, python-gtk2 | python-gi
+Recommends: iso-codes
+Description: spellchecking library written in pure Python for Gtk based on Enchant
+ It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both Python 
+ 2 and 3 with automatic switching and binding autodetection. For automatic 
+ translation of the user interface it can use GEdit's translation files.
+
+Package: python3-gtkspellcheck
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}, python3-enchant, python3-gi
+Recommends: iso-codes
+Description: spellchecking library written in pure Python for Gtk based on Enchant
+ It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both Python 
+ 2 and 3 with automatic switching and binding autodetection. For automatic 
+ translation of the user interface it can use GEdit's translation files.
+
