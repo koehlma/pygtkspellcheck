@@ -1,5 +1,5 @@
-python-gtkspellcheck (2.3) unstable; urgency=low
+pygtkspellcheck (2.4) unstable; urgency=low
 
   * Initial release
 
- -- Carlos Miguel Jenkins Pérez <carlos@jenkins.co.cr>  Sun, 08 Jul 2012 19:36:18 -0600
+ -- Carlos Miguel Jenkins Pérez <carlos@jenkins.co.cr>  Fri, 13 Jul 2012 13:06:30 -0600

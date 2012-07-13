@@ -6,7 +6,7 @@ Source: https://github.com/carlos-jenkins/pygtkspellcheck
 Files: *
 Copyright: 2012, Maximilian Köhl <linuxmaxi@googlemail.com>
 Copyright: 2012, Carlos Jenkins <carlos@jenkins.co.cr>
-License: GPL-3+
+License: GPL-3.0+
 
 Files: debian/*
 Copyright: 2012, Carlos Jenkins <carlos@jenkins.co.cr>

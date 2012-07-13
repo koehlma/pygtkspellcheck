@@ -29,7 +29,7 @@ It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both Python
 translation of the user interface it can use GEdit's translation files.\
 """
 
-setup(name='pygtkspellchecker',
+setup(name='pygtkspellcheck',
       version=version,
       description='A spellchecking library written in pure Python for Gtk based on Enchant',
       long_description=long_description,

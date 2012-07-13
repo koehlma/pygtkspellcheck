@@ -21,7 +21,8 @@ cp $SDIST debian/$DEBSDIST
 echo "Entering debian..."
 cd debian/
 tar -zxvf $DEBSDIST
-DEBSDISTUN=`find . -maxdepth 1 -type d -name nested-*`
+DEBSDISTUN=`find . -maxdepth 1 -type d -name pygtkspellcheck-*`
+echo $DEBSDISTUN
 cp -R debian/ $DEBSDISTUN/
 
 # Build Debian package
