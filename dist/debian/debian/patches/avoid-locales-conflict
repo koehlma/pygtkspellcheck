@@ -1,0 +1,23 @@
+--- a/src/gtkspellcheck/context.py
++++ b/src/gtkspellcheck/context.py
+@@ -87,6 +87,9 @@
+         """
+         Singleton map kind of factory sort stuff :P
+         """
++
++        app += str(sys.version_info.major)
++
+         if not app in AppContext._instances.keys():
+             logger.debug('Creating context: ' + app)
+             AppContext._instances[app] = super(AppContext, cls).__new__(cls)
+--- a/l10n/compile_mo.py
++++ b/l10n/compile_mo.py
+@@ -33,7 +33,7 @@
+         po_file = os.path.join(po_dir, lang + '.po')
+         lang_dir = os.path.join(locale_dir, lang)
+         mo_dir = os.path.join(lang_dir, 'LC_MESSAGES')
+-        mo_file = os.path.join(mo_dir, APP + '.mo')
++        mo_file = os.path.join(mo_dir, APP + str(sys.version_info.major) + '.mo')
+         
+         if not os.path.exists(mo_dir):
+             os.makedirs(mo_dir)
