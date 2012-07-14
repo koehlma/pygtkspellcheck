@@ -28,7 +28,7 @@ override_dh_auto_install: $(PYTHON3:%=install-python%)
 
 override_dh_installdocs:
 	python setup.py build_sphinx
-	dh_installdocs build/sphinx/html
+	dh_installdocs
 
 override_dh_auto_clean:
 	dh_auto_clean
