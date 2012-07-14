@@ -19,7 +19,7 @@ install-python%:
 	python$* setup.py install --root=$(CURDIR)/debian/tmp --install-layout=deb
 
 	# l10n
-	python -B $(CURDIR)/l10n/compile_mo.py
+	python$* -B $(CURDIR)/l10n/compile_mo.py
 	mkdir -p $(CURDIR)/debian/tmp/usr/share/
 	mv $(CURDIR)/l10n/mo $(CURDIR)/debian/tmp/usr/share/locale
 
