@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import shutil
 
 where_am_i = os.path.normpath(os.path.dirname(os.path.abspath(os.path.realpath(__file__))))
 os.chdir(where_am_i)
 
-import msgfmt
+if sys.version_info.major == 3:
+    import msgfmt3 as msgfmt
+else:
+    import msgfmt2 as msgfmt
 
 def build_mo_files():
     """Compile available localization files"""
@@ -21,9 +25,9 @@ def build_mo_files():
 
     available_langs = os.listdir(po_dir)
     available_langs = filter(lambda file: file.endswith('.po'), available_langs)
-    available_langs = map(lambda file: file[:-3], available_langs)
+    available_langs = list(map(lambda file: file[:-3], available_langs))
 
-    print 'Languages: ', available_langs
+    print('Languages: {langs}'.format(langs=str(available_langs)))
 
     for lang in available_langs:
         po_file = os.path.join(po_dir, lang + '.po')
