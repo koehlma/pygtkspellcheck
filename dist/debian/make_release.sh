@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -o nounset errexit
+set -o errexit
+set -o nounset
 
 # Base packages need to run this script:
 #    sudo apt-get install devscripts build-essential fakeroot dh-make wget
@@ -47,6 +48,7 @@ mv *.deb ../
 echo "Done. Perform cleaning? Press [Enter] to confirm cleaning and continue or Ctrl+C to cancel."
 read
 cd ../../../
-pwd
-rm -R dist/debian/build
-python setup.py clean
+echo `pwd`
+ls
+#rm -R dist/debian/build
+#python setup.py clean
