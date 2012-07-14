@@ -3,32 +3,37 @@
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 
-PYTHON2=$(shell pyversions -vr)
-PYTHON3=$(shell py3versions -vr)
-
 %:
 	dh $@ --with python2,python3,sphinxdoc
 
-build-python%:
-	python$* setup.py build
-
-override_dh_auto_build: $(PYTHON3:%=build-python%)
+override_dh_auto_build:
 	dh_auto_build
 
-install-python%:
-	python$* setup.py install --root=$(CURDIR)/debian/tmp --install-layout=deb
+	# Python3
+	set -ex; for python in $(shell py3versions -r); do \
+		$$python setup.py build; \
+	done;
+
+override_dh_auto_install:
+	dh_auto_install
+
+	# Python3
+	set -ex; for python in $(shell py3versions -r); do \
+		$$python setup.py install --root=$(CURDIR)/debian/tmp --install-layout=deb; \
+	done;
 
 	# l10n
 	mkdir -p $(CURDIR)/debian/tmp/usr/share/
-	
-	python2 -B $(CURDIR)/l10n/compile_mo.py
-	mv $(CURDIR)/l10n/mo $(CURDIR)/debian/tmp/usr/share/locale2
 
-	python3 -B $(CURDIR)/l10n/compile_mo.py
+	set -ex; for python in $(shell py3versions -r); do \
+		$$python -B $(CURDIR)/l10n/compile_mo.py; \
+	done;
 	mv $(CURDIR)/l10n/mo $(CURDIR)/debian/tmp/usr/share/locale3
 
-override_dh_auto_install: $(PYTHON3:%=install-python%)
-	dh_auto_install
+	set -ex; for python in $(shell pyversions -r); do \
+		$$python -B $(CURDIR)/l10n/compile_mo.py; \
+	done;
+	mv $(CURDIR)/l10n/mo $(CURDIR)/debian/tmp/usr/share/locale2
 
 override_dh_installdocs:
 	python setup.py build_sphinx
@@ -36,5 +41,4 @@ override_dh_installdocs:
 
 override_dh_auto_clean:
 	dh_auto_clean
-	rm -rf build
-	rm -rf *.egg-info
+	rm -rf build *.egg-info

@@ -1,0 +1,13 @@
+Document: pygtkspellcheck
+Title: Python GTK+ Spellchecker's documentation
+Author: Maximilian Köhl & Carlos Jenkins
+Abstract: pygtkspellcheck is a spellchecking library written in Python for Gtk+ based on Enchant
+ It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both 
+ Python 2 and 3 with automatic switching and binding autodetection. For 
+ automatic translation of the user interface it can use GEdit's translation 
+ files.
+Section: Programming/Python
+
+Format: html
+Index: /usr/share/doc/python-gtkspellcheck-doc/html/index.html
+Files: /usr/share/doc/python-gtkspellcheck-doc/html/*.html
