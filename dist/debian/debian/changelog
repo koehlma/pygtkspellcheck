@@ -1,5 +1,5 @@
-pygtkspellcheck (2.4) unstable; urgency=low
+pygtkspellcheck (2.4-1) unstable; urgency=low
 
-  * Initial release
+  * Initial release. Closes: 681528
 
- -- Carlos Miguel Jenkins Pérez <carlos@jenkins.co.cr>  Fri, 13 Jul 2012 13:06:30 -0600
+ -- Carlos Miguel Jenkins Pérez <carlos@jenkins.co.cr>  Fri, 13 Jul 2012 15:22:11 -0600

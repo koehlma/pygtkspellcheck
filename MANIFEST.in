@@ -1,5 +1,8 @@
 include LICENSE.txt
 include MANIFEST.in
 include README.md
-graft l10n/pygtkspellcheck
 graft examples
+graft l10n
+prune l10n/mo
+prune l10n/isos
+recursive-exclude l10n *.pyc

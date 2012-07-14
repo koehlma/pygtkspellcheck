@@ -1,24 +1,35 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+export DH_VERBOSE=1
+
+PYTHON2=$(shell pyversions -vr)
+PYTHON3=$(shell py3versions -vr)
 
 %:
-	dh $@ --with python2
+	dh $@ --with python2,python3,sphinxdoc
 
-#~ %:
-	#~ dh $@
-#~ 
-#~ override_dh_auto_install:
-	#~ # Install into a private directory
-	#~ dh_auto_install -- install --root=$(CURDIR)/debian/nested \
-		#~ --install-lib=/usr/share/nested \
-		#~ --install-scripts=/usr/bin
-	#~ # "--install-scripts=/usr/share/nested" will not work here
-	#~ # as binary name is the same as module name
-	#~ mv $(CURDIR)/debian/nested/usr/bin/nested \
-		#~ $(CURDIR)/debian/nested/usr/share/nested/nested.run
-#~ 
-	#~ # l10n
-	#~ python -B l10n/compile_mo.py
-	#~ mv $(CURDIR)/l10n/mo $(CURDIR)/debian/nested/usr/share/locale/
+build-python%:
+	python$* setup.py build
+
+override_dh_auto_build: $(PYTHON3:%=build-python%)
+	dh_auto_build
+
+install-python%:
+	python$* setup.py install --root=$(CURDIR)/debian/tmp --install-layout=deb
+
+	# l10n
+	python -B $(CURDIR)/l10n/compile_mo.py
+	mv $(CURDIR)/l10n/mo $(CURDIR)/debian/tmp/usr/share/locale
+
+override_dh_auto_install: $(PYTHON3:%=install-python%)
+	dh_auto_install
+
+override_dh_installdocs:
+	python setup.py build_sphinx
+	dh_installdocs build/sphinx/html
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf build
+	rm -rf *.egg-info

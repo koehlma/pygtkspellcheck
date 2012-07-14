@@ -1,6 +1,9 @@
 #!/bin/bash
 
-#sudo apt-get install devscripts build-essential fakeroot dh-make wget
+set -o nounset errexit
+
+# Base packages need to run this script:
+#    sudo apt-get install devscripts build-essential fakeroot dh-make wget
 
 export DEBFULLNAME="Carlos Miguel Jenkins Pérez"
 export DEBEMAIL="carlos@jenkins.co.cr"
@@ -12,23 +15,37 @@ python setup.py sdist
 echo "Entering to dist..."
 cd dist/
 
+# Create build folder
+echo "Creating build folder..."
+mkdir -p debian/build
+
 # Copy source package
+echo "Copying source package..."
 SDIST=`find . -maxdepth 1 -type f -name *.tar.gz`
 DEBSDIST=`echo $SDIST | sed s/.tar.gz/.orig.tar.gz/ | sed s/-/_/`
-cp $SDIST debian/$DEBSDIST
+cp $SDIST debian/build/$DEBSDIST
 
 # Build Debian source package
-echo "Entering debian..."
-cd debian/
+echo "Entering build folder..."
+cd debian/build/
 tar -zxvf $DEBSDIST
 DEBSDISTUN=`find . -maxdepth 1 -type d -name pygtkspellcheck-*`
-echo $DEBSDISTUN
-cp -R debian/ $DEBSDISTUN/
+cp -R ../debian/ $DEBSDISTUN/
 
-# Build Debian package
+# Build Debian binary packages
 echo "Entering $DEBSDISTUN..."
 cd $DEBSDISTUN/
 echo "Ready to build package. Press [Enter] to confirm structure and continue or Ctrl+C to cancel."
 read
 debuild -us -uc
-#debuild
+
+# Move Debian packages
+echo "Moving Debian packages..."
+mv *.deb ../
+
+# Clean
+echo "Done. Perform cleaning? Press [Enter] to confirm cleaning and continue or Ctrl+C to cancel."
+read
+cd ../../../
+rm -R dist/debian/build
+python setup.py clean
