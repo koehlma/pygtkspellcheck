@@ -66,7 +66,7 @@ if gettext.find('gedit'):
     _gedit = AppContext('gedit').what_do_i_speak()
     _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
 else:
-    _ = AppContext('gtkspellcheck').what_do_i_speak()
+    _ = AppContext('pygtkspellcheck').what_do_i_speak()
 
 class SpellChecker(object):
     '''

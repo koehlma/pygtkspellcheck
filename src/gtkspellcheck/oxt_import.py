@@ -39,7 +39,7 @@ __version__ = '1.5'
 __status__ = 'Production'
 __all__ = ['deflate_oxt']
 
-WHERE_AM_I = AppContext.where_am_i(__file__)
+WHERE_AM_I = AppContext.where_am_i('pygtkspellcheck')
 logger = AppContext.get_logger(__name__)
 _ = AppContext().what_do_i_speak()
 

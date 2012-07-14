@@ -7,6 +7,5 @@ MANIFEST
 __pycache__
 dist/*.tar.gz
 doc/build/
-dist/debian/pygtkspellcheck*
-dist/debian/*.deb
+dist/debian/build
 l10n/mo
