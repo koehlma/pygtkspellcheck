@@ -47,5 +47,6 @@ mv *.deb ../
 echo "Done. Perform cleaning? Press [Enter] to confirm cleaning and continue or Ctrl+C to cancel."
 read
 cd ../../../
+pwd
 rm -R dist/debian/build
 python setup.py clean
