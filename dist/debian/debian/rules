@@ -19,9 +19,13 @@ install-python%:
 	python$* setup.py install --root=$(CURDIR)/debian/tmp --install-layout=deb
 
 	# l10n
-	python$* -B $(CURDIR)/l10n/compile_mo.py
 	mkdir -p $(CURDIR)/debian/tmp/usr/share/
-	mv $(CURDIR)/l10n/mo $(CURDIR)/debian/tmp/usr/share/locale
+	
+	python2 -B $(CURDIR)/l10n/compile_mo.py
+	mv $(CURDIR)/l10n/mo $(CURDIR)/debian/tmp/usr/share/locale2
+
+	python3 -B $(CURDIR)/l10n/compile_mo.py
+	mv $(CURDIR)/l10n/mo $(CURDIR)/debian/tmp/usr/share/locale3
 
 override_dh_auto_install: $(PYTHON3:%=install-python%)
 	dh_auto_install
