@@ -42,13 +42,14 @@ debuild -us -uc
 
 # Move Debian packages
 echo "Moving Debian packages..."
+cd ../
 mv *.deb ../
 
 # Clean
 echo "Done. Perform cleaning? Press [Enter] to confirm cleaning and continue or Ctrl+C to cancel."
 read
 cd ../../../
-echo `pwd`
-ls
-#rm -R dist/debian/build
-#python setup.py clean
+rm -R dist/debian/build
+rm -f dist/pygtkspellcheck-*
+rm -f MANIFEST
+python setup.py clean
