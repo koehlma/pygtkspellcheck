@@ -11,7 +11,7 @@ import msgfmt
 def build_mo_files():
     """Compile available localization files"""
     
-    APP = "pygtkspellcheck"
+    APP = 'pygtkspellcheck'
     locale_dir = 'mo'
     po_dir = 'pygtkspellcheck'
 

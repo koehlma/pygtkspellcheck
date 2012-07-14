@@ -69,7 +69,7 @@ else:
     _ = AppContext('pygtkspellcheck').what_do_i_speak()
 
 class SpellChecker(object):
-    '''
+    """
     Main spellchecking class, everything important happens here.
         
     :param view: GtkTextView the SpellChecker should be attached to
@@ -89,7 +89,7 @@ class SpellChecker(object):
             checks if a language exists
             
             :param language: language to check
-    '''
+    """
     FILTER_WORD = 'word'
     FILTER_LINE = 'line'
     FILTER_TEXT = 'text'
@@ -170,9 +170,9 @@ class SpellChecker(object):
     
     @property
     def language(self):
-        '''
+        """
         The language used for spellchecking
-        '''
+        """
         return self._language
     
     @language.setter
@@ -184,9 +184,9 @@ class SpellChecker(object):
     
     @property
     def enabled(self):
-        '''
+        """
         Enable or disable spellchecking
-        '''
+        """
         return self._enabled
     
     @enabled.setter
@@ -197,10 +197,10 @@ class SpellChecker(object):
             self.disable()
     
     def buffer_initialize(self):
-        '''
+        """
         Initialize the GtkTextBuffer associated with the GtkTextView.
         If you associate a new GtkTextBuffer with the GtkTextView call this method.
-        ''' 
+        """ 
         self._buffer = self._view.get_buffer()
         self._buffer.connect('insert-text', self._before_text_insert)
         self._buffer.connect_after('insert-text', self._after_text_insert)
@@ -232,29 +232,29 @@ class SpellChecker(object):
         self.recheck()
     
     def recheck(self):
-        '''
+        """
         Rechecks the spelling of the whole text.
-        '''
+        """
         start, end = self._buffer.get_bounds()
         self.check_range(start, end, True)
     
     def disable(self):
-        '''
+        """
         Disable spellchecking.
-        '''
+        """
         self._enabled = False
         start, end = self._buffer.get_bounds()
         self._buffer.remove_tag(self._misspelled, start, end)
     
     def enable(self):
-        '''
+        """
         Enable spellchecking.
-        '''
+        """
         self._enable = True
         self.recheck()
     
     def append_filter(self, regex, filter_type):
-        '''
+        """
         Append a new filter to the filter list.
         Filters are useful to ignore some misspelled words based on regular expressions.
         
@@ -272,7 +272,7 @@ class SpellChecker(object):
         :const:`SpellChecker.FILTER_TEXT`: Use this if you want to filter multiline expressions.
         The regex will be compiled with the `MULTILINE` flag.
         Same with open end expressions apply here.
-        '''
+        """
         self._filters[filter_type].append(regex)
         if filter_type == SpellChecker.FILTER_TEXT:
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]), re.MULTILINE)
@@ -280,12 +280,12 @@ class SpellChecker(object):
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]))
     
     def remove_filter(self, regex, filter_type):
-        '''
+        """
         Remove a filter from the filter list.
         
         :param regex: the regex which used for filtering
         :param filter_type: the type of the filter
-        '''
+        """
         self._filters[filter_type].remove(regex)
         if filter_type == SpellChecker.FILTER_TEXT:
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]), re.MULTILINE)
@@ -293,52 +293,52 @@ class SpellChecker(object):
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]))
     
     def append_ignore_tag(self, tag):
-        '''
+        """
         Appends a tag to the list of ignored tags.
         A string will be automatic resolved into a tag object.
         
         :param tag: tag object or tag name
-        '''
+        """
         if isinstance(tag, basestring):
             tag = self._table.lookup(tag)
         self.ignored_tags.append(tag)
     
     def remove_ignore_tag(self, tag):
-        '''
+        """
         Removes a tag from the list of ignored tags.
         A string will be automatic resolved into a tag object.
         
         :param tag: tag object or tag name
-        '''
+        """
         if isinstance(tag, basestring):
             tag = self._table.lookup(tag)
         self.ignored_tags.remove(tag)
     
     def add_to_dictionary(self, word):
-        '''
+        """
         Adds a word to user's dictionary.
         
         :param word: the word to add
-        '''
+        """
         self._dictionary.add_to_pwl(word)
         self.recheck()
     
     def ignore_all(self, word):
-        '''
+        """
         Ignores a word for the current session.
         
         :param word: the word to ignore
-        '''
+        """
         self._dictionary.add_to_session(word)
         self.recheck()       
     
     def check_range(self, start, end, force_all=False):
-        '''
+        """
         Checks a specified range between two GtkTextIters.
         
         :param start: start iter - checking starts here
         :param end: end iter - checking ends here
-        '''
+        """
         if not self._enabled:
             return
         if end.inside_word(): end.forward_word_end()
