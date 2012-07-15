@@ -21,6 +21,29 @@ import sys, os
 doc_directory = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(doc_directory, '..', '..', 'src'))
 
+import sys
+
+# Support for readthedocs.org
+class Mock(object):
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        return Mock()
+
+    @classmethod
+    def __getattr__(self, name):
+        if name in ('__file__', '__path__'):
+            return '/dev/null'
+        elif name[0] == name[0].upper():
+            return type(name, (), {})
+        else:
+            return Mock()
+
+MOCK_MODULES = ['enchant']
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = Mock()
+
 import gtkspellcheck
 
 # -- General configuration -----------------------------------------------------
