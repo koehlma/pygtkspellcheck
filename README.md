@@ -15,7 +15,7 @@ Features
 * Support for hotswap of Gtk's TextBuffers.
 * PyGObject and PyGtk compatible with automatic detection.
 * Python 2 and 3 support.
-* As Enchant, support for MySpell (LibreOffice) and Aspell dictionaries.
+* As Enchant, support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries.
 
 Documentation
 =============

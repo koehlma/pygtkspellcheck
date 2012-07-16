@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""context.py: Context class for a multiplatform and multilanguage applications."""
+"""context.py: Context class for multiplatform and multilanguage applications."""
 
 import os
 import sys
