@@ -29,6 +29,7 @@ from .context import AppContext
 __all__ = ['SpellChecker']
 
 # Find which Gtk binding to use based on client's binding
+logger = AppContext.get_logger(__name__)
 if 'gi.repository.Gtk' in sys.modules:
     gtk = sys.modules['gi.repository.Gtk']
     _pygobject = True
@@ -36,7 +37,7 @@ elif 'gtk' in sys.modules:
     gtk = sys.modules['gtk']
     _pygobject = False
 else:
-    print('No Gtk module found. Spellcheck will be unusable.')
+    logger.warning('No Gtk module found. Spellcheck will be unusable.')
 
 # Select base list class for Python3/2
 try:

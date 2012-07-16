@@ -30,14 +30,30 @@ __short_name__ = 'pygtkspellcheck'
 __authors__    = u('Maximilian Köhl & Carlos Jenkins')
 __emails__     = u('linuxmaxi@googlemail.com & carlos@jenkins.co.cr')
 __website__    = 'http://pygtkspellcheck.readthedocs.org/'
+__source__     = 'https://github.com/carlos-jenkins/pygtkspellcheck'
+__vcs__        = 'git://github.com/carlos-jenkins/pygtkspellcheck.git'
 __copyright__  = u('2012, Maximilian Köhl & Carlos Jenkins')
 __desc_short__ = 'A spellchecking library written in pure Python for Gtk based on Enchant'
 __desc_long__  =  \
 """\
-It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both Python \
-2 and 3 with automatic switching and binding autodetection. For automatic \
-translation of the user interface it can use GEdit's translation files.\
+It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both \
+Python 2 and 3 with automatic switching and binding autodetection. For \
+automatic translation of the user interface it can use GEdit's translation \
+files.\
 """
+__metadata__ = {
+    '__version__'    : __version__,
+    '__project__'    : __project__,
+    '__short_name__' : __short_name__,
+    '__authors__'    : __authors__,
+    '__emails__'     : __emails__,
+    '__website__'    : __website__,
+    '__source__'     : __source__,
+    '__vcs__'        : __vcs__,
+    '__copyright__'  : __copyright__,
+    '__desc_short__' : __desc_short__,
+    '__desc_long__'  : __desc_long__,
+    }
 
 try:
     from .spellcheck import SpellChecker

@@ -12,7 +12,7 @@ Files: debian/*
 Copyright: 2012, Carlos Jenkins <carlos@jenkins.co.cr>
 License: GPL-2.0+
 
-Files: po/*.po
+Files: l10n/pygtkspellcheck/*.po
 Copyright: 2012, their respective authors.
 License: BSD-3-clause
 
