@@ -20,24 +20,16 @@ import sys
 from distutils.core import setup
 from sphinx.setup_command import BuildDoc
 sys.path.append('./src/')
-import gtkspellcheck
-
-version = gtkspellcheck.__version__
-long_description = \
-"""\
-It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both Python \
-2 and 3 with automatic switching and binding autodetection. For automatic \
-translation of the user interface it can use GEdit's translation files.\
-"""
+import gtkspellcheck as m
 
 cmdclass = {'build_sphinx': BuildDoc}
-setup(name='pygtkspellcheck',
-      version=version,
-      description='A spellchecking library written in pure Python for Gtk based on Enchant',
-      long_description=long_description,
-      author='Maximilian Köhl & Carlos Jenkins',
-      author_email='linuxmaxi@googlemail.com',
-      url='http://www.github.com/koehlma/pygtkspellcheck',
+setup(name=m.__short_name__,
+      version=m.__version__,
+      description=m.__desc_long__,
+      long_description=m.__desc_long__,
+      author=m.__authors__,
+      author_email=m.__emails__,
+      url=m.__website__,
       license='GPLv3',
       package_dir = {'': 'src'},
       packages=['gtkspellcheck'],

@@ -16,7 +16,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = '2.4'
+# Python 2/3 compat
+import sys
+if sys.version_info.major == 3:
+    u = lambda x: x
+else:
+    u = lambda x: x.decode('UTF-8')
+
+# Metadata
+__version__    = '2.5'
+__project__    = 'Python GTK Spellcheck'
+__short_name__ = 'pygtkspellcheck'
+__authors__    = u('Maximilian Köhl & Carlos Jenkins')
+__emails__     = u('linuxmaxi@googlemail.com & carlos@jenkins.co.cr')
+__website__    = 'http://pygtkspellcheck.readthedocs.org/'
+__copyright__  = u('2012, Maximilian Köhl & Carlos Jenkins')
+__desc_short__ = 'A spellchecking library written in pure Python for Gtk based on Enchant'
+__desc_long__  =  \
+"""\
+It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both Python \
+2 and 3 with automatic switching and binding autodetection. For automatic \
+translation of the user interface it can use GEdit's translation files.\
+"""
 
 try:
     from .spellcheck import SpellChecker

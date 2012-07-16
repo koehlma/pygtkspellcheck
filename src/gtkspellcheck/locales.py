@@ -29,12 +29,7 @@ import sys
 import sqlite3
 from .context import AppContext
 
-# Base module information
-__author__ = 'Maximilian Köhl & Carlos Jenkins'
-__copyright__ = 'Copyright (C) 2012, Maximilian Köhl & Carlos Jenkins'
-__license__ = 'GPL'
-__version__ = '1.3'
-__status__ = 'Production'
+# Expose
 __all__ = ['Country', 'Language', 'LanguageNotFound', 'CountryNotFound', 'code_to_name']
 
 # Translation

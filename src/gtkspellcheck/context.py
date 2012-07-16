@@ -22,12 +22,7 @@ import sys
 import gettext
 import logging
 
-# Base module information
-__author__ = 'Carlos Jenkins'
-__copyright__ = 'Copyright (C) 2012, Carlos Jenkins'
-__license__ = 'GPL'
-__version__ = '1.5'
-__status__ = 'Production'
+# Expose
 __all__ = ['AppContext']
 
 _loggers = {}

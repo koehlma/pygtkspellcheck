@@ -25,12 +25,7 @@ import gettext
 from .locales import code_to_name
 from .context import AppContext
 
-# Base module information
-__author__ = 'Maximilian Köhl & Carlos Jenkins'
-__copyright__ = 'Copyright (C) 2012, Maximilian Köhl & Carlos Jenkins'
-__license__ = 'GPL'
-__version__ = '2.3'
-__status__ = 'Production'
+# Expose
 __all__ = ['SpellChecker']
 
 # Find which Gtk binding to use based on client's binding
@@ -71,34 +66,34 @@ else:
 class SpellChecker(object):
     """
     Main spellchecking class, everything important happens here.
-        
-    :param view: GtkTextView the SpellChecker should be attached to
-    :param language: the language which should be used for spellchecking (use a 
-      combination of two letter lower-case ISO 639 language code with a two 
-      letter upper-case ISO 3166 country code, for example en_US or de_DE)
-    :param prefix: a prefix for some internal GtkTextMarks
-    :param collapse: enclose suggestions in its own menu
-    :param params: dictionary with Enchant broker parameters that should be set e.g. `enchant.myspell.dictionary.path`
-    
+
+    :param view: GtkTextView the SpellChecker should be attached to.
+    :param language: the language which should be used for spellchecking. Use a
+      combination of two letter lower-case ISO 639 language code with a two
+      letter upper-case ISO 3166 country code, for example en_US or de_DE.
+    :param prefix: a prefix for some internal GtkTextMarks.
+    :param collapse: enclose suggestions in its own menu.
+    :param params: dictionary with Enchant broker parameters that should be set e.g. `enchant.myspell.dictionary.path`.
+
     .. attribute:: languages
-        
+
         A list of supported languages.
-        
+
         .. function:: exists(language)
-        
+
             checks if a language exists
-            
+
             :param language: language to check
     """
     FILTER_WORD = 'word'
     FILTER_LINE = 'line'
     FILTER_TEXT = 'text'
-    
+
     DEFAULT_FILTERS = {FILTER_WORD : [r'[0-9.,]+'],
                        FILTER_LINE : [r'(https?|ftp|file):((//)|(\\\\))+[\w\d:#@%/;$()~_?+-=\\.&]+',
                                       r'[\w\d]+@[\w\d.]+'],
                        FILTER_TEXT : []}
-    
+
     class _LanguageList(_list):
         def __init__(self, *args, **kwargs):
             if sys.version_info.major == 3:
@@ -106,29 +101,29 @@ class SpellChecker(object):
             else:
                 _list.__init__(self, *args, **kwargs)
             self.mapping = dict(self)
-        
+
         @classmethod
         def from_broker(cls, broker):
             return cls([(language, code_to_name(language))
                         for language in broker.list_languages()])
-        
+
         def exists(self, language):
             return language in self.mapping
-    
+
     class _Mark():
         def __init__(self, buffer, name, start):
             self._buffer = buffer
             self._name = name
             self._mark = self._buffer.create_mark(self._name, start, True)
-        
+
         @property
         def iter(self):
             return self._buffer.get_iter_at_mark(self._mark)
-        
+
         @property
         def inside_word(self):
             return self.iter.inside_word()
-     
+
         @property
         def word(self):
             start = self.iter
@@ -138,10 +133,10 @@ class SpellChecker(object):
             if end.inside_word():
                 end.forward_word_end()
             return start, end
-        
+
         def move(self, location):
             self._buffer.move_mark(self._mark, location)
-    
+
     def __init__(self, view, language='en', prefix='gtkspellchecker', collapse=True, params={}):
         self._view = view
         self.collapse = collapse
@@ -154,9 +149,8 @@ class SpellChecker(object):
         else:
             self._misspelled = gtk.TextTag('{prefix}-misspelled'.format(prefix=self._prefix))
         self._misspelled.set_property('underline', 4)
-        self._language = language
         self._broker = enchant.Broker()
-        for param, value in params: self._broker.set_param(param, value) 
+        for param, value in params: self._broker.set_param(param, value)
         self.languages = SpellChecker._LanguageList.from_broker(self._broker)
         self._language = language if self.languages.exists(language) else 'en'
         self._dictionary = self._broker.request_dict(language)
@@ -167,40 +161,40 @@ class SpellChecker(object):
                          SpellChecker.FILTER_TEXT : re.compile('|'.join(self._filters[SpellChecker.FILTER_TEXT]), re.MULTILINE)}
         self._enabled = True
         self.buffer_initialize()
-    
+
     @property
     def language(self):
         """
         The language used for spellchecking
         """
         return self._language
-    
+
     @language.setter
     def language(self, language):
         if self.languages.exists(language):
             self._language = language
             self._dictionary = self._broker.request_dict(language)
             self.recheck()
-    
+
     @property
     def enabled(self):
         """
         Enable or disable spellchecking
         """
         return self._enabled
-    
+
     @enabled.setter
     def enabled(self, enabled):
         if enabled and not self._enabled:
             self.enable()
         elif not enabled and self._enabled:
             self.disable()
-    
+
     def buffer_initialize(self):
         """
         Initialize the GtkTextBuffer associated with the GtkTextView.
         If you associate a new GtkTextBuffer with the GtkTextView call this method.
-        """ 
+        """
         self._buffer = self._view.get_buffer()
         self._buffer.connect('insert-text', self._before_text_insert)
         self._buffer.connect_after('insert-text', self._after_text_insert)
@@ -230,14 +224,14 @@ class SpellChecker(object):
                 self.no_spell_check = gtk.TextTag('no-spell-check')
             self._table.add(self.no_spell_check)
         self.recheck()
-    
+
     def recheck(self):
         """
         Rechecks the spelling of the whole text.
         """
         start, end = self._buffer.get_bounds()
         self.check_range(start, end, True)
-    
+
     def disable(self):
         """
         Disable spellchecking.
@@ -245,30 +239,30 @@ class SpellChecker(object):
         self._enabled = False
         start, end = self._buffer.get_bounds()
         self._buffer.remove_tag(self._misspelled, start, end)
-    
+
     def enable(self):
         """
         Enable spellchecking.
         """
         self._enable = True
         self.recheck()
-    
+
     def append_filter(self, regex, filter_type):
         """
         Append a new filter to the filter list.
         Filters are useful to ignore some misspelled words based on regular expressions.
-        
+
         :param regex: the regex used for filtering
         :param filter_type: the type of the filter
-        
+
         Filter Types:
-        
+
         :const:`SpellChecker.FILTER_WORD`: The regex must match the whole word you want to filter.
         The word separation is done by Pango's word separation algorythm so, for example, urls won't work here because they are split in many words.
-        
+
         :const:`SpellChecker.FILTER_LINE`: If the expression you want to match is a single line expression use this type.
         It should not be an open end expression because then the rest of the line with the text you want to filter will become correct.
-         
+
         :const:`SpellChecker.FILTER_TEXT`: Use this if you want to filter multiline expressions.
         The regex will be compiled with the `MULTILINE` flag.
         Same with open end expressions apply here.
@@ -278,11 +272,11 @@ class SpellChecker(object):
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]), re.MULTILINE)
         else:
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]))
-    
+
     def remove_filter(self, regex, filter_type):
         """
         Remove a filter from the filter list.
-        
+
         :param regex: the regex which used for filtering
         :param filter_type: the type of the filter
         """
@@ -291,51 +285,51 @@ class SpellChecker(object):
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]), re.MULTILINE)
         else:
             self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]))
-    
+
     def append_ignore_tag(self, tag):
         """
         Appends a tag to the list of ignored tags.
         A string will be automatic resolved into a tag object.
-        
+
         :param tag: tag object or tag name
         """
         if isinstance(tag, basestring):
             tag = self._table.lookup(tag)
         self.ignored_tags.append(tag)
-    
+
     def remove_ignore_tag(self, tag):
         """
         Removes a tag from the list of ignored tags.
         A string will be automatic resolved into a tag object.
-        
+
         :param tag: tag object or tag name
         """
         if isinstance(tag, basestring):
             tag = self._table.lookup(tag)
         self.ignored_tags.remove(tag)
-    
+
     def add_to_dictionary(self, word):
         """
         Adds a word to user's dictionary.
-        
+
         :param word: the word to add
         """
         self._dictionary.add_to_pwl(word)
         self.recheck()
-    
+
     def ignore_all(self, word):
         """
         Ignores a word for the current session.
-        
+
         :param word: the word to ignore
         """
         self._dictionary.add_to_session(word)
-        self.recheck()       
-    
+        self.recheck()
+
     def check_range(self, start, end, force_all=False):
         """
         Checks a specified range between two GtkTextIters.
-        
+
         :param start: start iter - checking starts here
         :param end: end iter - checking ends here
         """
@@ -368,8 +362,8 @@ class SpellChecker(object):
             word_end.backward_word_start()
             if word_start.equal(word_end):
                 break
-            word_start = word_end.copy() 
-    
+            word_start = word_end.copy()
+
     def _languages_menu(self):
         def _set_language(item, code):
             self.language = code
@@ -390,7 +384,7 @@ class SpellChecker(object):
                 item.set_active(True)
             menu.append(item)
         return menu
-    
+
     def _suggestion_menu(self, word):
         menu = []
         suggestions = self._dictionary.suggest(word)
@@ -439,7 +433,7 @@ class SpellChecker(object):
         item.connect('activate', lambda *args: self.ignore_all(word))
         menu.append(item)
         return menu
-    
+
     def _extend_menu(self, menu):
         if not self._enabled:
             return
@@ -478,33 +472,33 @@ class SpellChecker(object):
                     for i in submenu_items:
                         menu.prepend(i)
                         menu.show_all()
-    
+
     def _click_move_popup(self, *args):
         self._marks['click'].move(self._buffer.get_iter_at_mark(self._buffer.get_insert()))
         return False
-    
+
     def _click_move_button(self, widget, event):
         if event.button == 3:
             if self._deferred_check:  self._check_deferred_range(True)
             x, y = self._view.window_to_buffer_coords(2, int(event.x), int(event.y))
             self._marks['click'].move(self._view.get_iter_at_location(x, y))
         return False
-    
+
     def _before_text_insert(self, textbuffer, location, text, length):
         self._marks['insert-start'].move(location)
-    
+
     def _after_text_insert(self, textbuffer, location, text, length):
         start = self._marks['insert-start'].iter
         self.check_range(start, location)
         self._marks['insert-end'].move(location)
-    
+
     def _range_delete(self, textbuffer, start, end):
         self.check_range(start, end)
-        
+
     def _mark_set(self, textbuffer, location, mark):
         if mark == self._buffer.get_insert() and self._deferred_check:
             self._check_deferred_range(False)
-    
+
     def _replace_word(self, item, old_word, new_word):
         start, end = self._marks['click'].word
         offset = start.get_offset()
@@ -513,12 +507,12 @@ class SpellChecker(object):
         self._buffer.insert(self._buffer.get_iter_at_offset(offset), new_word)
         self._buffer.end_user_action()
         self._dictionary.store_replacement(old_word, new_word)
-    
+
     def _check_deferred_range(self, force_all):
         start = self._marks['insert-start'].iter
-        end = self._marks['insert-end'].iter 
+        end = self._marks['insert-end'].iter
         self.check_range(start, end, force_all)
-            
+
     def _check_word(self, start, end):
         if start.has_tag(self.no_spell_check):
             return

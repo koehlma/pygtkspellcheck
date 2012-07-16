@@ -10,3 +10,4 @@ doc/build/
 dist/debian/build
 dist/debian/*.deb
 l10n/mo
+build/

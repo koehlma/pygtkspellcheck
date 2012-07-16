@@ -31,12 +31,7 @@ import shutil
 from zipfile import ZipFile, BadZipfile
 from .context import AppContext
 
-# Base module information
-__author__ = 'Carlos Jenkins'
-__copyright__ = 'Copyright (C) 2012, Carlos Jenkins'
-__license__ = 'GPL'
-__version__ = '1.5'
-__status__ = 'Production'
+# Expose
 __all__ = ['deflate_oxt']
 
 WHERE_AM_I = AppContext.where_am_i('pygtkspellcheck')
