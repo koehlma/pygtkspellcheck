@@ -217,7 +217,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   (start_file, m.__short_name__ + '.tex', m.__project__ + ' Documentation',
-   m.__authors__, 'manual'),
+   m.__authors__.replace('&', r'\&'), 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
