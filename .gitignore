@@ -1,6 +1,13 @@
+MANIFEST
 *.pyc
 .project
 .pydevproject
 .settings
 .directory
 __pycache__
+dist/*.tar.gz
+doc/build/
+dist/debian/build
+dist/debian/*.deb
+l10n/mo
+build/

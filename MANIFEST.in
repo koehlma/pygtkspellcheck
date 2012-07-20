@@ -1,0 +1,10 @@
+include LICENSE.txt
+include MANIFEST.in
+include README.md
+graft examples
+graft doc
+graft l10n
+prune l10n/mo
+prune l10n/isos
+recursive-exclude l10n *.pyc
+
