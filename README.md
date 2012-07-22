@@ -25,8 +25,8 @@ docstrings.
 
 Examples
 ========
-* [PyGObject Simple Example](https://github.com/carlos-jenkins/pygtkspellcheck/blob/master/examples/simple_pygobject.py)
-* [PyGtk Simple Example](https://github.com/carlos-jenkins/pygtkspellcheck/blob/master/examples/simple_pygtk.py)
+* [PyGObject Simple Example](https://github.com/koehlma/pygtkspellcheck/blob/master/examples/simple_pygobject.py)
+* [PyGtk Simple Example](https://github.com/koehlma/pygtkspellcheck/blob/master/examples/simple_pygtk.py)
 
 License 
 =======

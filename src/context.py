@@ -17,6 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
+This is not a part of PyGtkSpellcheck...
+
 Context module for multiplatform and multilanguage applications. It uses monkey
 patching to support modules written for the standard library. Modules just use
 `logging.getLogger` and `gettext.translation` and this modules cares about

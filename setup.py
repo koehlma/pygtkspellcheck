@@ -35,4 +35,3 @@ setup(name=m.__short_name__,
       packages=['gtkspellcheck', 'pylocales'],
       package_data={'pylocales' : ['locales.db']},
       cmdclass=cmdclass)
-

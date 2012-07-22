@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkspellchecker\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-25 22:07+0100\n"
-"PO-Revision-Date: 2012-05-25 22:08+0100\n"
+"POT-Creation-Date: 2012-07-23 00:08+0100\n"
+"PO-Revision-Date: 2012-07-23 00:08+0100\n"
 "Last-Translator: Maximilian Köhl <linuxmaxi@googlemail.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -11,32 +11,60 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
-"X-Poedit-Basepath: /home/maximilian/Development/Python/pygtkspellcheck/src\n"
+"X-Poedit-Basepath: /home/maximilian/Entwicklung/pygtkspellcheck/src\n"
 "X-Poedit-Language: German\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-SearchPath-0: ./gtkspellcheck\n"
 
-#: gtkspellcheck/gtkspellcheck.py:403
+#: gtkspellcheck/oxt_import.py:64
+msgid "Extract path is not a directory."
+msgstr ""
+
+#: gtkspellcheck/oxt_import.py:116
+msgid "'{0}' declared in registry but not found within the extension."
+msgstr ""
+
+#: gtkspellcheck/oxt_import.py:119
+msgid "Error while processing extension {0}."
+msgstr ""
+
+#: gtkspellcheck/oxt_import.py:122
+msgid "Extension '{0}' has no dictionary registry."
+msgstr ""
+
+#: gtkspellcheck/oxt_import.py:124
+msgid "Extension '{0}' is not a valid zip file."
+msgstr ""
+
+#: gtkspellcheck/oxt_import.py:138
+msgid "Unable to move extension, file with same name exists within move_path."
+msgstr ""
+
+#: gtkspellcheck/oxt_import.py:140
+msgid "Unable to move extension, move_path is not a directory."
+msgstr ""
+
+#: gtkspellcheck/spellcheck.py:411
 msgid "(no suggestions)"
 msgstr "(keine Vorschläge)"
 
-#: gtkspellcheck/gtkspellcheck.py:424
-#: gtkspellcheck/gtkspellcheck.py:427
+#: gtkspellcheck/spellcheck.py:432
+#: gtkspellcheck/spellcheck.py:435
 msgid "Add \"{word}\" to Dictionary"
 msgstr "\"{word}\" zum Wörterbuch hinzufügen"
 
-#: gtkspellcheck/gtkspellcheck.py:431
-#: gtkspellcheck/gtkspellcheck.py:433
+#: gtkspellcheck/spellcheck.py:439
+#: gtkspellcheck/spellcheck.py:441
 msgid "Ignore All"
 msgstr "Alles ignorieren"
 
-#: gtkspellcheck/gtkspellcheck.py:449
-#: gtkspellcheck/gtkspellcheck.py:451
+#: gtkspellcheck/spellcheck.py:456
+#: gtkspellcheck/spellcheck.py:458
 msgid "Languages"
 msgstr "Sprachen"
 
-#: gtkspellcheck/gtkspellcheck.py:460
-#: gtkspellcheck/gtkspellcheck.py:462
+#: gtkspellcheck/spellcheck.py:469
+#: gtkspellcheck/spellcheck.py:472
 msgid "Suggestions"
 msgstr "Vorschläge"
 
