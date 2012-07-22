@@ -29,7 +29,7 @@ import logging
 import re
 import sys
 
-from gtkspellcheck.locales import code_to_name
+from pylocales import code_to_name
 
 # Public Objects
 __all__ = ['SpellChecker']
