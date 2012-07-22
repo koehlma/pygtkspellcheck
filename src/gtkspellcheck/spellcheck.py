@@ -22,14 +22,14 @@ import sys
 import re
 import enchant
 import gettext
+import logging
 from .locales import code_to_name
-from .context import AppContext
 
 # Expose
 __all__ = ['SpellChecker']
 
 # Find which Gtk binding to use based on client's binding
-logger = AppContext.get_logger(__name__)
+logger = logging.getLogger(__name__)
 if 'gi.repository.Gtk' in sys.modules:
     gtk = sys.modules['gi.repository.Gtk']
     _pygobject = True
@@ -59,11 +59,11 @@ _GEDIT_MAP = {'Languages' : 'Languages',
 
 # Get translation of GUI elements
 if gettext.find('gedit'):
-    _gedit = AppContext('gedit').what_do_i_speak()
+    _gedit = gettext.translation('gedit').gettext
     _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
 else:
-    _ = AppContext('pygtkspellcheck').what_do_i_speak()
-
+    _ = gettext.translation('pygtkspellcheck').gettext
+    
 class SpellChecker(object):
     """
     Main spellchecking class, everything important happens here.

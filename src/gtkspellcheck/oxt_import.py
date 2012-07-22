@@ -28,15 +28,15 @@ Extensions like the ones found here:
 import os
 import xml.dom.minidom
 import shutil
+import logging
+import gettext
 from zipfile import ZipFile, BadZipfile
-from .context import AppContext
 
 # Expose
 __all__ = ['deflate_oxt']
 
-WHERE_AM_I = AppContext.where_am_i('pygtkspellcheck')
-logger = AppContext.get_logger(__name__)
-_ = AppContext().what_do_i_speak()
+logger = logging.getLogger(__name__)
+_ = gettext.translation('default', fallback=True).gettext
 
 def deflate_oxt(oxt_path, extract_path, override=False, move_path=None):
     """

@@ -54,6 +54,7 @@ logging.setLevels = _manager.setLevels
 
 logger = logging.getLogger(__name__)
 
+# how to monkey patch this?
 def find_where_am_i(file_var):
     """
     Allows any module to know where he is.
@@ -71,6 +72,7 @@ class Gettext():
     def __init__(self):
         self._builder_used = False
         self._root = find_where_am_i(__file__)
+        self._default = 'default'
         default_locale = {'linux' : '/usr/share/locale',
                           'win' : os.path.join(self._root, 'l10n')}
         self._locale_dir = default_locale['linux']
@@ -81,8 +83,10 @@ class Gettext():
             lang, enc = locale.getdefaultlocale()
             os.environ['LANG'] = lang         
         
-    def translation(self, domain, localedir=None, languages=None, class_=None,
+    def translation(self, domain=None, localedir=None, languages=None, class_=None,
                     fallback=False, codeset=None, builder=False):
+        domain = self._default if domain is None else domain
+        logger.debug('requesting translation for domain "{}"'.format(domain))
         # Only one application can be 'Builder' (Application that uses GtkBuilder)
         if builder and not self._builder_used and sys.platform.startswith('win'):
             self._builder_used = True
@@ -103,6 +107,9 @@ class Gettext():
     def set_locale_dir(self, locale_dir):
         self._locale_dir = locale_dir
 
+# Do some monkey patching, so applications and libraries could just use the
+# python standard way `gettext.translation` and must not carry context.py to
+# work correctly with it.
 _gettext = Gettext()
 gettext.translation = _gettext.translation
 gettext.set_locale_dir = _gettext.set_locale_dir
