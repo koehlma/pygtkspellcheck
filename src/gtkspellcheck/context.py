@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 #
 # Copyright (C) 2012, Carlos Jenkins <carlos@jenkins.co.cr>
+# Copyright (C) 2012, Maximilian Köhl <linuxmaxi@googlemail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,30 +26,36 @@ import logging
 # Expose
 __all__ = ['AppContext']
 
-_loggers = {}
-_loggers_level = logging.WARNING
-def get_logger(logger_name):
-    """
-    Get a logger with de application default handler method and level
-    """
-    if not logger_name in _loggers.keys():
-        new_logger = logging.getLogger(logger_name)
-        new_logger.addHandler(logging.StreamHandler()) # FIXME: Windows case
-        new_logger.setLevel(_loggers_level)
-        _loggers[logger_name] = new_logger
-    return _loggers[logger_name]
-logger = get_logger(__name__)
+class Manager(logging.Manager):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._current_level = logging.WARNING
+    
+    def getLogger(self, name):
+        if name in self.loggerDict:
+            return super().getLogger(name)
+        else:
+            logger = super().getLogger(name)
+            logger.addHandler(logging.StreamHandler()) # FIXME: Windows TODO: should not be hardcoded
+            logger.setLevel(self._current_level) # TODO: should not be hardcoded
+            return logger
+    
+    def setLevels(self, level):
+        if level < logging.NOTSET or level > logging.CRITICAL: return
+        self._current_level = level
+        for logger in self.loggerDict.values():
+            logger.setLevel(level)
 
-def set_logger_level(level):
-    """
-    Set level of all loggers of the application
-    """
-    if level < logging.NOTSET or level > logging.CRITICAL:
-        return
-    for app_logger in _loggers.keys():
-        _loggers[app_logger].setLevel(level)
-    global _loggers_level
-    _loggers_level = level
+# Do some monkey patching, so applications and libraries could just use the
+# python standard way `logging.getLogger` and must not carry context.py to work
+# correctly with it.
+logging.Manager = Manager
+manager = Manager(logging.root)
+logging.Logger.manager = manager
+logging.manager = manager
+logging.setLevels = manager.setLevels
+
+logger = logging.getLogger(__name__)
 
 def find_where_am_i(file_var):
     """
@@ -127,14 +134,14 @@ class AppContext(object):
         """
         get_logger() wrapper in case user only imports AppContext class.
         """
-        return get_logger(logger_name)
+        return logging.getLogger(logger_name)
 
     @classmethod
     def set_logger_level(cls, level):
         """
         set_logger_level() wrapper in case user only imports AppContext class.
         """
-        return set_logger_level(level)
+        return logging.setLevels(level)
 
 # Hack for MS Windows
 if sys.platform.startswith('win'):
@@ -145,4 +152,3 @@ if sys.platform.startswith('win'):
         os.environ['LANG'] = lang
     # Set LOCALE_DIR for MS Windows
     AppContext.LOCALE_DIR = AppContext.DEFAULT_LOCALE['win']
-
