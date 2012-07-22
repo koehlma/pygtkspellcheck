@@ -39,9 +39,9 @@ _translator_country = gettext.translation('iso_3166').gettext
 
 # Locales database
 if hasattr(os.path, 'get_file_path'):
-    WHERE_AM_I = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
+    WHERE_AM_I = os.path.get_file_path(__file__)
 else:
-    WHERE_AM_I = os.path.get_file_path(__file__) 
+    WHERE_AM_I = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
 _database = sqlite3.connect(os.path.join(WHERE_AM_I, 'locales.db'))
 
 class LanguageNotFound(Exception): pass
