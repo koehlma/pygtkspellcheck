@@ -41,7 +41,7 @@ import enchant
 __author__ = 'Maximilian Köhl'
 __copyright__ = 'Copyright (C) 2012, Maximilian Köhl'
 __license__ = 'GPLv3'
-__version__ = '2.2.2'
+__version__ = '2.2.3'
 __status__ = 'Production'
 __all__ = ['SpellChecker']
 
