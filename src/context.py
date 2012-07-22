@@ -74,7 +74,7 @@ class Gettext():
     _translation = gettext.translation
     def __init__(self):
         self._builder_used = False
-        self._root = os.path.get_file_path(__file__) 
+        self._root = os.path.get_data_path(__file__) 
         self._default = 'default'
         default_locale = {'linux' : '/usr/share/locale',
                           'win' : os.path.join(self._root, 'l10n')}
