@@ -31,9 +31,8 @@ setup(name=m.__short_name__,
       author_email=m.__emails__,
       url=m.__website__,
       license='GPLv3',
-      package_dir = {'': 'src'},
-      packages=['gtkspellcheck'],
-      package_data={'gtkspellcheck' : ['locales.db']},
-      cmdclass=cmdclass,
-)
+      package_dir={'': 'src'},
+      packages=['gtkspellcheck', 'pylocales'],
+      package_data={'pylocales' : ['locales.db']},
+      cmdclass=cmdclass)
 
