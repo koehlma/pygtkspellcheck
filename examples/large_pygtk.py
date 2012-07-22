@@ -19,10 +19,13 @@
 from __future__ import print_function
 
 import locale
+import logging
 
 import context
 
-# PyGtk example
+logging.setLevels(logging.DEBUG)
+
+# importing PyGtk
 import gtk
 
 try:

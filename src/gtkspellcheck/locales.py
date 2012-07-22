@@ -16,36 +16,54 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""locales.py: Query the ISO 639/3166 database.
-Query the locales database about a country or a language. The locales database
-contains ISO 639 languages definitions and ISO 3166 countries definitions.
-This package provides translation for countries and languages names if
-iso-codes package is installed (Ubuntu/Debian).
+"""
+Query the ISO 639/3166 database about a country or a language. The locales
+database contains ISO 639 languages definitions and ISO 3166 countries
+definitions. This package provides translation for countries and languages names
+if iso-codes package is installed (Ubuntu/Debian).
+
 @see utils/locales/build.py to know the database tables and structure.
 """
 
+import gettext
 import os
 import os.path
-import sys
 import sqlite3
-import gettext
+import sys
 
-# Expose
-__all__ = ['Country', 'Language', 'LanguageNotFound', 'CountryNotFound', 'code_to_name']
+# Public Objects
+__all__ = ['Country', 'Language', 'LanguageNotFound',
+           'CountryNotFound', 'code_to_name']
 
 # Translation
 _translator_language = gettext.translation('iso_639').gettext
 _translator_country = gettext.translation('iso_3166').gettext
 
-# Locales database
-if hasattr(os.path, 'get_file_path'):
-    WHERE_AM_I = os.path.get_file_path(__file__)
-else:
-    WHERE_AM_I = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
-_database = sqlite3.connect(os.path.join(WHERE_AM_I, 'locales.db'))
+# Decides where the database is located. If an application provides an
+# os.path.get_data_path monkey patch to determine the path where resources
+# are located it uses this. If not it searches in the directory of this source
+# code file.
+__path__ = None
+if hasattr(os.path, 'get_data_path'):
+    __path__ = os.path.get_data_path(__file__)
+    if not os.path.isfile(os.path.join(__path__, 'locales.db')):
+        __path__ = None
+if __path__ is None:
+    __path__ = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
 
-class LanguageNotFound(Exception): pass
-class CountryNotFound(Exception): pass
+# Loading the Database
+_database = sqlite3.connect(os.path.join(__path__, 'locales.db'))
+
+# Exceptions
+class LanguageNotFound(Exception):
+    """
+    The specified language wasn't found in the database.
+    """
+    
+class CountryNotFound(Exception):
+    """
+    The specified country wasn't found in the database.
+    """
 
 class Country(object):
     def __init__(self, rowid):
@@ -106,8 +124,9 @@ class Language(object):
 
 
 def code_to_name(code, separator='_'):
-    """Get the natural name of a language based on it's code"""
-    
+    """
+    Get the natural name of a language based on it's code.
+    """
     code = code.split(separator)
     if len(code) > 1:
         print(code)

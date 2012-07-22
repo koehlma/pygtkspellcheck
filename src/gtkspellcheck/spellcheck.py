@@ -16,20 +16,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""spellcheck.py: Module for PyGtk/PyGObject spell checking."""
+"""
+A spellchecking library written in pure Python for Gtk based on Enchant. It
+supports both Gtk's Python bindings, PyGObject and PyGtk, and for both Python 2
+and 3 with automatic switching and binding autodetection. For automatic
+translation of the user interface it can use GEdit's translation files.
+"""
 
-import sys
-import re
 import enchant
 import gettext
 import logging
-from .locales import code_to_name
+import re
+import sys
 
-# Expose
+from gtkspellcheck.locales import code_to_name
+
+# Public Objects
 __all__ = ['SpellChecker']
 
-# Find which Gtk binding to use based on client's binding
+# Logger
 logger = logging.getLogger(__name__)
+
+# Find which Gtk binding to use based on client's binding
 if 'gi.repository.Gtk' in sys.modules:
     gtk = sys.modules['gi.repository.Gtk']
     _pygobject = True
@@ -37,7 +45,7 @@ elif 'gtk' in sys.modules:
     gtk = sys.modules['gtk']
     _pygobject = False
 else:
-    logger.warning('No Gtk module found. Spellcheck will be unusable.')
+    logger.error('No Gtk module found. Spellcheck will be unusable.')
 
 # Select base list class for Python3/2
 try:
@@ -50,14 +58,14 @@ except ImportError:
 if sys.version_info.major == 3:
     basestring = str
 
-# Map between Gedit keys and current module keys
+# Map between Gedit's translation and PyGtkSpellcheck's own
 _GEDIT_MAP = {'Languages' : 'Languages',
               'Ignore All' : 'Ignore _All',
               'Suggestions' : 'Suggestions',
               '(no suggestions)' : '(no suggested words)',
               'Add "{word}" to Dictionary' : 'Add w_ord'}
 
-# Get translation of GUI elements
+# Translation
 if gettext.find('gedit'):
     _gedit = gettext.translation('gedit', fallback=True).gettext
     _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
@@ -70,8 +78,8 @@ class SpellChecker(object):
 
     :param view: GtkTextView the SpellChecker should be attached to.
     :param language: the language which should be used for spellchecking.  
-      Use a combination of two letter lower-case ISO 639 language code with a
-      two letter upper-case ISO 3166 country code, for example en_US or de_DE.
+        Use a combination of two letter lower-case ISO 639 language code with a
+        two letter upper-case ISO 3166 country code, for example en_US or de_DE.
     :param prefix: a prefix for some internal GtkTextMarks.
     :param collapse: enclose suggestions in its own menu.
     :param params: dictionary with Enchant broker parameters that should be set e.g. `enchant.myspell.dictionary.path`.
@@ -546,4 +554,3 @@ class SpellChecker(object):
                     return
         if not self._dictionary.check(word):
             self._buffer.apply_tag(self._misspelled, start, end)
-

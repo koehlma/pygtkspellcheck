@@ -25,15 +25,16 @@ import gettext
 import logging
 
 class Manager(logging.Manager):
+    _Manager = logging.Manager
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        self._Manager.__init__(self, *args, **kwargs)
         self._current_level = logging.WARNING
     
     def getLogger(self, name):
         if name in self.loggerDict:
-            return super().getLogger(name)
+            return self._Manager.getLogger(self, name)
         else:
-            logger = super().getLogger(name)
+            logger = self._Manager.getLogger(self, name)
             logger.addHandler(logging.StreamHandler()) # FIXME: Windows TODO: should not be hardcoded
             logger.setLevel(self._current_level) # TODO: should not be hardcoded
             return logger
@@ -56,7 +57,7 @@ logging.setLevels = _manager.setLevels
 logger = logging.getLogger(__name__)
 
 # Maybe not a good solution...
-def get_file_path(file_var):
+def get_data_path(file_var):
     """
     Allows any module to know where he is.
     $file_var must be current module __file__
@@ -67,7 +68,7 @@ def get_file_path(file_var):
     elif frozen in ('dll', 'console_exe', 'windows_exe'):
         where_am_i = os.path.normpath(os.path.dirname(sys.executable))
     return where_am_i
-os.path.get_file_path = get_file_path
+os.path.get_data_path = get_data_path
 
 class Gettext():
     _translation = gettext.translation
@@ -101,9 +102,9 @@ class Gettext():
             except:
                 logger.error('Error loading translations into Glade file.')
         if gettext.find(domain, self._locale_dir):
-            return Gettext._translation(domain, self._locale_dir, languages, class_,
+            return gettext.old_translation(domain, self._locale_dir, languages, class_,
                                         True, codeset)
-        return Gettext._translation(domain, localedir, languages, class_,
+        return gettext.old_translation(domain, localedir, languages, class_,
                                     True, codeset)
     
     def set_locale_dir(self, locale_dir):
@@ -112,6 +113,7 @@ class Gettext():
 # Do some monkey patching, so applications and libraries could just use the
 # python standard way `gettext.translation` and must not carry context.py to
 # work correctly with it.
+gettext.old_translation = gettext.translation  
 _gettext = Gettext()
 gettext.translation = _gettext.translation
 gettext.set_locale_dir = _gettext.set_locale_dir

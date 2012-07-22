@@ -19,11 +19,14 @@
 from __future__ import print_function
 
 import locale
+import logging
 
 import context
 
-# PyGObject example
-from gi.repository import Gtk
+logging.setLevels(logging.DEBUG)
+
+# importing PyGObject
+from gi.repository import Gtk as gtk
 
 try:
     from gtkspellcheck import SpellChecker
@@ -36,10 +39,10 @@ except ImportError:
 
 if __name__ == '__main__':
     def quit(*args):
-        Gtk.main_quit()
+        gtk.main_quit()
         
-    window = Gtk.Window.new(Gtk.WindowType.TOPLEVEL)
-    view = Gtk.TextView.new()
+    window = gtk.Window.new(gtk.WindowType.TOPLEVEL)
+    view = gtk.TextView.new()
     
     spellchecker = SpellChecker(view, locale.getdefaultlocale()[0])
     
@@ -50,4 +53,4 @@ if __name__ == '__main__':
     window.add(view)
     window.show_all()
     window.connect('delete-event', quit)
-    Gtk.main()
+    gtk.main()
