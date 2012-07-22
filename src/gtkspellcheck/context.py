@@ -23,9 +23,6 @@ import sys
 import gettext
 import logging
 
-# Expose
-__all__ = ['AppContext']
-
 class Manager(logging.Manager):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -50,10 +47,10 @@ class Manager(logging.Manager):
 # python standard way `logging.getLogger` and must not carry context.py to work
 # correctly with it.
 logging.Manager = Manager
-manager = Manager(logging.root)
-logging.Logger.manager = manager
-logging.manager = manager
-logging.setLevels = manager.setLevels
+_manager = Manager(logging.root)
+logging.Logger.manager = _manager
+logging.manager = _manager
+logging.setLevels = _manager.setLevels
 
 logger = logging.getLogger(__name__)
 
@@ -69,86 +66,43 @@ def find_where_am_i(file_var):
         where_am_i = os.path.normpath(os.path.dirname(sys.executable))
     return where_am_i
 
-class AppContext(object):
-    """
-    Context for a particular application.
-    """
-
-    LOGGER_DEBUG = logging.DEBUG
-
-    ROOT = find_where_am_i(__file__)
-    DEFAULT_LOCALE = {'linux' : '/usr/share/locale',
-                      'win'   : os.path.join(ROOT, 'l10n')}
-    LOCALE_DIR = DEFAULT_LOCALE['linux']
-    DEFAULT_APP = 'default'
-    
-    _instances = {}
-    _builder_used = False
-
-    def __new__(cls, app=DEFAULT_APP, builder=False):
-        """
-        Singleton map kind of factory sort stuff :P
-        """
-        if not app in AppContext._instances.keys():
-            logger.debug('Creating context: ' + app)
-            AppContext._instances[app] = super(AppContext, cls).__new__(cls)
-        return AppContext._instances[app]
-
-    def __init__(self, app=DEFAULT_APP, builder=False):
-        """
-        Start environment for given application.
-        """
+class Gettext():
+    _translation = gettext.translation
+    def __init__(self):
+        self._builder_used = False
+        self._root = find_where_am_i(__file__)
+        default_locale = {'linux' : '/usr/share/locale',
+                          'win' : os.path.join(self._root, 'l10n')}
+        self._locale_dir = default_locale['linux']
+        if sys.platform.startswith('win'):
+            self._locale_dir = default_locale['win']
+        if os.getenv('LANG') is None:
+            import locale
+            lang, enc = locale.getdefaultlocale()
+            os.environ['LANG'] = lang         
         
-        self.APP = app
-
+    def translation(self, domain, localedir=None, languages=None, class_=None,
+                    fallback=False, codeset=None, builder=False):
         # Only one application can be 'Builder' (Application that uses GtkBuilder)
-        if builder and not AppContext._builder_used and sys.platform.startswith('win'):
-            AppContext._builder_used = True
+        if builder and not self._builder_used and sys.platform.startswith('win'):
+            self._builder_used = True
             # Glade file translations
             try:
                 import ctypes
                 libintl = ctypes.cdll.LoadLibrary('intl.dll')
-                libintl.bindtextdomain(self.APP, AppContext.LOCALE_DIR)
-                libintl.bind_textdomain_codeset(self.APP, 'UTF-8')
+                libintl.bindtextdomain(domain, self._locale_dir)
+                libintl.bind_textdomain_codeset(domain, 'UTF-8')
             except:
                 logger.error('Error loading translations into Glade file.')
+        if gettext.find(domain, self._locale_dir):
+            return Gettext._translation(domain, self._locale_dir, languages, class_,
+                                        True, codeset)
+        return Gettext._translation(domain, localedir, languages, class_,
+                                    True, codeset)
+    
+    def set_locale_dir(self, locale_dir):
+        self._locale_dir = locale_dir
 
-        self._translation = gettext.translation(self.APP, AppContext.LOCALE_DIR, fallback=True)
-        self._ = self._translation.gettext
-
-    def what_do_i_speak(self):
-        """
-        Allows all modules to share a common translation context.
-        """
-        return self._
-
-    @classmethod
-    def where_am_i(cls, file_var):
-        """
-        find_where_am_i() wrapper in case user only imports AppContext class.
-        """
-        return find_where_am_i(file_var)
-
-    @classmethod
-    def get_logger(cls, logger_name):
-        """
-        get_logger() wrapper in case user only imports AppContext class.
-        """
-        return logging.getLogger(logger_name)
-
-    @classmethod
-    def set_logger_level(cls, level):
-        """
-        set_logger_level() wrapper in case user only imports AppContext class.
-        """
-        return logging.setLevels(level)
-
-# Hack for MS Windows
-if sys.platform.startswith('win'):
-    # Set $LANG on MS Windows for gettext
-    import locale
-    if os.getenv('LANG') is None:
-        lang, enc = locale.getdefaultlocale()
-        os.environ['LANG'] = lang
-    # Set LOCALE_DIR for MS Windows
-    AppContext.LOCALE_DIR = AppContext.DEFAULT_LOCALE['win']
+_gettext = Gettext()
+gettext.translation = _gettext.translation
+gettext.set_locale_dir = _gettext.set_locale_dir
