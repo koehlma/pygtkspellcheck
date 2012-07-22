@@ -20,6 +20,8 @@ from __future__ import print_function
 
 import locale
 
+import context
+
 # PyGtk example
 import gtk
 

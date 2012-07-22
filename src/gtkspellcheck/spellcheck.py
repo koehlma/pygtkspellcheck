@@ -59,10 +59,10 @@ _GEDIT_MAP = {'Languages' : 'Languages',
 
 # Get translation of GUI elements
 if gettext.find('gedit'):
-    _gedit = gettext.translation('gedit').gettext
+    _gedit = gettext.translation('gedit', fallback=True).gettext
     _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
 else:
-    _ = gettext.translation('pygtkspellcheck').gettext
+    _ = gettext.translation('pygtkspellcheck', fallback=True).gettext
     
 class SpellChecker(object):
     """

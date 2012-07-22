@@ -20,6 +20,8 @@ from __future__ import print_function
 
 import locale
 
+import context
+
 # PyGObject example
 from gi.repository import Gtk
 

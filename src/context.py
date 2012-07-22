@@ -19,6 +19,7 @@
 """context.py: Context class for multiplatform and multilanguage applications."""
 
 import os
+import os.path
 import sys
 import gettext
 import logging
@@ -54,8 +55,8 @@ logging.setLevels = _manager.setLevels
 
 logger = logging.getLogger(__name__)
 
-# how to monkey patch this?
-def find_where_am_i(file_var):
+# Maybe not a good solution...
+def get_file_path(file_var):
     """
     Allows any module to know where he is.
     $file_var must be current module __file__
@@ -66,12 +67,13 @@ def find_where_am_i(file_var):
     elif frozen in ('dll', 'console_exe', 'windows_exe'):
         where_am_i = os.path.normpath(os.path.dirname(sys.executable))
     return where_am_i
+os.path.get_file_path = get_file_path
 
 class Gettext():
     _translation = gettext.translation
     def __init__(self):
         self._builder_used = False
-        self._root = find_where_am_i(__file__)
+        self._root = os.path.get_file_path(__file__) 
         self._default = 'default'
         default_locale = {'linux' : '/usr/share/locale',
                           'win' : os.path.join(self._root, 'l10n')}

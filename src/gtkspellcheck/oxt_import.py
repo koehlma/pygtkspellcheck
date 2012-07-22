@@ -36,7 +36,7 @@ from zipfile import ZipFile, BadZipfile
 __all__ = ['deflate_oxt']
 
 logger = logging.getLogger(__name__)
-_ = gettext.translation('default', fallback=True).gettext
+_ = gettext.translation('oxt_import', fallback=True).gettext
 
 def deflate_oxt(oxt_path, extract_path, override=False, move_path=None):
     """

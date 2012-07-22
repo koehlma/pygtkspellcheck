@@ -25,10 +25,10 @@ iso-codes package is installed (Ubuntu/Debian).
 """
 
 import os
+import os.path
 import sys
 import sqlite3
 import gettext
-from .context import find_where_am_i
 
 # Expose
 __all__ = ['Country', 'Language', 'LanguageNotFound', 'CountryNotFound', 'code_to_name']
@@ -38,7 +38,10 @@ _translator_language = gettext.translation('iso_639').gettext
 _translator_country = gettext.translation('iso_3166').gettext
 
 # Locales database
-WHERE_AM_I = find_where_am_i(__file__)
+if hasattr(os.path, 'get_file_path'):
+    WHERE_AM_I = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
+else:
+    WHERE_AM_I = os.path.get_file_path(__file__) 
 _database = sqlite3.connect(os.path.join(WHERE_AM_I, 'locales.db'))
 
 class LanguageNotFound(Exception): pass
