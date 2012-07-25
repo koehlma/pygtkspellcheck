@@ -1,0 +1,69 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: gtkspellchecker\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-07-23 00:08+0100\n"
+"PO-Revision-Date: 2012-07-23 00:08+0100\n"
+"Last-Translator: Maximilian Köhl <linuxmaxi@googlemail.com>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: /home/maximilian/Entwicklung/pygtkspellcheck/src\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: ./gtkspellcheck\n"
+
+#: ../src/gtkspellcheck/spellcheck.py:412
+msgid "(no suggestions)"
+msgstr "(keine Vorschläge)"
+
+#: ../src/gtkspellcheck/spellcheck.py:433
+#: ../src/gtkspellcheck/spellcheck.py:436
+msgid "Add \"{word}\" to Dictionary"
+msgstr "\"{word}\" zum Wörterbuch hinzufügen"
+
+#: ../src/gtkspellcheck/spellcheck.py:440
+#: ../src/gtkspellcheck/spellcheck.py:442
+msgid "Ignore All"
+msgstr "Alles ignorieren"
+
+#: ../src/gtkspellcheck/spellcheck.py:457
+#: ../src/gtkspellcheck/spellcheck.py:459
+msgid "Languages"
+msgstr "Sprachen"
+
+#: ../src/gtkspellcheck/spellcheck.py:470
+#: ../src/gtkspellcheck/spellcheck.py:473
+msgid "Suggestions"
+msgstr "Vorschläge"
+
+#: ../src/gtkspellcheck/oxt_import.py:138
+msgid "'{0}' declared in registry but not found within the extension."
+msgstr "'{0}' wurde in der Wörterbuch Datenbank angegeben, kann aber nicht gefunden werden."
+
+#: ../src/gtkspellcheck/oxt_import.py:141
+msgid "Error while processing extension {0}."
+msgstr "Fehler beim Bearbeiten der Erweiterung {0}."
+
+#: ../src/gtkspellcheck/oxt_import.py:144
+msgid "Extension '{0}' has no dictionary registry."
+msgstr "Erweiterung '{0}' hat keine Wörterbuch Datenbank."
+
+#: ../src/gtkspellcheck/oxt_import.py:146
+msgid "Extension '{0}' is not a valid zip file."
+msgstr "Erweiterung '{0}' ist keine Zip-Datei."
+
+#: ../src/gtkspellcheck/oxt_import.py:86
+msgid "Extract path is not a directory."
+msgstr "Ziel ist kein Verzeichnis."
+
+#: ../src/gtkspellcheck/oxt_import.py:160
+msgid "Unable to move extension, file with same name exists within move_path."
+msgstr "Die Erweiterung konnte nicht verschoben werden, eine Datei mit gleichem Namen existiert bereits."
+
+#: ../src/gtkspellcheck/oxt_import.py:162
+msgid "Unable to move extension, move_path is not a directory."
+msgstr "Die Erweiterung konnte nicht verschoben werden, Ziel ist kein Verzeichnis."
