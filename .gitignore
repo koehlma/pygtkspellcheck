@@ -1,22 +1,32 @@
+doc/build/
+l10n/mo
+build/
 MANIFEST
+
+# Python
 *.pyc
+__pycache__
+
+# IDE
 .project
 .pydevproject
 .settings
 .directory
-__pycache__
+
+# Debian
 dist/*.tar.gz
-doc/build/
 dist/debian/build
 dist/debian/*.deb
+
+# Archlinux
 dist/archlinux/python2/pkg
 dist/archlinux/python2/src
 dist/archlinux/python2/v*
+dist/archlinux/python2/*.pkg.tar.xz
+dist/archlinux/python2/*.src.tar.gz
+
 dist/archlinux/python3/pkg
 dist/archlinux/python3/src
 dist/archlinux/python3/v*
-*.pkg.tar.xz
-*.src.tar.gz
-l10n/mo
-build/
-
+dist/archlinux/python3/*.pkg.tar.xz
+dist/archlinux/python3/*.src.tar.gz

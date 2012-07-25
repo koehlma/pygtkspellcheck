@@ -47,18 +47,19 @@ Install package python-gtkspellcheck:
 Archlinux
 ^^^^^^^^^
 
-Available in the `Archlinux User Repository`_.
-
-Python3: https://aur.archlinux.org/packages.php?ID=61200
-Python2: https://aur.archlinux.org/packages.php?ID=61199
-
-Or via `yaourt`:
-	
-	yaourt -S python-gtkspellcheck
-	yaourt -S python2-gtkspellcheck
+Available in the `Archlinux User Repository`_:
 
 .. _Archlinux User Repository: https://aur.archlinux.org/
 
+- Python 3:
+	- ``yaourt -S python-gtkspellcheck``
+	- https://aur.archlinux.org/packages.php?ID=61200
+	- https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-3.0a-1-any.pkg.tar.xz
+
+- Python 2:
+	- ``yaourt -S python2-gtkspellcheck``
+	- https://aur.archlinux.org/packages.php?ID=61199
+	- https://github.com/downloads/koehlma/pygtkspellcheck/python2-gtkspellcheck-3.0a-1-any.pkg.tar.xz
 
 Hacking
 ^^^^^^^
