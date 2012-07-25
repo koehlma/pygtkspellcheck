@@ -25,8 +25,8 @@ You can find the documentation at http://pygtkspellcheck.readthedocs.org/ .
 
 Examples
 ========
-* [PyGObject Simple Example](https://github.com/koehlma/pygtkspellcheck/blob/new/examples/simple_pygobject.py)
-* [PyGtk Simple Example](https://github.com/koehlma/pygtkspellcheck/blob/new/examples/simple_pygtk.py)
+* [PyGObject Simple Example](https://github.com/koehlma/pygtkspellcheck/blob/master/examples/simple_pygobject.py)
+* [PyGtk Simple Example](https://github.com/koehlma/pygtkspellcheck/blob/master/examples/simple_pygtk.py)
 
 License 
 =======

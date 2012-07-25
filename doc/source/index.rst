@@ -53,7 +53,7 @@ Development repository is available at: https://github.com/koehlma/pygtkspellche
 
 Or download last sources in a `ZIP file`_.
 
-.. _ZIP file: https://github.com/koehlma/pygtkspellcheck/zipball/new
+.. _ZIP file: https://github.com/koehlma/pygtkspellcheck/zipball/master
 
 
 API Reference
@@ -88,8 +88,8 @@ Examples
 - `PyGObject Simple Example`_
 - `PyGtk Simple Example`_
 
-.. _PyGObject Simple Example: https://github.com/koehlma/pygtkspellcheck/blob/new/examples/simple_pygobject.py
-.. _PyGtk Simple Example: https://github.com/koehlma/pygtkspellcheck/blob/new/examples/simple_pygtk.py
+.. _PyGObject Simple Example: https://github.com/koehlma/pygtkspellcheck/blob/master/examples/simple_pygobject.py
+.. _PyGtk Simple Example: https://github.com/koehlma/pygtkspellcheck/blob/master/examples/simple_pygtk.py
 
 
 License
