@@ -9,5 +9,14 @@ dist/*.tar.gz
 doc/build/
 dist/debian/build
 dist/debian/*.deb
+dist/archlinux/python2/pkg
+dist/archlinux/python2/src
+dist/archlinux/python2/v*
+dist/archlinux/python3/pkg
+dist/archlinux/python3/src
+dist/archlinux/python3/v*
+*.pkg.tar.xz
+*.src.tar.gz
 l10n/mo
 build/
+
