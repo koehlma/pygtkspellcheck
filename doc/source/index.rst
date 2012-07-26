@@ -1,4 +1,3 @@
-
 Python GTK Spellcheck
 =====================
 

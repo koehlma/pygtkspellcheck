@@ -33,7 +33,7 @@ __website__ = 'http://koehlma.github.com/projects/pygtkspellcheck.html'
 __source__ = 'https://github.com/koehlma/pygtkspellcheck/'
 __vcs__ = 'git://github.com/koehlma/pygtkspellcheck.git'
 __copyright__ = u('2012, Maximilian Köhl & Carlos Jenkins')
-__desc_short__ = 'A spellchecking library written in pure Python for Gtk based on Enchant'
+__desc_short__ = 'A simple but quite powerful Python spell checking library for GtkTextViews based on Enchant.'
 __desc_long__ = ('It supports both Gtk\'s Python bindings, PyGObject and'
                  'PyGtk, and for both Python 2 and 3 with automatic switching'
                  'and binding autodetection. For automatic translation of the'
