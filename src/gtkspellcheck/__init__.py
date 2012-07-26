@@ -30,6 +30,7 @@ __short_name__ = 'pygtkspellcheck'
 __authors__ = u('Maximilian Köhl & Carlos Jenkins')
 __emails__ = u('linuxmaxi@googlemail.com & carlos@jenkins.co.cr')
 __website__ = 'http://koehlma.github.com/projects/pygtkspellcheck.html'
+__download_url__ = 'https://github.com/koehlma/pygtkspellcheck/tarball/master'
 __source__ = 'https://github.com/koehlma/pygtkspellcheck/'
 __vcs__ = 'git://github.com/koehlma/pygtkspellcheck.git'
 __copyright__ = u('2012, Maximilian Köhl & Carlos Jenkins')
@@ -45,6 +46,7 @@ __metadata__ = {'__version__' : __version__,
                 '__authors__' : __authors__,
                 '__emails__' : __emails__,
                 '__website__' : __website__,
+                '__download_url__' : __download_url__,
                 '__source__' : __source__,
                 '__vcs__' : __vcs__,
                 '__copyright__' : __copyright__,
