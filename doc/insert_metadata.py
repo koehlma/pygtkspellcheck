@@ -25,14 +25,11 @@ import argparse
 # Python 2/3 unicode
 import sys
 if sys.version_info.major == 3:
-    i = lambda x: x
+    io_in = lambda x: x
+    io_out = io_in
 else:
-    i = lambda x: x.decode(ENCODING)
-
-if sys.version_info.major == 3:
-    o = i
-else:
-    o = lambda x: x.encode(ENCODING)
+    io_in = lambda x: x.decode(ENCODING)
+    io_out = lambda x: x.encode(ENCODING)   
 
 # Pipes Python enconding nightmare
 if sys.stdout.encoding is None:
@@ -53,7 +50,7 @@ parser.add_argument('-w', '--writeback', action='store_true',
 args = parser.parse_args()
 
 # Read content
-out_content = i(args.infile.read())
+out_content = io_in(args.infile.read())
 args.infile.close()
 
 # Replace variables
@@ -65,7 +62,7 @@ for key, value in __metadata__.items():
 if args.writeback:
     try:
         with open(args.infile.name, 'w') as out_handler:
-            out_handler.write(o(out_content))
+            out_handler.write(io_out(out_content))
     except Exception as e:
         sys.stderr.write(str(e) + '\n')
         sys.exit(-1)
