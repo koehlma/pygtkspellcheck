@@ -18,53 +18,44 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-from os.path import exists, isfile
+import argparse
 
-try:
-    from gtkspellcheck import __metadata__
-except ImportError: # Load if running from source
-    import sys
-    from os.path import join, dirname
-    sys.path.append(join(dirname(__file__), '../src/'))
-    from gtkspellcheck import __metadata__
+# Python 2/3 compat and pipes Python enconding nightmare
+if sys.stdout.encoding is None:
+    import codecs
+    sys.stdout = sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 
-# Python 2/3 compat
-if sys.version_info.major == 3:
-    u = lambda x: x
+# Find metadata dict
+from os.path import join, dirname
+sys.path.append(join(dirname(__file__), '../src/'))
+from gtkspellcheck import __metadata__
+
+# Parse command line
+parser = argparse.ArgumentParser(description='Insert metadata into plain text files.')
+parser.add_argument('infile', type=argparse.FileType('r'),
+                     help='path to the template file or stdin pipe.')
+parser.add_argument('-w', '--writeback', action='store_true',
+                     help='write the output back to the input file.')
+args = parser.parse_args()
+
+# Read content
+out_content = args.infile.read()
+args.infile.close()
+
+# Replace variables
+# FIXME: Stop wasting memory like crazy!
+for key, value in __metadata__.items():
+    out_content = out_content.replace(key, value)
+
+# Print/Write new content
+if args.writeback:
+    try:
+        with open(args.infile.name, 'w') as out_handler:
+            out_handler.write(out_content)
+    except Exception as e:
+        sys.stderr.write(str(e))
+        sys.exit(-1)
 else:
-    u = lambda x: x.decode('UTF-8')
-
-usage = \
-"""
-USAGE:
-    ./insert_metadata.py [INPUT_FILE] [OUTPUT_FILE]
-"""
-
-if len(sys.argv) != 3:
-    print(usage)
-    sys.exit(-1)
-
-in_file = sys.argv[1]
-out_file = sys.argv[2]
-
-if not isfile(in_file):
-    print('Unable find input file: {i}'.format(i=in_file))
-    sys.exit(-2)
-
-if exists(out_file):
-    print('Output file {o} already exists. Stopping.'.format(i=out_file))
-    sys.exit(-3)
-
-with open(in_file, 'r') as in_handler:
-    out_content = u(in_handler.read())
-
-for key in __metadata__.keys():
-    out_content = out_content.replace(key, __metadata__[key])
-
-if out_file == '-':
     print(out_content)
-else:
-    with open(filename, 'w') as out_handler:
-        out_handler.write(out_content)
 
 sys.exit(0)
