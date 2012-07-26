@@ -17,13 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+ENCODING = 'UTF-8'
+
 import sys
 import argparse
 
-# Python 2/3 compat and pipes Python enconding nightmare
+# Python 2/3 unicode
+import sys
+if sys.version_info.major == 3:
+    i = lambda x: x
+else:
+    i = lambda x: x.decode(ENCODING)
+
+if sys.version_info.major == 3:
+    o = i
+else:
+    o = lambda x: x.encode(ENCODING)
+
+# Pipes Python enconding nightmare
 if sys.stdout.encoding is None:
     import codecs
-    sys.stdout = sys.stdout = codecs.getwriter('utf8')(sys.stdout)
+    sys.stdout = codecs.getwriter(ENCODING)(sys.stdout)
 
 # Find metadata dict
 from os.path import join, dirname
@@ -39,7 +53,7 @@ parser.add_argument('-w', '--writeback', action='store_true',
 args = parser.parse_args()
 
 # Read content
-out_content = args.infile.read()
+out_content = i(args.infile.read())
 args.infile.close()
 
 # Replace variables
@@ -51,9 +65,9 @@ for key, value in __metadata__.items():
 if args.writeback:
     try:
         with open(args.infile.name, 'w') as out_handler:
-            out_handler.write(out_content)
+            out_handler.write(o(out_content))
     except Exception as e:
-        sys.stderr.write(str(e))
+        sys.stderr.write(str(e) + '\n')
         sys.exit(-1)
 else:
     print(out_content)
