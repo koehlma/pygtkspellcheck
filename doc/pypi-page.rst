@@ -1,4 +1,3 @@
-
 Python GTK Spellcheck
 =====================
 
@@ -75,7 +74,9 @@ Or download last sources in a `ZIP file`_.
 
 API Reference
 -------------
+You can find the documentation at `Read the Docs`_.
 
+.. _Read the Docs: http://pygtkspellcheck.readthedocs.org/
 
 Examples
 --------
