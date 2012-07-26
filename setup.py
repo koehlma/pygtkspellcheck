@@ -18,7 +18,9 @@
 
 from __future__ import print_function
 
+import os
 import sys
+
 from distutils.core import setup
 
 cmdclass = {}
@@ -42,9 +44,13 @@ except ImportError as e:
 sys.path.append('./src/')
 import gtkspellcheck as m
 
+if len(sys.argv) > 1 and sys.argv[1] == 'register':
+    m.__desc_long__ = open(os.path.join('.', 'doc', 'pypi-page.rst'), 'r').read()
+    print('pypi registration: override `long_description`')
+
 setup(name=m.__short_name__,
       version=m.__version__,
-      description=m.__desc_long__,
+      description=m.__desc_short__,
       long_description=m.__desc_long__,
       author=m.__authors__,
       author_email=m.__emails__,
