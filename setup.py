@@ -19,14 +19,23 @@
 import sys
 from distutils.core import setup
 
+cmdclass = {}
 try:
     from sphinx.setup_command import BuildDoc
-    cmdclass = {'build_sphinx': BuildDoc}
+    cmdclass['build_sphinx'] = BuildDoc
 except ImportError as e:
     print(e)
     print('Unable to import Sphinx custom command. Documentation build will ' +
           'be unavailable. Install python-sphinx to solve this.')
-    cmdclass = {}
+
+try:
+    from sphinx_pypi_upload import UploadDoc
+    cmdclass['upload_sphinx'] = UploadDoc
+except ImportError as e:
+    print(e)
+    print('Unable to import Sphinx custom command. Documentation upload ' +
+      'be unavailable. Install http://pypi.python.org/pypi/Sphinx-PyPI-' +
+      'upload/ to solve this.')
 
 sys.path.append('./src/')
 import gtkspellcheck as m
