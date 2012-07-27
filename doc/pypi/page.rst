@@ -29,6 +29,12 @@ You can find the documentation at `Read the Docs`_.
 
 .. _Read the Docs: http://pygtkspellcheck.readthedocs.org/
 
+Development
+^^^^^^^^^^^
+Development happens at `GitHub`_.
+
+.. _GitHub: https://github.com/koehlma/pygtkspellcheck
+
 License
 ^^^^^^^
 PyGtkSpellcheck is released under `GPLv3`_ or at your opinion any later version.
