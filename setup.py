@@ -45,7 +45,7 @@ sys.path.append('./src/')
 import gtkspellcheck as m
 
 if len(sys.argv) > 1 and sys.argv[1] == 'register':
-    m.__desc_long__ = open(os.path.join('.', 'doc', 'pypi-page.rst'), 'r').read()
+    m.__desc_long__ = open(os.path.join('.', 'doc', 'pypi', 'page.rst'), 'r').read()
     print('pypi registration: override `long_description`')
 
 setup(name=m.__short_name__,
