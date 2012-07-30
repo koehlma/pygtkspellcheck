@@ -181,10 +181,11 @@ class SpellChecker(object):
 
     @language.setter
     def language(self, language):
-        if self.languages.exists(language):
-            self._language = language
-            self._dictionary = self._broker.request_dict(language)
-            self.recheck()
+        if language != self._language:
+            if self.languages.exists(language):
+                self._language = language
+                self._dictionary = self._broker.request_dict(language)
+                self.recheck()
 
     @property
     def enabled(self):
@@ -383,16 +384,19 @@ class SpellChecker(object):
         else:
             menu = gtk.Menu()
             group = gtk.RadioMenuItem()
+        connect = []
         for code, name in self.languages:
             if _pygobject:
                 item = gtk.RadioMenuItem.new_with_label(group, name)
                 group.append(item)
             else:
                 item = gtk.RadioMenuItem(group, name)
-            item.connect('activate', _set_language, code)
             if code == self.language:
                 item.set_active(True)
+            connect.append((item, code))
             menu.append(item)
+        for item, code in connect:
+            item.connect('activate', _set_language, code) 
         return menu
 
     def _suggestion_menu(self, word):
