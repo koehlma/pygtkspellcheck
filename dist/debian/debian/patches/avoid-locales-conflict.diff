@@ -1,0 +1,33 @@
+--- a/l10n/compile_mo.py
++++ b/l10n/compile_mo.py
+@@ -31,7 +31,7 @@
+         po_file = os.path.join(po_dir, lang + '.po')
+         lang_dir = os.path.join(locale_dir, lang)
+         mo_dir = os.path.join(lang_dir, 'LC_MESSAGES')
+-        mo_file = os.path.join(mo_dir, APP + '.mo')
++        mo_file = os.path.join(mo_dir, APP + str(sys.version_info.major) + '.mo')
+         
+         if not os.path.exists(mo_dir):
+             os.makedirs(mo_dir)
+--- a/src/gtkspellcheck/oxt_import.py
++++ b/src/gtkspellcheck/oxt_import.py
+@@ -37,7 +37,7 @@
+ __all__ = ['deflate_oxt']
+ 
+ logger = logging.getLogger(__name__)
+-_ = gettext.translation('pygtkspellcheck', fallback=True).gettext
++_ = gettext.translation('pygtkspellcheck' + str(sys.version_info.major), fallback=True).gettext
+ 
+ def deflate_oxt(oxt_path, extract_path, override=False, move_path=None):
+     """
+--- a/src/gtkspellcheck/spellcheck.py
++++ b/src/gtkspellcheck/spellcheck.py
+@@ -70,7 +70,7 @@
+     _gedit = gettext.translation('gedit', fallback=True).gettext
+     _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
+ else:
+-    _ = gettext.translation('pygtkspellcheck', fallback=True).gettext
++    _ = gettext.translation('pygtkspellcheck' + str(sys.version_info.major), fallback=True).gettext
+     
+ class SpellChecker(object):
+     """

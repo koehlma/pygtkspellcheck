@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 
 # Base packages need to run this script:
-#    sudo apt-get install devscripts build-essential fakeroot dh-make wget
+#    sudo apt-get install devscripts quilt build-essential fakeroot dh-make wget
 
 export DEBFULLNAME="Carlos Miguel Jenkins Pérez"
 export DEBEMAIL="carlos@jenkins.co.cr"
