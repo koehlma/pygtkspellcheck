@@ -71,13 +71,13 @@ if gettext.find('gedit'):
     _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
 else:
     _ = gettext.translation('pygtkspellcheck', fallback=True).gettext
-    
+
 class SpellChecker(object):
     """
     Main spellchecking class, everything important happens here.
 
     :param view: GtkTextView the SpellChecker should be attached to.
-    :param language: the language which should be used for spellchecking.  
+    :param language: the language which should be used for spellchecking.
         Use a combination of two letter lower-case ISO 639 language code with a
         two letter upper-case ISO 3166 country code, for example en_US or de_DE.
     :param prefix: a prefix for some internal GtkTextMarks.
@@ -115,7 +115,7 @@ class SpellChecker(object):
         @classmethod
         def from_broker(cls, broker):
             return cls([(language, code_to_name(language))
-                        for language in broker.list_languages()])
+                        for language in sorted(broker.list_languages())])
 
         def exists(self, language):
             return language in self.mapping
@@ -181,11 +181,10 @@ class SpellChecker(object):
 
     @language.setter
     def language(self, language):
-        if language != self._language:
-            if self.languages.exists(language):
-                self._language = language
-                self._dictionary = self._broker.request_dict(language)
-                self.recheck()
+        if language != self._language and self.languages.exists(language):
+            self._language = language
+            self._dictionary = self._broker.request_dict(language)
+            self.recheck()
 
     @property
     def enabled(self):
@@ -396,7 +395,7 @@ class SpellChecker(object):
             connect.append((item, code))
             menu.append(item)
         for item, code in connect:
-            item.connect('activate', _set_language, code) 
+            item.connect('activate', _set_language, code)
         return menu
 
     def _suggestion_menu(self, word):
