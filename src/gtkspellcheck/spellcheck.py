@@ -114,8 +114,9 @@ class SpellChecker(object):
 
         @classmethod
         def from_broker(cls, broker):
-            return cls([(language, code_to_name(language))
-                        for language in sorted(broker.list_languages())])
+            return cls(sorted([(language, code_to_name(language))
+                               for language in broker.list_languages()],
+                              key=lambda language: language[1]))
 
         def exists(self, language):
             return language in self.mapping
