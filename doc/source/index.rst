@@ -39,9 +39,19 @@ PyPI package available at: http://pypi.python.org/pypi/pygtkspellcheck/
 Ubuntu/Debian
 ^^^^^^^^^^^^^
 
-Install package python-gtkspellcheck:
+Install packages:
 
-    ``sudo apt-get install python-gtkspellcheck``
+- Python 3:
+    - ``sudo apt-get install python3-gtkspellcheck``
+    - https://github.com/downloads/koehlma/pygtkspellcheck/python3-gtkspellcheck_3.0a-1_all.deb
+
+- Python 2:
+    - ``sudo apt-get install python-gtkspellcheck``
+    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck_3.0a-1_all.deb
+
+- Documentation:
+    - ``sudo apt-get install python-gtkspellcheck-doc``
+    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-doc_3.0a-1_all.deb
 
 Archlinux
 ^^^^^^^^^
@@ -51,14 +61,14 @@ Available in the `Archlinux User Repository`_:
 .. _Archlinux User Repository: https://aur.archlinux.org/
 
 - Python 3:
-	- ``yaourt -S python-gtkspellcheck``
-	- https://aur.archlinux.org/packages.php?ID=61200
-	- https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-3.0a-1-any.pkg.tar.xz
+    - ``yaourt -S python-gtkspellcheck``
+    - https://aur.archlinux.org/packages.php?ID=61200
+    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-3.0a-1-any.pkg.tar.xz
 
 - Python 2:
-	- ``yaourt -S python2-gtkspellcheck``
-	- https://aur.archlinux.org/packages.php?ID=61199
-	- https://github.com/downloads/koehlma/pygtkspellcheck/python2-gtkspellcheck-3.0a-1-any.pkg.tar.xz
+    - ``yaourt -S python2-gtkspellcheck``
+    - https://aur.archlinux.org/packages.php?ID=61199
+    - https://github.com/downloads/koehlma/pygtkspellcheck/python2-gtkspellcheck-3.0a-1-any.pkg.tar.xz
 
 Hacking
 ^^^^^^^
@@ -67,9 +77,10 @@ Development repository is available at: https://github.com/koehlma/pygtkspellche
 
     ``git clone git://github.com/koehlma/pygtkspellcheck.git``
 
-Or download last sources in a `ZIP file`_.
+Or download last sources in a `ZIP`_ or `Tarball`_ file.
 
-.. _ZIP file: https://github.com/koehlma/pygtkspellcheck/zipball/master
+.. _ZIP: https://github.com/koehlma/pygtkspellcheck/zipball/master
+.. _Tarball: https://github.com/koehlma/pygtkspellcheck/tarball/master
 
 
 API Reference
