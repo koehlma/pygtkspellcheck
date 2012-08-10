@@ -40,7 +40,11 @@ echo "Ready to build package. Press [Enter] to confirm structure and build using
 read builder
 if [ "$builder" == "pbuilder" ]; then
   echo "Building using pbuilder..."
-  pdebuild -us -uc
+  pdebuild
+
+  # Move Debian packages
+  echo "Done. Find Debian packages at /var/cache/pbuilder/result/"
+  cd ../
 else
   echo "Building using debuild..."
   debuild -us -uc

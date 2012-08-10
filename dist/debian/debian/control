@@ -5,8 +5,10 @@ Maintainer: Carlos Miguel Jenkins Pérez <carlos@jenkins.co.cr>
 Build-Depends: debhelper (>= 8),
                python (>= 2.7),
                python-sphinx,
+               python-enchant,
                python3,
-               python3-sphinx
+               python3-sphinx,
+               python3-enchant
 Standards-Version: 3.9.3
 Homepage: http://pygtkspellcheck.readthedocs.org/
 Vcs-Browser: https://github.com/koehlma/pygtkspellcheck
