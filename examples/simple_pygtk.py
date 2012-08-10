@@ -32,6 +32,7 @@ if __name__ == '__main__':
         gtk.main_quit()
     
     window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    window.set_title('PyGtkSpellCheck Example')
     view = gtk.TextView()
     
     spellchecker = SpellChecker(view, locale.getdefaultlocale()[0])
