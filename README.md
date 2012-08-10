@@ -1,15 +1,13 @@
-About
-=====
+# About
 PyGtkSpellCheck is a spellchecking library written in pure Python for Gtk based 
-on [Enchant](http://www.abisource.com/projects/enchant/).  
+on [Enchant](http://www.abisource.com/projects/enchant/).
 It supports both Gtk's Python bindings,
 [PyGObject](https://live.gnome.org/PyGObject/) and
 [PyGtk](http://www.pygtk.org/), and for both Python 
 2 and 3 with automatic switching and binding autodetection. For automatic 
 translation of the user interface it can use GEdit's translation files.
 
-Features
-========
+# Features
 * Localized names of the available languages.
 * Supports word, line and multiline ignore regexes.
 * Support for ignore custom tags on Gtk's TextBuffer.
@@ -19,17 +17,13 @@ Features
 * Python 2 and 3 support.
 * As Enchant, support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries.
 
-Documentation
-=============
+# Documentation
 You can find the documentation at http://pygtkspellcheck.readthedocs.org/ .
 
-Examples
-========
-* [PyGObject Simple Example](https://github.com/koehlma/pygtkspellcheck/blob/master/examples/simple_pygobject.py)
-* [PyGtk Simple Example](https://github.com/koehlma/pygtkspellcheck/blob/master/examples/simple_pygtk.py)
+# Homepage
+You can find the project page at http://koehlma.github.com/projects/pygtkspellcheck.html .
 
-License 
-=======
+# License 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
