@@ -14,7 +14,7 @@ optdepends=('gtk3: gtk 3 bindings'
             'python2-gobject: gtk 2 and 3 gi bindings')
 provides=('python2-pylocales')
 source=(https://github.com/koehlma/pygtkspellcheck/tarball/v${pkgver})
-md5sums=('0cf1078a1250ebf8010d1d47c5c34eb8')
+md5sums=('f54e8a82bd60feac5eb7b46a095e16a2')
 
 build() {
     cd koehlma-pygtkspellcheck-*
