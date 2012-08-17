@@ -43,15 +43,15 @@ Install packages:
 
 - Python 3:
     - ``sudo apt-get install python3-gtkspellcheck``
-    - https://github.com/downloads/koehlma/pygtkspellcheck/python3-gtkspellcheck_3.0a-1_all.deb
+    - https://github.com/downloads/koehlma/pygtkspellcheck/python3-gtkspellcheck_3.0-1_all.deb
 
 - Python 2:
     - ``sudo apt-get install python-gtkspellcheck``
-    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck_3.0a-1_all.deb
+    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck_3.0-1_all.deb
 
 - Documentation:
     - ``sudo apt-get install python-gtkspellcheck-doc``
-    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-doc_3.0a-1_all.deb
+    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-doc_3.0-1_all.deb
 
 Archlinux
 ^^^^^^^^^
@@ -63,12 +63,12 @@ Available in the `Archlinux User Repository`_:
 - Python 3:
     - ``yaourt -S python-gtkspellcheck``
     - https://aur.archlinux.org/packages.php?ID=61200
-    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-3.0a-1-any.pkg.tar.xz
+    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-3.0-1-any.pkg.tar.xz
 
 - Python 2:
     - ``yaourt -S python2-gtkspellcheck``
     - https://aur.archlinux.org/packages.php?ID=61199
-    - https://github.com/downloads/koehlma/pygtkspellcheck/python2-gtkspellcheck-3.0a-1-any.pkg.tar.xz
+    - https://github.com/downloads/koehlma/pygtkspellcheck/python2-gtkspellcheck-3.0-1-any.pkg.tar.xz
 
 Hacking
 ^^^^^^^
