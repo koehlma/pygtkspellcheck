@@ -24,7 +24,7 @@ else:
     u = lambda x: x.decode('utf-8')
 
 # Metadata
-__version__ = '3.0a'
+__version__ = '3.0'
 __project__ = 'Python GTK Spellcheck'
 __short_name__ = 'pygtkspellcheck'
 __authors__ = u('Maximilian Köhl & Carlos Jenkins')
