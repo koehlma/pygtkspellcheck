@@ -42,15 +42,12 @@ Ubuntu/Debian
 Install packages:
 
 - Python 3:
-    - ``sudo apt-get install python3-gtkspellcheck``
     - https://github.com/downloads/koehlma/pygtkspellcheck/python3-gtkspellcheck_3.0-1_all.deb
 
 - Python 2:
-    - ``sudo apt-get install python-gtkspellcheck``
     - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck_3.0-1_all.deb
 
 - Documentation:
-    - ``sudo apt-get install python-gtkspellcheck-doc``
     - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-doc_3.0-1_all.deb
 
 Archlinux

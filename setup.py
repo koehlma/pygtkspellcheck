@@ -41,7 +41,7 @@ except ImportError as e:
           'be unavailable. Install http://pypi.python.org/pypi/Sphinx-PyPI-'
           'upload/ to solve this.')
 
-sys.path.append('./src/')
+sys.path.insert(0, './src/')
 import gtkspellcheck as m
 
 if len(sys.argv) > 1 and sys.argv[1] == 'register':
@@ -61,7 +61,7 @@ setup(name=m.__short_name__,
       packages=['gtkspellcheck', 'pylocales'],
       package_data={'pylocales' : ['locales.db']},
       classifiers=[
-          'Development Status :: 3 - Alpha',
+          'Development Status :: 5 - Production/Stable',
           'Environment :: X11 Applications :: Gnome',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
