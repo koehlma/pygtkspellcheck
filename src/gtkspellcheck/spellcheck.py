@@ -164,7 +164,9 @@ class SpellChecker(object):
         for param, value in params: self._broker.set_param(param, value)
         self.languages = SpellChecker._LanguageList.from_broker(self._broker)
         self._language = language if self.languages.exists(language) else 'en'
-        self._dictionary = self._broker.request_dict(language)
+        if not self.languages.exists(self._language):
+            self._language = self.languages[0][0]
+        self._dictionary = self._broker.request_dict(self._language)
         self._deferred_check = False
         self._filters = dict(SpellChecker.DEFAULT_FILTERS)
         self._regexes = {SpellChecker.FILTER_WORD : re.compile('|'.join(self._filters[SpellChecker.FILTER_WORD])),
