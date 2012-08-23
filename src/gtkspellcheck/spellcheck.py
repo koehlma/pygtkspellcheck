@@ -72,6 +72,12 @@ if gettext.find('gedit'):
 else:
     _ = gettext.translation('pygtkspellcheck', fallback=True).gettext
 
+class NoDictionariesFound(Exception):
+    """
+    There aren't any dictionaries installed on the current system so
+    spellchecking could not work in any way.
+    """
+
 class SpellChecker(object):
     """
     Main spellchecking class, everything important happens here.
@@ -163,9 +169,22 @@ class SpellChecker(object):
         self._broker = enchant.Broker()
         for param, value in params: self._broker.set_param(param, value)
         self.languages = SpellChecker._LanguageList.from_broker(self._broker)
-        self._language = language if self.languages.exists(language) else 'en'
-        if not self.languages.exists(self._language):
-            self._language = self.languages[0][0]
+        if self.languages.exists(language):
+            self._language = language
+        elif self.languages.exists('en'):
+            logger.warning(('no installed dictionary for language "{}", '
+                            'fallback to english'.format(language)))
+            self._language = 'en'
+        else:
+            if self.languages:
+                self._language = self.languages[0][0]
+                logger.warning(('no installed dictionary for language "{}" '
+                                'and english, fallback to first language in'
+                                'language list ("{}")').format(language,
+                                                                self._language))
+            else:
+                logger.critical('no dictionaries found')
+                raise NoDictionariesFound()
         self._dictionary = self._broker.request_dict(self._language)
         self._deferred_check = False
         self._filters = dict(SpellChecker.DEFAULT_FILTERS)
