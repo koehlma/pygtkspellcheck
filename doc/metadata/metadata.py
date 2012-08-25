@@ -41,7 +41,7 @@ description = {'short': 'a simple but quite powerful Python spell checking libra
                         'and binding detection. For automatic translation of the user '
                         'interface it can use Gedit’s translation files.')}
 
-screenshot = os.path.join(os.path.dirname(__file__), 'screenshot.png')
+screenshot = os.path.join(__path__, 'screenshot.png')
 
 development = 'https://github.com/koehlma/pygtkspellcheck'
 
@@ -53,11 +53,14 @@ links = {'Enchant': 'http://www.abisource.com/projects/enchant/',
          'PyGObject': 'https://live.gnome.org/PyGObject/',
          'PyGtk': 'http://www.pygtk.org/'}
 
-with open(os.path.join(os.path.dirname(__file__), 'readme.md'), 'rb') as _readme:
+with open(os.path.join(__path__, 'readme.md'), 'rb') as _readme:
     readme = _readme.read().decode('utf-8')
     
-with open(os.path.join(os.path.dirname(__file__), 'pypi.rst'), 'rb') as _pypi:
+with open(os.path.join(__path__, 'pypi.rst'), 'rb') as _pypi:
     pypi = _pypi.read().decode('utf-8')
+    
+with open(os.path.join(__path__, 'documentation.rst'), 'rb') as _documentation:
+    documentation = _documentation.read().decode('utf-8')
 
 replace = re.compile('\{%\s*(.+?)\s*%\}')
 
@@ -85,3 +88,6 @@ if __name__ == '__main__':
     print('creating pypi')
     with open(os.path.join(__path__, '..', 'pypi', 'page.rst'), 'wb') as _pypi:
         _pypi.write(replace.sub(template, pypi).encode('utf-8'))
+    print('creating documentation')
+    with open(os.path.join(__path__, '..', 'source', 'index.rst'), 'wb') as _documentation:
+        _documentation.write(replace.sub(template, documentation).encode('utf-8'))
