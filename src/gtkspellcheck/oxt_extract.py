@@ -20,9 +20,9 @@
 This module extracts the .dic and .aff (Hunspell) dictionaries from any given 
 .oxt extension.
 
-Extensions like the ones found here:
+Extensions could be found at:
 
-    Extensions could be found at:
+    http://extensions.services.openoffice.org/dictionary
 """
 
 import functools
