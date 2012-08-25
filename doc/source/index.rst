@@ -87,7 +87,7 @@ with the ``enchant.myspell.dictionary.path`` parameter.
 .. _LibreOffice .oxt extension dictionaries: http://extensions.services.openoffice.org/dictionary
 
 .. toctree::
-   oxt_import
+   oxt_extract
 
 Examples
 --------

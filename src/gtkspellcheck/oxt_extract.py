@@ -68,9 +68,9 @@ def extract(filename, target):
     """
     Extract Hunspell dictionaries out of LibreOffice ``.oxt`` extensions.
 
-    :param filename: path of the ``.oxt`` extension
-    :param target: path to extract Hunspell dictionaries files to
-    :rtype: list the extracted dictionaries
+    :param filename: path to the ``.oxt`` extension
+    :param target: path to extract Hunspell dictionaries to
+    :rtype: list of the extracted dictionaries
 
     This function extracts the Hunspell dictionaries (``.dic`` and ``.aff``
     files) from the given ``.oxt`` extension found to ``target``.

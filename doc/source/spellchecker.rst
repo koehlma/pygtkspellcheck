@@ -1,5 +1,5 @@
-SpellChecker class reference
-============================
+SpellChecker Reference
+======================
 
 .. autoclass:: gtkspellcheck.spellcheck.SpellChecker
    :members:
