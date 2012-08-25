@@ -1,29 +1,23 @@
-# About
-PyGtkSpellCheck is a spellchecking library written in pure Python for Gtk based 
-on [Enchant](http://www.abisource.com/projects/enchant/).
-It supports both Gtk's Python bindings,
-[PyGObject](https://live.gnome.org/PyGObject/) and
-[PyGtk](http://www.pygtk.org/), and for both Python 
-2 and 3 with automatic switching and binding autodetection. For automatic 
-translation of the user interface it can use GEdit's translation files.
+## About
+A simple but quite powerful spellchecking library written in pure Python for Gtk based on [Enchant](http://www.abisource.com/projects/enchant/). It supports [PyGObject](https://live.gnome.org/PyGObject/) as well as [PyGtk](http://www.pygtk.org/) for Python 2 and 3 with automatic switching and binding detection. For automatic translation of the user interface it can use Gedit’s translation files.
 
-# Features
-* Localized names of the available languages.
-* Supports word, line and multiline ignore regexes.
-* Support for ignore custom tags on Gtk's TextBuffer.
-* Enable and disable of spellchecking with preferences memory.
-* Support for hotswap of Gtk's TextBuffers.
-* PyGObject and PyGtk compatible with automatic detection.
-* Python 2 and 3 support.
-* As Enchant, support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries.
+## Features
+* localized names of the available languages
+* supports word, line and multiple line ignore regular expressions
+* supports ignore custom tags on GtkTextBuffer
+* enable and disable of spellchecking with preferences memory
+* supports hotswap of GtkTextBuffers
+* PyGObject and PyGtk compatible with automatic detection
+* Python 2 and 3 supportas Enchant, support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries
+* extract dictionaries out of LibreOffice extension files
 
-# Documentation
-You can find the documentation at http://pygtkspellcheck.readthedocs.org/ .
+## Documentation
+The documentation is available at [Read the Docs](http://pygtkspellcheck.readthedocs.org/).
 
-# Homepage
-You can find the project page at http://koehlma.github.com/projects/pygtkspellcheck.html .
+## Website
+Checkout the [official project website](http://koehlma.github.com/projects/pygtkspellcheck.html).
 
-# License 
+## License
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
