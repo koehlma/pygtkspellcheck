@@ -17,42 +17,18 @@ Features
 - Python 2 and 3 supportas Enchant, support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries
 - extract dictionaries out of LibreOffice extension files
 
-Download
---------
-Source Distribution
-^^^^^^^^^^^^^^^^^^^
-PyPI package available at: http://pypi.python.org/pypi/pygtkspellcheck/
+API Reference
+-------------
+.. autoclass:: gtkspellcheck.spellcheck.SpellChecker
+   :members:
+   
+.. autoclass:: gtkspellcheck.spellcheck.NoDictionariesFound
 
-    ``pip install pygtkspellcheck``
+.. autoclass:: gtkspellcheck.spellcheck.NoGtkBindingFound
+	
+.. autofunction:: pylocales.code_to_name
 
-Ubuntu & Debian
-^^^^^^^^^^^^^^^
-Install packages:
-
-- Python 3:
-    - https://github.com/downloads/koehlma/pygtkspellcheck/python3-gtkspellcheck_3.0-1_all.deb
-
-- Python 2:
-    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck_3.0-1_all.deb
-
-- Documentation:
-    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-doc_3.0-1_all.deb
-
-Archlinux
-^^^^^^^^^
-Available in the `Archlinux User Repository`_:
-
-.. _Archlinux User Repository: https://aur.archlinux.org/
-
-- Python 3:
-    - ``yaourt -S python-gtkspellcheck``
-    - https://aur.archlinux.org/packages.php?ID=61200
-    - https://github.com/downloads/koehlma/pygtkspellcheck/python-gtkspellcheck-3.0-1-any.pkg.tar.xz
-
-- Python 2:
-    - ``yaourt -S python2-gtkspellcheck``
-    - https://aur.archlinux.org/packages.php?ID=61199
-    - https://github.com/downloads/koehlma/pygtkspellcheck/python2-gtkspellcheck-3.0-1-any.pkg.tar.xz
+.. autofunction:: gtkspellcheck.oxt_extract.extract
 
 Development
 -----------
@@ -69,16 +45,9 @@ Download last sources in a `ZIP`_ or `Tarball`_ file.
 
 Website
 -------
-Checkout the `official project website`_.
+Checkout the `official project website`_ for additional information.
 
 .. _official project website: http://koehlma.github.com/projects/pygtkspellcheck.html.
-
-API Reference
--------------
-.. toctree::
-   spellchecker
-   pylocales
-   oxt_extract   
 
 Examples
 --------
