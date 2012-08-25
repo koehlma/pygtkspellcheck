@@ -172,7 +172,7 @@ class SpellChecker(object):
             self._misspelled = gtk.TextTag('{prefix}-misspelled'.format(prefix=self._prefix))
         self._misspelled.set_property('underline', 4)
         self._broker = enchant.Broker()
-        for param, value in params: self._broker.set_param(param, value)
+        for param, value in params.items(): self._broker.set_param(param, value)
         self.languages = SpellChecker._LanguageList.from_broker(self._broker)
         if self.languages.exists(language):
             self._language = language
