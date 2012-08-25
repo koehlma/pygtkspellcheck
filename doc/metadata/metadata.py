@@ -60,7 +60,10 @@ with open(os.path.join(__path__, 'pypi.rst'), 'rb') as _pypi:
     pypi = _pypi.read().decode('utf-8')
     
 with open(os.path.join(__path__, 'documentation.rst'), 'rb') as _documentation:
-    documentation = _documentation.read().decode('utf-8')
+    docs = _documentation.read().decode('utf-8')
+
+with open(os.path.join(__path__, 'website.md'), 'rb') as _website:
+    website = _website.read().decode('utf-8')
 
 replace = re.compile('\{%\s*(.+?)\s*%\}')
 
@@ -90,4 +93,9 @@ if __name__ == '__main__':
         _pypi.write(replace.sub(template, pypi).encode('utf-8'))
     print('creating documentation')
     with open(os.path.join(__path__, '..', 'source', 'index.rst'), 'wb') as _documentation:
-        _documentation.write(replace.sub(template, documentation).encode('utf-8'))
+        _documentation.write(replace.sub(template, docs).encode('utf-8'))
+    koehlma_github = os.path.join(__path__, '..', '..', '..', 'koehlma.github.com')
+    if os.path.exists(koehlma_github):
+        print('creating website')
+        with open(os.path.join(koehlma_github, 'projects', 'pygtkspellcheck.md'), 'wb') as _website:
+            _website.write(replace.sub(template, website).encode('utf-8'))
