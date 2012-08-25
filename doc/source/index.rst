@@ -47,7 +47,7 @@ Website
 -------
 Checkout the `official project website`_ for additional information.
 
-.. _official project website: http://koehlma.github.com/projects/pygtkspellcheck.html.
+.. _official project website: http://koehlma.github.com/projects/pygtkspellcheck.html
 
 Examples
 --------

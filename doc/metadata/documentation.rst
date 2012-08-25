@@ -36,7 +36,7 @@ Website
 -------
 Checkout the `official project website`_ for additional information.
 
-.. _official project website: {% homepage %}.
+.. _official project website: {% homepage %}
 
 Examples
 --------
