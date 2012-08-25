@@ -47,6 +47,7 @@ for mod_name in MOCK_MODULES:
     except:
         sys.modules[mod_name] = Mock()
 
+sys.modules['gtk'] = None
 import gtkspellcheck as m
 
 start_file = 'index'

@@ -31,13 +31,24 @@ import sys
 
 from pylocales import code_to_name
 
-# Public Objects
-__all__ = ['SpellChecker']
+# public objects
+__all__ = ['SpellChecker', 'NoDictionariesFound', 'NoGtkBindingFound']
 
-# Logger
+# logger
 logger = logging.getLogger(__name__)
 
-# Find which Gtk binding to use based on client's binding
+class NoDictionariesFound(Exception):
+    """
+    There aren't any dictionaries installed on the current system so
+    spellchecking could not work in any way.
+    """
+
+class NoGtkBindingFound(Exception):
+    """
+    Could not find any loaded Gtk binding.
+    """
+
+# find any loaded gtk binding
 if 'gi.repository.Gtk' in sys.modules:
     gtk = sys.modules['gi.repository.Gtk']
     _pygobject = True
@@ -45,38 +56,32 @@ elif 'gtk' in sys.modules:
     gtk = sys.modules['gtk']
     _pygobject = False
 else:
-    logger.error('No Gtk module found. Spellcheck will be unusable.')
+    raise NoGtkBindingFound('could not find any loaded Gtk binding')
 
-# Select base list class for Python3/2
+# select base list class
 try:
     from collections import UserList
     _list = UserList
 except ImportError:
     _list = list
 
-# Select basestring for Python2/3
+# select base string
 if sys.version_info.major == 3:
     basestring = str
 
-# Map between Gedit's translation and PyGtkSpellcheck's own
+# map between Gedit's translation and PyGtkSpellcheck's
 _GEDIT_MAP = {'Languages' : 'Languages',
               'Ignore All' : 'Ignore _All',
               'Suggestions' : 'Suggestions',
               '(no suggestions)' : '(no suggested words)',
               'Add "{word}" to Dictionary' : 'Add w_ord'}
 
-# Translation
+# translation
 if gettext.find('gedit'):
     _gedit = gettext.translation('gedit', fallback=True).gettext
     _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
 else:
     _ = gettext.translation('pygtkspellcheck', fallback=True).gettext
-
-class NoDictionariesFound(Exception):
-    """
-    There aren't any dictionaries installed on the current system so
-    spellchecking could not work in any way.
-    """
 
 class SpellChecker(object):
     """

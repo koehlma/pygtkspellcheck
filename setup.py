@@ -23,52 +23,45 @@ import sys
 
 from distutils.core import setup
 
-cmdclass = {}
+commands = {}
 try:
     from sphinx.setup_command import BuildDoc
-    cmdclass['build_sphinx'] = BuildDoc
-except ImportError as e:
-    print(e)
-    print('Unable to import Sphinx custom command. Documentation build will '
-          'be unavailable. Install python-sphinx to solve this.')
+    commands['build_sphinx'] = BuildDoc
+except ImportError:
+    print('build_sphinx command is unavailable, please install Sphinx to solve this')
 
-try:
-    from sphinx_pypi_upload import UploadDoc
-    cmdclass['upload_sphinx'] = UploadDoc
-except ImportError as e:
-    print(e)
-    print('Unable to import Sphinx custom command. Documentation upload '
-          'be unavailable. Install http://pypi.python.org/pypi/Sphinx-PyPI-'
-          'upload/ to solve this.')
+__path__ = os.path.dirname(__file__)
 
-sys.path.insert(0, './src/')
-import gtkspellcheck as m
+sys.path.insert(0, os.path.join(__path__, 'src'))
 
+sys.modules['gtk'] = None
+import gtkspellcheck
+    
 if len(sys.argv) > 1 and sys.argv[1] == 'register':
-    m.__desc_long__ = open(os.path.join('.', 'doc', 'pypi', 'page.rst'), 'r').read()
+    with open(os.path.join(__path__, 'doc', 'pypi', 'page.rst'), 'rb') as _pypi:
+        gtkspellcheck.__desc_long__ = _pypi.read().decode('utf-8')
     print('pypi registration: override `long_description`')
 
-setup(name=m.__short_name__,
-      version=m.__version__,
-      description=m.__desc_short__,
-      long_description=m.__desc_long__,
-      author=m.__authors__,
-      author_email=m.__emails__,
-      url=m.__website__,
-      download_url=m.__download_url__,
+setup(name=gtkspellcheck.__short_name__,
+      version=gtkspellcheck.__version__,
+      description=gtkspellcheck.__desc_short__,
+      long_description=gtkspellcheck.__desc_long__,
+      author=gtkspellcheck.__authors__,
+      author_email=gtkspellcheck.__emails__,
+      url=gtkspellcheck.__website__,
+      download_url=gtkspellcheck.__download_url__,
       license='GPLv3+',
       package_dir={'': 'src'},
       packages=['gtkspellcheck', 'pylocales'],
       package_data={'pylocales' : ['locales.db']},
-      classifiers=[
-          'Development Status :: 5 - Production/Stable',
-          'Environment :: X11 Applications :: Gnome',
-          'Intended Audience :: Developers',
-          'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-          'Operating System :: MacOS :: MacOS X', # Should work on MacOS X I think...
-          'Operating System :: Microsoft :: Windows',
-          'Operating System :: POSIX',
-          'Programming Language :: Python :: 2',
-          'Programming Language :: Python :: 3',
-          'Topic :: Software Development :: Localization'],
-      cmdclass=cmdclass)
+      classifiers=['Development Status :: 5 - Production/Stable',
+                   'Environment :: X11 Applications :: Gnome',
+                   'Intended Audience :: Developers',
+                   'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+                   'Operating System :: MacOS :: MacOS X',
+                   'Operating System :: Microsoft :: Windows',
+                   'Operating System :: POSIX',
+                   'Programming Language :: Python :: 2',
+                   'Programming Language :: Python :: 3',
+                   'Topic :: Software Development :: Localization'],
+      cmdclass=commands)
