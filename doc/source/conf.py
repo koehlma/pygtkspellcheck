@@ -49,6 +49,7 @@ for mod_name in MOCK_MODULES:
 
 sys.modules['gtk'] = None
 import gtkspellcheck as m
+import pylocales
 
 start_file = 'index'
 
