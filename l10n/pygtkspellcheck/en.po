@@ -3,68 +3,38 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: gtkspellcheck\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-23 14:00+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2012-08-26 14:30+0100\n"
+"PO-Revision-Date: 2012-08-26 14:30+0100\n"
+"Last-Translator: Maximilian Köhl <linuxmaxi@googlemail.com>\n"
+"Language-Team: \n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: /home/maximilian/development/pygtkspellcheck/src\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ./gtkspellcheck\n"
 
-#: ../src/gtkspellcheck/spellcheck.py:412
+#: gtkspellcheck/spellcheck.py:442
 msgid "(no suggestions)"
 msgstr ""
 
-#: ../src/gtkspellcheck/spellcheck.py:433
-#: ../src/gtkspellcheck/spellcheck.py:436
+#: gtkspellcheck/spellcheck.py:463 gtkspellcheck/spellcheck.py:466
 msgid "Add \"{word}\" to Dictionary"
 msgstr ""
 
-#: ../src/gtkspellcheck/spellcheck.py:440
-#: ../src/gtkspellcheck/spellcheck.py:442
+#: gtkspellcheck/spellcheck.py:470 gtkspellcheck/spellcheck.py:472
 msgid "Ignore All"
 msgstr ""
 
-#: ../src/gtkspellcheck/spellcheck.py:457
-#: ../src/gtkspellcheck/spellcheck.py:459
+#: gtkspellcheck/spellcheck.py:487 gtkspellcheck/spellcheck.py:489
 msgid "Languages"
 msgstr ""
 
-#: ../src/gtkspellcheck/spellcheck.py:470
-#: ../src/gtkspellcheck/spellcheck.py:473
+#: gtkspellcheck/spellcheck.py:500 gtkspellcheck/spellcheck.py:503
 msgid "Suggestions"
-msgstr ""
-
-#: ../src/gtkspellcheck/oxt_import.py:138
-msgid "'{0}' declared in registry but not found within the extension."
-msgstr ""
-
-#: ../src/gtkspellcheck/oxt_import.py:141
-msgid "Error while processing extension {0}."
-msgstr ""
-
-#: ../src/gtkspellcheck/oxt_import.py:144
-msgid "Extension '{0}' has no dictionary registry."
-msgstr ""
-
-#: ../src/gtkspellcheck/oxt_import.py:146
-msgid "Extension '{0}' is not a valid zip file."
-msgstr ""
-
-#: ../src/gtkspellcheck/oxt_import.py:86
-msgid "Extract path is not a directory."
-msgstr ""
-
-#: ../src/gtkspellcheck/oxt_import.py:160
-msgid "Unable to move extension, file with same name exists within move_path."
-msgstr ""
-
-#: ../src/gtkspellcheck/oxt_import.py:162
-msgid "Unable to move extension, move_path is not a directory."
 msgstr ""

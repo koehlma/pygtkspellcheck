@@ -5,66 +5,36 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: pygtkspellcheck_3.0a\n"
+"Project-Id-Version: gtkspellcheck\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-23 05:23-0600\n"
-"PO-Revision-Date: 2012-07-23 05:26-0600\n"
-"Last-Translator: Carlos Jenkins <carlos@jenkins.co.cr>\n"
+"POT-Creation-Date: 2012-08-26 14:32+0100\n"
+"PO-Revision-Date: 2012-08-26 14:32+0100\n"
+"Last-Translator: Maximilian Köhl <linuxmaxi@googlemail.com>\n"
 "Language-Team: Carlos Jenkins <carlos@jenkins.co.cr>\n"
-"Language: \n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Spanish\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: /home/maximilian/development/pygtkspellcheck/src\n"
+"X-Poedit-SearchPath-0: ./gtkspellcheck\n"
 
-#: ../src/gtkspellcheck/spellcheck.py:412
+#: gtkspellcheck/spellcheck.py:442
 msgid "(no suggestions)"
 msgstr "(sin sugerencias)"
 
-#: ../src/gtkspellcheck/spellcheck.py:433
-#: ../src/gtkspellcheck/spellcheck.py:436
+#: gtkspellcheck/spellcheck.py:463 gtkspellcheck/spellcheck.py:466
 msgid "Add \"{word}\" to Dictionary"
 msgstr "Agregar \"{word}\" al Diccionario"
 
-#: ../src/gtkspellcheck/spellcheck.py:440
-#: ../src/gtkspellcheck/spellcheck.py:442
+#: gtkspellcheck/spellcheck.py:470 gtkspellcheck/spellcheck.py:472
 msgid "Ignore All"
 msgstr "Ignorar Todos"
 
-#: ../src/gtkspellcheck/spellcheck.py:457
-#: ../src/gtkspellcheck/spellcheck.py:459
+#: gtkspellcheck/spellcheck.py:487 gtkspellcheck/spellcheck.py:489
 msgid "Languages"
 msgstr "Idiomas"
 
-#: ../src/gtkspellcheck/spellcheck.py:470
-#: ../src/gtkspellcheck/spellcheck.py:473
+#: gtkspellcheck/spellcheck.py:500 gtkspellcheck/spellcheck.py:503
 msgid "Suggestions"
 msgstr "Sugerencias"
-
-#: ../src/gtkspellcheck/oxt_import.py:138
-msgid "'{0}' declared in registry but not found within the extension."
-msgstr "'{0}' ha sido declarado en el archivo de registro pero no pudo ser encontrado dentro de la extensión."
-
-#: ../src/gtkspellcheck/oxt_import.py:141
-msgid "Error while processing extension {0}."
-msgstr "Hubo un error al procesar la extensión {0}."
-
-#: ../src/gtkspellcheck/oxt_import.py:144
-msgid "Extension '{0}' has no dictionary registry."
-msgstr "La extensión '{0}' no tiene un archivo de registro de diccionarios."
-
-#: ../src/gtkspellcheck/oxt_import.py:146
-msgid "Extension '{0}' is not a valid zip file."
-msgstr "La extensión '{0}' no es un archivo zip válido."
-
-#: ../src/gtkspellcheck/oxt_import.py:86
-msgid "Extract path is not a directory."
-msgstr "La ruta de extracción no es un directorio."
-
-#: ../src/gtkspellcheck/oxt_import.py:160
-msgid "Unable to move extension, file with same name exists within move_path."
-msgstr "No fue posible mover el archivo de la extensión, un archivo del mismo nombre ya existe dentro de move_path."
-
-#: ../src/gtkspellcheck/oxt_import.py:162
-msgid "Unable to move extension, move_path is not a directory."
-msgstr "No fue posible mover el archivo de la extensión, move_path no es un directorio."
