@@ -18,6 +18,9 @@
 
 from __future__ import print_function
 
+import distutils.cmd
+import distutils.command.install
+import distutils.command.install_data
 import os
 import sys
 
@@ -42,10 +45,21 @@ if len(sys.argv) > 1 and sys.argv[1] == 'register':
         gtkspellcheck.__desc_long__ = _pypi.read().decode('utf-8')
     print('pypi registration: override `long_description`')
 
-data_files = []
-for lang in os.listdir('locale'):
-    data_files.append((os.path.join('share', 'locale', lang, 'LC_MESSAGES'),
-                       [os.path.join('locale', lang, 'pygtkspellcheck.mo')]))
+class InstallLocale(distutils.command.install_data.install_data):
+    def run(self):
+        locale_name = 'py{}gtkspellcheck.mo'.format(sys.version_info.major)
+        base = os.path.join(self.install_dir, 'share', 'locale')
+        self.mkpath(base)
+        for lang in os.listdir(os.path.join(__path__, 'locale')):
+            path = os.path.join(base, lang, 'LC_MESSAGES')
+            self.mkpath(path)
+            self.copy_file(os.path.join(__path__, 'locale', lang,
+                                        'pygtkspellcheck.mo'),
+                           os.path.join(path, locale_name))
+            
+commands['install_locale'] = InstallLocale
+distutils.command.install.install.sub_commands.append(('install_locale',
+                                                       lambda self: True))
 
 setup(name=gtkspellcheck.__short_name__,
       version=gtkspellcheck.__version__,
@@ -56,11 +70,9 @@ setup(name=gtkspellcheck.__short_name__,
       url=gtkspellcheck.__website__,
       download_url=gtkspellcheck.__download_url__,
       license='GPLv3+',
-      scripts=['utils/oxt_extract_dictionaries.py'],
       package_dir={'': 'src'},
       packages=['gtkspellcheck', 'pylocales'],
       package_data={'pylocales' : ['locales.db']},
-      data_files=data_files,
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Environment :: X11 Applications :: Gnome',
                    'Intended Audience :: Developers',

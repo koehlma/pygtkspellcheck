@@ -17,10 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-A spellchecking library written in pure Python for Gtk based on Enchant. It
-supports both Gtk's Python bindings, PyGObject and PyGtk, and for both Python 2
-and 3 with automatic switching and binding autodetection. For automatic
-translation of the user interface it can use GEdit's translation files.
+A simple but quite powerful spellchecking library written in pure Python for Gtk
+based on Enchant. It supports PyGObject as well as PyGtk for Python 2 and 3 with
+automatic switching and binding detection. For automatic translation of the user
+interface it can use Gedit’s translation files.
 """
 
 import enchant
@@ -81,7 +81,8 @@ if gettext.find('gedit'):
     _gedit = gettext.translation('gedit', fallback=True).gettext
     _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
 else:
-    _ = gettext.translation('pygtkspellcheck', fallback=True).gettext
+    locale_name = 'py{}gtkspellcheck.mo'.format(sys.version_info.major)
+    _ = gettext.translation(locale_name, fallback=True).gettext
 
 class SpellChecker(object):
     """

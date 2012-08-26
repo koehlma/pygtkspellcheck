@@ -2,7 +2,7 @@
 pkgname=python-gtkspellcheck
 pkgver=3.0
 pkgrel=1
-pkgdesc="A simple but quite powerful spellchecking library written in pure Python for Gtk based on Enchant."
+pkgdesc="a simple but quite powerful Python spell checking library for GtkTextViews based on Enchant"
 arch=(any)
 url="http://koehlma.github.com/projects/pygtkspellcheck.html"
 license=('GPL')
