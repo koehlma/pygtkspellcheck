@@ -42,6 +42,11 @@ if len(sys.argv) > 1 and sys.argv[1] == 'register':
         gtkspellcheck.__desc_long__ = _pypi.read().decode('utf-8')
     print('pypi registration: override `long_description`')
 
+data_files = []
+for lang in os.listdir('locale'):
+    data_files.append((os.path.join('share', 'locale', lang, 'LC_MESSAGES'),
+                       [os.path.join('locale', lang, 'pygtkspellcheck.mo')]))
+
 setup(name=gtkspellcheck.__short_name__,
       version=gtkspellcheck.__version__,
       description=gtkspellcheck.__desc_short__,
@@ -55,6 +60,7 @@ setup(name=gtkspellcheck.__short_name__,
       package_dir={'': 'src'},
       packages=['gtkspellcheck', 'pylocales'],
       package_data={'pylocales' : ['locales.db']},
+      data_files=data_files,
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Environment :: X11 Applications :: Gnome',
                    'Intended Audience :: Developers',
