@@ -81,7 +81,7 @@ if gettext.find('gedit'):
     _gedit = gettext.translation('gedit', fallback=True).gettext
     _ = lambda message: _gedit(_GEDIT_MAP[message]).replace('_', '')
 else:
-    locale_name = 'py{}gtkspellcheck.mo'.format(sys.version_info.major)
+    locale_name = 'py{}gtkspellcheck'.format(sys.version_info.major)
     _ = gettext.translation(locale_name, fallback=True).gettext
 
 class SpellChecker(object):
