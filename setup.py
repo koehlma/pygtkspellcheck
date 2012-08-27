@@ -61,6 +61,16 @@ commands['install_locale'] = InstallLocale
 distutils.command.install.install.sub_commands.append(('install_locale',
                                                        lambda self: True))
 
+data_files = []
+if len(sys.argv) > 1 and sys.argv[1] == 'bdist_wininst':
+    windows_locale = os.path.join('dist', 'windows', 'locale')
+    for lang in os.listdir(windows_locale):
+        data_files.append((os.path.join('share', 'locale', lang, 'LC_MESSAGES'),
+                           [os.path.join(windows_locale, lang, 'LC_MESSAGES', message_file)
+                            for message_file in os.listdir(os.path.join(windows_locale, lang, 'LC_MESSAGES'))
+                            if message_file.endswith('.mo')]))
+    print('windows bdist_wininst include iso message files')
+    
 setup(name=gtkspellcheck.__short_name__,
       version=gtkspellcheck.__version__,
       description=gtkspellcheck.__desc_short__,
@@ -70,9 +80,10 @@ setup(name=gtkspellcheck.__short_name__,
       url=gtkspellcheck.__website__,
       download_url=gtkspellcheck.__download_url__,
       license='GPLv3+',
-      package_dir={'': 'src'},
       packages=['gtkspellcheck', 'pylocales'],
+      package_dir={'': 'src'},
       package_data={'pylocales' : ['locales.db']},
+      data_files=data_files,
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Environment :: X11 Applications :: Gnome',
                    'Intended Audience :: Developers',
