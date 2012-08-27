@@ -22,19 +22,6 @@ override_dh_auto_install:
 		$$python setup.py install --root=$(CURDIR)/debian/tmp --install-layout=deb; \
 	done;
 
-	# l10n
-	mkdir -p $(CURDIR)/debian/tmp/usr/share/
-
-	set -ex; for python in $(shell py3versions -r); do \
-		$$python -B $(CURDIR)/l10n/compile_mo.py; \
-	done;
-	mv $(CURDIR)/l10n/mo $(CURDIR)/debian/tmp/usr/share/locale3
-
-	set -ex; for python in $(shell pyversions -r); do \
-		$$python -B $(CURDIR)/l10n/compile_mo.py; \
-	done;
-	mv $(CURDIR)/l10n/mo $(CURDIR)/debian/tmp/usr/share/locale2
-
 override_dh_installdocs:
 	python setup.py build_sphinx
 	dh_installdocs
