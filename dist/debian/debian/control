@@ -20,11 +20,10 @@ Package: python-gtkspellcheck
 Architecture: all
 Depends: ${python:Depends}, ${misc:Depends}, python-enchant, python-gtk2 | python-gi
 Recommends: iso-codes
-Description: spellchecking library written in Python for Gtk based on Enchant
- It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both 
- Python 2 and 3 with automatic switching and binding autodetection. For 
- automatic translation of the user interface it can use GEdit's translation 
- files.
+Description: A simple but quite powerful spellchecking library written in pure
+ Python for Gtk based on Enchant. It supports PyGObject as well as PyGtk for
+ Python 2 and 3 with automatic switching and binding detection. For automatic
+ translation of the user interface it can use Gedit’s translation files.
  .
  This package contains the Python 2 version with support for PyGtk and
  PyGObject.
@@ -33,11 +32,10 @@ Package: python3-gtkspellcheck
 Architecture: all
 Depends: ${python3:Depends}, ${misc:Depends}, python3-enchant, python3-gi
 Recommends: iso-codes, python-gtkspellcheck-docs
-Description: spellchecking library written in Python for Gtk based on Enchant
- It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both 
- Python 2 and 3 with automatic switching and binding autodetection. For 
- automatic translation of the user interface it can use GEdit's translation 
- files.
+Description: A simple but quite powerful spellchecking library written in pure
+ Python for Gtk based on Enchant. It supports PyGObject as well as PyGtk for
+ Python 2 and 3 with automatic switching and binding detection. For automatic
+ translation of the user interface it can use Gedit’s translation files.
  . 
  This package contains the Python 3 version with support for PyGObject.
 
@@ -45,10 +43,10 @@ Package: python-gtkspellcheck-doc
 Architecture: all
 Section: doc
 Depends: ${sphinxdoc:Depends}, ${misc:Depends}
-Description: Python GTK Spellcheck common documentation
- It supports both Gtk's Python bindings, PyGObject and PyGtk, and for both 
- Python 2 and 3 with automatic switching and binding autodetection. For 
- automatic translation of the user interface it can use GEdit's translation 
- files.
+Description: Common documentation for Python GTK Spellcheck. A simple but quite
+ powerful spellchecking library written in pure Python for Gtk based on Enchant.
+ It supports PyGObject as well as PyGtk for Python 2 and 3 with automatic
+ switching and binding detection. For automatic translation of the user
+ interface it can use Gedit’s translation files.
  .
  This is the common documentation package.
