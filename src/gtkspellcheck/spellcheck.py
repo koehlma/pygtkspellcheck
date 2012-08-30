@@ -74,7 +74,7 @@ _GEDIT_MAP = {'Languages' : 'Languages',
               'Ignore All' : 'Ignore _All',
               'Suggestions' : 'Suggestions',
               '(no suggestions)' : '(no suggested words)',
-              'Add "{word}" to Dictionary' : 'Add w_ord'}
+              'Add "{}" to Dictionary' : 'Add w_ord'}
 
 # translation
 if gettext.find('gedit'):

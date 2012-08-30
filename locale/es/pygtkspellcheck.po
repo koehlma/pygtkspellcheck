@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkspellcheck\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-26 14:32+0100\n"
-"PO-Revision-Date: 2012-08-26 14:32+0100\n"
+"POT-Creation-Date: 2012-08-30 20:01+0100\n"
+"PO-Revision-Date: 2012-08-30 20:01+0100\n"
 "Last-Translator: Maximilian Köhl <linuxmaxi@googlemail.com>\n"
 "Language-Team: Carlos Jenkins <carlos@jenkins.co.cr>\n"
 "Language: es\n"
@@ -19,22 +19,22 @@ msgstr ""
 "X-Poedit-Basepath: /home/maximilian/development/pygtkspellcheck/src\n"
 "X-Poedit-SearchPath-0: ./gtkspellcheck\n"
 
-#: gtkspellcheck/spellcheck.py:442
+#: gtkspellcheck/spellcheck.py:467
 msgid "(no suggestions)"
 msgstr "(sin sugerencias)"
 
-#: gtkspellcheck/spellcheck.py:463 gtkspellcheck/spellcheck.py:466
-msgid "Add \"{word}\" to Dictionary"
-msgstr "Agregar \"{word}\" al Diccionario"
+#: gtkspellcheck/spellcheck.py:489 gtkspellcheck/spellcheck.py:492
+msgid "Add \"{}\" to Dictionary"
+msgstr "Agregar \"{}\" al Diccionario"
 
-#: gtkspellcheck/spellcheck.py:470 gtkspellcheck/spellcheck.py:472
+#: gtkspellcheck/spellcheck.py:496 gtkspellcheck/spellcheck.py:498
 msgid "Ignore All"
 msgstr "Ignorar Todos"
 
-#: gtkspellcheck/spellcheck.py:487 gtkspellcheck/spellcheck.py:489
+#: gtkspellcheck/spellcheck.py:513 gtkspellcheck/spellcheck.py:515
 msgid "Languages"
 msgstr "Idiomas"
 
-#: gtkspellcheck/spellcheck.py:500 gtkspellcheck/spellcheck.py:503
+#: gtkspellcheck/spellcheck.py:527 gtkspellcheck/spellcheck.py:530
 msgid "Suggestions"
 msgstr "Sugerencias"
