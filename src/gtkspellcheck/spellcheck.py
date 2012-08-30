@@ -89,12 +89,12 @@ class SpellChecker(object):
     Main spellchecking class, everything important happens here.
 
     :param view: GtkTextView the SpellChecker should be attached to.
-    :param language: the language which should be used for spellchecking.
+    :param language: The language which should be used for spellchecking.
         Use a combination of two letter lower-case ISO 639 language code with a
         two letter upper-case ISO 3166 country code, for example en_US or de_DE.
-    :param prefix: a prefix for some internal GtkTextMarks.
-    :param collapse: enclose suggestions in its own menu.
-    :param params: dictionary with Enchant broker parameters that should be set
+    :param prefix: A prefix for some internal GtkTextMarks.
+    :param collapse: Enclose suggestions in its own menu.
+    :param params: Dictionary with Enchant broker parameters that should be set
       e.g. `enchant.myspell.dictionary.path`.
 
     .. attribute:: languages
@@ -103,7 +103,7 @@ class SpellChecker(object):
 
         .. function:: exists(language)
 
-            checks if a language exists
+            Checks if a language exists.
 
             :param language: language to check
     """
@@ -112,7 +112,8 @@ class SpellChecker(object):
     FILTER_TEXT = 'text'
 
     DEFAULT_FILTERS = {FILTER_WORD : [r'[0-9.,]+'],
-                       FILTER_LINE : [r'(https?|ftp|file):((//)|(\\\\))+[\w\d:#@%/;$()~_?+-=\\.&]+',
+                       FILTER_LINE : [(r'(https?|ftp|file):((//)|(\\\\))+[\w\d:'
+                                       r'#@%/;$()~_?+-=\\.&]+'),
                                       r'[\w\d]+@[\w\d.]+'],
                        FILTER_TEXT : []}
 
@@ -160,17 +161,20 @@ class SpellChecker(object):
         def move(self, location):
             self._buffer.move_mark(self._mark, location)
 
-    def __init__(self, view, language='en', prefix='gtkspellchecker', collapse=True, params={}):
+    def __init__(self, view, language='en', prefix='gtkspellchecker',
+                 collapse=True, params={}):
         self._view = view
         self.collapse = collapse
-        self._view.connect('populate-popup', lambda entry, menu: self._extend_menu(menu))
+        self._view.connect('populate-popup',
+                           lambda entry, menu:self._extend_menu(menu))
         self._view.connect('popup-menu', self._click_move_popup)
         self._view.connect('button-press-event', self._click_move_button)
         self._prefix = prefix
         if _pygobject:
-            self._misspelled = gtk.TextTag.new('{prefix}-misspelled'.format(prefix=self._prefix))
+            self._misspelled = gtk.TextTag.new('{}-misspelled'\
+                                               .format(self._prefix))
         else:
-            self._misspelled = gtk.TextTag('{prefix}-misspelled'.format(prefix=self._prefix))
+            self._misspelled = gtk.TextTag('{}-misspelled'.format(self._prefix))
         self._misspelled.set_property('underline', 4)
         self._broker = enchant.Broker()
         for param, value in params.items(): self._broker.set_param(param, value)
@@ -194,16 +198,20 @@ class SpellChecker(object):
         self._dictionary = self._broker.request_dict(self._language)
         self._deferred_check = False
         self._filters = dict(SpellChecker.DEFAULT_FILTERS)
-        self._regexes = {SpellChecker.FILTER_WORD : re.compile('|'.join(self._filters[SpellChecker.FILTER_WORD])),
-                         SpellChecker.FILTER_LINE : re.compile('|'.join(self._filters[SpellChecker.FILTER_LINE])),
-                         SpellChecker.FILTER_TEXT : re.compile('|'.join(self._filters[SpellChecker.FILTER_TEXT]), re.MULTILINE)}
+        self._regexes = {SpellChecker.FILTER_WORD : re.compile('|'.join(
+                             self._filters[SpellChecker.FILTER_WORD])),
+                         SpellChecker.FILTER_LINE : re.compile('|'.join(
+                             self._filters[SpellChecker.FILTER_LINE])),
+                         SpellChecker.FILTER_TEXT : re.compile('|'.join(
+                             self._filters[SpellChecker.FILTER_TEXT]),
+                                                               re.MULTILINE)}
         self._enabled = True
         self.buffer_initialize()
 
     @property
     def language(self):
         """
-        The language used for spellchecking
+        The language used for spellchecking.
         """
         return self._language
 
@@ -217,7 +225,7 @@ class SpellChecker(object):
     @property
     def enabled(self):
         """
-        Enable or disable spellchecking
+        Enable or disable spellchecking.
         """
         return self._enabled
 
@@ -230,8 +238,9 @@ class SpellChecker(object):
 
     def buffer_initialize(self):
         """
-        Initialize the GtkTextBuffer associated with the GtkTextView.
-        If you associate a new GtkTextBuffer with the GtkTextView call this method.
+        Initialize the GtkTextBuffer associated with the GtkTextView. If you
+        have associated a new GtkTextBuffer with the GtkTextView call this
+        method.
         """
         self._buffer = self._view.get_buffer()
         self._buffer.connect('insert-text', self._before_text_insert)
@@ -239,9 +248,12 @@ class SpellChecker(object):
         self._buffer.connect_after('delete-range', self._range_delete)
         self._buffer.connect_after('mark-set', self._mark_set)
         start = self._buffer.get_bounds()[0]
-        self._marks = {'insert-start' : SpellChecker._Mark(self._buffer, '{prefix}-insert-start'.format(prefix=self._prefix), start),
-                       'insert-end' : SpellChecker._Mark(self._buffer, '{prefix}-insert-end'.format(prefix=self._prefix), start),
-                       'click' : SpellChecker._Mark(self._buffer, '{prefix}-click'.format(prefix=self._prefix), start)}
+        self._marks = {'insert-start' : SpellChecker._Mark(self._buffer,
+                           '{}-insert-start'.format(self._prefix), start),
+                       'insert-end' : SpellChecker._Mark(self._buffer,
+                           '{}-insert-end'.format(self._prefix), start),
+                       'click' : SpellChecker._Mark(self._buffer,
+                           '{}-click'.format(self._prefix), start)}
         self._table = self._buffer.get_tag_table()
         self._table.add(self._misspelled)
         self.ignored_tags = []
@@ -287,49 +299,57 @@ class SpellChecker(object):
 
     def append_filter(self, regex, filter_type):
         """
-        Append a new filter to the filter list.
-        Filters are useful to ignore some misspelled words based on regular expressions.
+        Append a new filter to the filter list. Filters are useful to ignore
+        some misspelled words based on regular expressions.
 
-        :param regex: the regex used for filtering
-        :param filter_type: the type of the filter
+        :param regex: The regex used for filtering.
+        :param filter_type: The type of the filter.
 
         Filter Types:
 
-        :const:`SpellChecker.FILTER_WORD`: The regex must match the whole word you want to filter.
-        The word separation is done by Pango's word separation algorythm so, for example, urls won't work here because they are split in many words.
+        :const:`SpellChecker.FILTER_WORD`: The regex must match the whole word
+            you want to filter. The word separation is done by Pango's word
+            separation algorithm so, for example, urls won't work here because
+            they are split in many words.
 
-        :const:`SpellChecker.FILTER_LINE`: If the expression you want to match is a single line expression use this type.
-        It should not be an open end expression because then the rest of the line with the text you want to filter will become correct.
+        :const:`SpellChecker.FILTER_LINE`: If the expression you want to match
+            is a single line expression use this type. It should not be an open
+            end expression because then the rest of the line with the text you
+            want to filter will become correct.
 
-        :const:`SpellChecker.FILTER_TEXT`: Use this if you want to filter multiline expressions.
-        The regex will be compiled with the `MULTILINE` flag.
-        Same with open end expressions apply here.
+        :const:`SpellChecker.FILTER_TEXT`: Use this if you want to filter
+           multiline expressions. The regex will be compiled with the
+           `re.MULTILINE` flag. Same with open end expressions apply here.
         """
         self._filters[filter_type].append(regex)
         if filter_type == SpellChecker.FILTER_TEXT:
-            self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]), re.MULTILINE)
+            self._regexes[filter_type] = re.compile('|'.join(
+                self._filters[filter_type]), re.MULTILINE)
         else:
-            self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]))
+            self._regexes[filter_type] = re.compile('|'.join(
+                self._filters[filter_type]))
 
     def remove_filter(self, regex, filter_type):
         """
         Remove a filter from the filter list.
 
-        :param regex: the regex which used for filtering
-        :param filter_type: the type of the filter
+        :param regex: The regex which used for filtering.
+        :param filter_type: The type of the filter.
         """
         self._filters[filter_type].remove(regex)
         if filter_type == SpellChecker.FILTER_TEXT:
-            self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]), re.MULTILINE)
+            self._regexes[filter_type] = re.compile('|'.join(
+                self._filters[filter_type]), re.MULTILINE)
         else:
-            self._regexes[filter_type] = re.compile('|'.join(self._filters[filter_type]))
+            self._regexes[filter_type] = re.compile('|'.join(
+                self._filters[filter_type]))
 
     def append_ignore_tag(self, tag):
         """
-        Appends a tag to the list of ignored tags.
-        A string will be automatic resolved into a tag object.
+        Appends a tag to the list of ignored tags. A string will be automatic
+        resolved into a tag object.
 
-        :param tag: tag object or tag name
+        :param tag: Tag object or tag name.
         """
         if isinstance(tag, basestring):
             tag = self._table.lookup(tag)
@@ -337,10 +357,10 @@ class SpellChecker(object):
 
     def remove_ignore_tag(self, tag):
         """
-        Removes a tag from the list of ignored tags.
-        A string will be automatic resolved into a tag object.
+        Removes a tag from the list of ignored tags. A string will be automatic
+        resolved into a tag object.
 
-        :param tag: tag object or tag name
+        :param tag: Tag object or tag name.
         """
         if isinstance(tag, basestring):
             tag = self._table.lookup(tag)
@@ -350,7 +370,7 @@ class SpellChecker(object):
         """
         Adds a word to user's dictionary.
 
-        :param word: the word to add
+        :param word: The word to add.
         """
         self._dictionary.add_to_pwl(word)
         self.recheck()
@@ -359,7 +379,7 @@ class SpellChecker(object):
         """
         Ignores a word for the current session.
 
-        :param word: the word to ignore
+        :param word: The word to ignore.
         """
         self._dictionary.add_to_session(word)
         self.recheck()
@@ -368,18 +388,21 @@ class SpellChecker(object):
         """
         Checks a specified range between two GtkTextIters.
 
-        :param start: start iter - checking starts here
-        :param end: end iter - checking ends here
+        :param start: Start iter - checking starts here.
+        :param end: End iter - checking ends here.
         """
         if not self._enabled:
             return
         if end.inside_word(): end.forward_word_end()
-        if not start.starts_word() and (start.inside_word() or start.ends_word()): start.backward_word_start()
+        if not start.starts_word() and (start.inside_word() or
+                                        start.ends_word()):
+            start.backward_word_start()
         self._buffer.remove_tag(self._misspelled, start, end)
         cursor = self._buffer.get_iter_at_mark(self._buffer.get_insert())
         precursor = cursor.copy()
         precursor.backward_char()
-        highlight = cursor.has_tag(self._misspelled) or precursor.has_tag(self._misspelled)
+        highlight = (cursor.has_tag(self._misspelled) or
+                     precursor.has_tag(self._misspelled))
         if not start.get_offset():
             start.forward_word_end()
             start.backward_word_start()
@@ -387,7 +410,8 @@ class SpellChecker(object):
         while word_start.compare(end) < 0:
             word_end = word_start.copy()
             word_end.forward_word_end()
-            in_word = (word_start.compare(cursor) < 0) and (cursor.compare(word_end) <= 0)
+            in_word = ((word_start.compare(cursor) < 0) and
+                       (cursor.compare(word_end) <= 0))
             if in_word and not force_all:
                 if highlight:
                     self._check_word(word_start, word_end)
@@ -461,10 +485,11 @@ class SpellChecker(object):
                 menu.append(item)
         if _pygobject:
             menu.append(gtk.SeparatorMenuItem.new())
-            item = gtk.MenuItem.new_with_label(_('Add "{word}" to Dictionary').format(word=word))
+            item = gtk.MenuItem.new_with_label(
+                _('Add "{}" to Dictionary').format(word))
         else:
             menu.append(gtk.SeparatorMenuItem())
-            item = gtk.MenuItem(_('Add "{word}" to Dictionary').format(word=word))
+            item = gtk.MenuItem(_('Add "{}" to Dictionary').format(word))
         item.connect('activate', lambda *args: self.add_to_dictionary(word))
         menu.append(item)
         if _pygobject:
@@ -495,33 +520,36 @@ class SpellChecker(object):
             start, end = self._marks['click'].word
             if start.has_tag(self._misspelled):
                 word = self._buffer.get_text(start, end, False)
-                submenu_items = self._suggestion_menu(word)
+                items = self._suggestion_menu(word)
                 if self.collapse:
                     if _pygobject:
-                        suggestions = gtk.MenuItem.new_with_label(_('Suggestions'))
+                        suggestions = gtk.MenuItem.new_with_label(
+                            _('Suggestions'))
                         submenu = gtk.Menu.new()
                     else:
                         suggestions = gtk.MenuItem(_('Suggestions'))
                         submenu = gtk.Menu()
-                    for i in submenu_items:
-                        submenu.append(i)
+                    for item in items:
+                        submenu.append(item)
                     suggestions.set_submenu(submenu)
                     suggestions.show_all()
                     menu.prepend(suggestions)
                 else:
-                    submenu_items.reverse()
-                    for i in submenu_items:
-                        menu.prepend(i)
+                    items.reverse()
+                    for item in items:
+                        menu.prepend(item)
                         menu.show_all()
 
     def _click_move_popup(self, *args):
-        self._marks['click'].move(self._buffer.get_iter_at_mark(self._buffer.get_insert()))
+        self._marks['click'].move(self._buffer.get_iter_at_mark(
+            self._buffer.get_insert()))
         return False
 
     def _click_move_button(self, widget, event):
         if event.button == 3:
             if self._deferred_check:  self._check_deferred_range(True)
-            x, y = self._view.window_to_buffer_coords(2, int(event.x), int(event.y))
+            x, y = self._view.window_to_buffer_coords(2, int(event.x),
+                                                      int(event.y))
             self._marks['click'].move(self._view.get_iter_at_location(x, y))
         return False
 
@@ -571,8 +599,10 @@ class SpellChecker(object):
             line = self._buffer.get_text(line_start, line_end, False)
             for match in self._regexes[SpellChecker.FILTER_LINE].finditer(line):
                 if match.start() <= start.get_line_offset() <= match.end():
-                    start = self._buffer.get_iter_at_line_offset(start.get_line(), match.start())
-                    end = self._buffer.get_iter_at_line_offset(start.get_line(), match.end())
+                    start = self._buffer.get_iter_at_line_offset(
+                        start.get_line(), match.start())
+                    end = self._buffer.get_iter_at_line_offset(start.get_line(),
+                                                               match.end())
                     self._buffer.remove_tag(self._misspelled, start, end)
                     return
         if len(self._filters[SpellChecker.FILTER_TEXT]):

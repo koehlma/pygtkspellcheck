@@ -65,7 +65,8 @@ class CountryNotFound(Exception):
 
 class Country(object):
     def __init__(self, rowid):
-        country = _database.execute('SELECT * FROM countries WHERE rowid == ?', (rowid,)).fetchone()
+        country = _database.execute('SELECT * FROM countries WHERE rowid == ?',
+                                    (rowid,)).fetchone()
         self.name = country[0]
         self.official_name = country[1]
         self.alpha_2 = country[2]
@@ -75,7 +76,9 @@ class Country(object):
         
     @classmethod
     def get_country(cls, code, codec):
-        country = _database.execute('SELECT rowid FROM countries WHERE %s == ?' % (codec), (code,)).fetchone()
+        country = _database.execute(
+            'SELECT rowid FROM countries WHERE %s == ?' % (codec),
+            (code,)).fetchone()
         if country:
             return cls(country[0])
         raise CountryNotFound('code: %s, codec: %s' % (code, codec))
@@ -94,7 +97,8 @@ class Country(object):
    
 class Language(object):
     def __init__(self, rowid):
-        language = _database.execute('SELECT * FROM languages WHERE rowid == ?', (rowid,)).fetchone()
+        language = _database.execute('SELECT * FROM languages WHERE rowid == ?',
+                                     (rowid,)).fetchone()
         self.name = language[0]
         self.iso_639_2B = language[1]
         self.iso_639_2T = language[2]
@@ -103,7 +107,9 @@ class Language(object):
         
     @classmethod
     def get_language(cls, code, codec):
-        language = _database.execute('SELECT rowid FROM languages WHERE %s == ?' % (codec), (code,)).fetchone()
+        language = _database.execute(
+            'SELECT rowid FROM languages WHERE %s == ?' % (codec),
+            (code,)).fetchone()
         if language:
             return cls(language[0])
         raise LanguageNotFound('code: %s, codec: %s' % (code, codec))
