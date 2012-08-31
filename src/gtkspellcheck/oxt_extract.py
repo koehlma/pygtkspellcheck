@@ -41,7 +41,6 @@ __all__ = ['extract_oxt', 'batch_extract', 'BatchError', 'BATCH_SUCCESS',
 logger = logging.getLogger(__name__)
 
 def find_dictionaries(registry):
-    # TODO: write comments
     def oor_name(name, element):
         return element.attributes['oor:name'].value.lower() == name
     
@@ -53,17 +52,26 @@ def find_dictionaries(registry):
     
     result = []
     
+    # find all "node" elements which have "dictionaries" as "oor:name" attribute
     for dictionaries in filter(functools.partial(oor_name, 'dictionaries'),
                                registry.getElementsByTagName('node')):
+        # for all "node" elements in this dictionary nodes
         for dictionary in dictionaries.getElementsByTagName('node'):
+            # get all "prop" elements
             properties = dictionary.getElementsByTagName('prop')
+            # get the format property as text
             format = get_property('format', properties).firstChild.data.strip()
             if format and format == 'DICT_SPELL':
+                # find the locations property
                 locations = get_property('locations', properties)
+                # if the location property is text:
+                # %origin%/dictionary.aff %origin%/dictionary.dic
                 if locations.firstChild.nodeType == xml.dom.Node.TEXT_NODE:
                     locations = locations.firstChild.data
                     locations = locations.replace('%origin%/', '').strip()
                     result.append(locations.split())
+                # otherwise:
+                # <i>%origin%/dictionary.aff</i> <i>%origin%/dictionary.dic</i>
                 else:
                     locations = [item.firshChild.data.replace('%origin%/', '') \
                                  .strip() for item in
