@@ -34,8 +34,9 @@ import xml.parsers.expat
 import zipfile
 
 # public objects
-__all__ = ['extract_oxt', 'batch_extract', 'BatchError', 'BATCH_SUCCESS',
-           'BATCH_ERROR']
+__all__ = ['extract_oxt', 'batch_extract', 'BadXml', 'BadExtensionFile',
+           'ExtractPathIsNoDirectory', 'BATCH_SUCCESS', 'BATCH_ERROR',
+           'BATCH_WARNING']
 
 # logger
 logger = logging.getLogger(__name__)

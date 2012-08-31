@@ -30,9 +30,13 @@ API Reference
 
 .. autofunction:: gtkspellcheck.oxt_extract.extract
 
-.. autofunction:: gtkspellcheck.oxt_extract.BatchError
-
 .. autofunction:: gtkspellcheck.oxt_extract.batch_extract
+
+.. autoclass:: gtkspellcheck.oxt_extract.BadXml
+
+.. autoclass:: gtkspellcheck.oxt_extract.BadExtensionFile
+
+.. autoclass:: gtkspellcheck.oxt_extract.ExtractPathIsNoDirectory
 
 Development
 -----------
