@@ -33,7 +33,8 @@ import xml.dom.minidom
 import zipfile
 
 # public objects
-__all__ = ['extract_oxt']
+__all__ = ['extract_oxt', 'batch_extract', 'BatchError', 'BATCH_SUCCESS',
+           'BATCH_ERROR']
 
 # logger
 logger = logging.getLogger(__name__)
