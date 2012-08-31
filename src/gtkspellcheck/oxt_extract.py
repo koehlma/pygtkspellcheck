@@ -40,6 +40,22 @@ __all__ = ['extract_oxt', 'batch_extract', 'BatchError', 'BATCH_SUCCESS',
 # logger
 logger = logging.getLogger(__name__)
 
+class BadXml(Exception):
+    """
+    The XML dictionary registry is not valid XML.
+    """
+    
+class BadExtensionFile(Exception):
+    """
+    The extension has a wrong file format, should be a ZIP file.
+    """
+
+class ExtractPathIsNoDirectory(Exception):
+    """
+    The given `extract_path` is no directory.
+    """
+
+
 def find_dictionaries(registry):
     def oor_name(name, element):
         return element.attributes['oor:name'].value.lower() == name
@@ -96,41 +112,42 @@ def extract(filename, target, override=False):
 
         http://extensions.services.openoffice.org/dictionary
     """
-    with zipfile.ZipFile(filename, 'r') as extension:
-        files = extension.namelist()
-        
-        registry = 'dictionaries.xcu'
-        if not registry in files:
-            for filename in files:
-                if filename.lower().endswith(registry):
-                    registry = filename
-                
-        if registry in files:
-            registry = xml.dom.minidom.parse(extension.open(registry))
-            dictionaries = find_dictionaries(registry)
-            extracted = []
-            for dictionary in dictionaries:
-                for filename in dictionary:
-                    dict_file = os.path.join(target, os.path.basename(filename))
-                    if (not os.path.exists(dict_file) 
-                            or (override and os.path.isfile(dict_file))):
-                        with open(dict_file, 'wb') as _target:
-                            with extension.open(filename, 'r') as _source:
-                                extracted.append(os.path.basename(filename))
-                                _target.write(_source.read())
-                    else:
-                        logging.warning(('dictionary file "{}" already exists '
-                                         'and not overriding it'
-                                         ).format(dict_file))
-            return extracted
-
-class BatchError(Exception):
-    """
-    An fatal error happened during Batch Processing.
-    """
+    try:
+        with zipfile.ZipFile(filename, 'r') as extension:
+            files = extension.namelist()
+            
+            registry = 'dictionaries.xcu'
+            if not registry in files:
+                for filename in files:
+                    if filename.lower().endswith(registry):
+                        registry = filename
+                    
+            if registry in files:
+                registry = xml.dom.minidom.parse(extension.open(registry))
+                dictionaries = find_dictionaries(registry)
+                extracted = []
+                for dictionary in dictionaries:
+                    for filename in dictionary:
+                        dict_file = os.path.join(target, os.path.basename(filename))
+                        if (not os.path.exists(dict_file) 
+                                or (override and os.path.isfile(dict_file))):
+                            with open(dict_file, 'wb') as _target:
+                                with extension.open(filename, 'r') as _source:
+                                    extracted.append(os.path.basename(filename))
+                                    _target.write(_source.read())
+                        else:
+                            logging.warning(('dictionary file "{}" already exists '
+                                             'and not overriding it'
+                                             ).format(dict_file))
+                return extracted
+    except zipfile.BadZipfile:
+        raise BadExtensionFile()
+    except xml.parsers.expat.ExpatError:
+        raise BadXml()
 
 BATCH_SUCCESS = 'success'
 BATCH_ERROR = 'error'
+BATCH_WARNING = 'warning'
 
 def batch_extract(oxt_path, extract_path, override=False, move_path=None):
     """
@@ -140,9 +157,11 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
     :param extract_path: path to extract Hunspell dictionaries files to
     :param override: override already existing files
     :param move_path: optional path to move the ``.oxt`` files after processing
-    :rtype: generator over all extensions, yielding result, extension name and
-        error - result would be :const:`BATCH_SUCCESS` for success and
-        :const:`BATCH_ERROR` if some error happened
+    :rtype: generator over all extensions, yielding result, extension name,
+        error and extracted dictionaries - result would be
+        :const:`BATCH_SUCCESS` for success, :const:`BATCH_ERROR` if some error
+        happened or :const:`BATCH_WARNING` which contain some warning messages
+        instead of errors
     
     This function extracts the Hunspell dictionaries (``.dic`` and ``.aff``
     files) from all the ``.oxt`` extensions found on ``oxt_path`` directory to
@@ -167,12 +186,15 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
     
     Example::
     
-        for result, name, error in oxt_extract.batch_extract(...):
+        for result, name, error, dictionaries in oxt_extract.batch_extract(...):
             if result == oxt_extract.BATCH_SUCCESS:
                 print('successfully extracted extension "{}"'.format(name))
-            else:
+            elif result == oxt_extract.BATCH_ERROR:
                 print('could not extract extension "{}"'.format(name))
                 print('error {}'.format(error))
+            elif result == oxt_extract.BATCH_WARNING:
+                print('warning during processing extension "{}"'.format(name))
+                print(error)
         
     """
 
@@ -189,7 +211,7 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
 
     # check that the extract path is a directory
     if not os.path.isdir(extract_path):
-        raise BatchError('extract path is not a directory')
+        raise ExtractPathIsNoDirectory()
     
     # get all .oxt extension at given path
     oxt_files = [extension for extension in os.listdir(oxt_path)
@@ -201,11 +223,13 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
         try:
             dictionaries = extract(extension_path, extract_path, override)
             yield BATCH_SUCCESS, extension_name, None, dictionaries
-        # TODO: replace the exceptions with custom ones - bad xml file and
-        # bad extension file
-        except xml.parsers.expat.ExpatError as error:
+        except BadExtensionFile as error:
+            logger.error(('extension "{}" is not a valid ZIP file'
+                          ).format(extension_name))
             yield BATCH_ERROR, extension_name, error, []
-        except zipfile.BadZipFile as error:
+        except BadXml as error:
+            logger.error(('extension "{}" has no valid XML dictionary registry'
+                          ).format(extension_name))
             yield BATCH_ERROR, extension_name, error, []     
         
         # move the extension after processing if user requires it
@@ -222,6 +246,12 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
                 else:
                     logger.warning(('unable to move extension, file with same '
                                     'name exists within move_path'))
+                    yield (BATCH_WARNING, '',
+                           ('unable to move extension, file with same name '
+                            'exists within move_path'), [])
             else:
                 logger.warning(('unable to move extension, move_path is not a '
                                 'directory'))
+                yield (BATCH_WARNING, '',
+                           ('unable to move extension, move_path is not a '
+                            'directory'), [])                
