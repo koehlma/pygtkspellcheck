@@ -30,6 +30,7 @@ import logging
 import os
 import shutil
 import xml.dom.minidom
+import xml.parsers.expat
 import zipfile
 
 # public objects
@@ -40,6 +41,7 @@ __all__ = ['extract_oxt', 'batch_extract', 'BatchError', 'BATCH_SUCCESS',
 logger = logging.getLogger(__name__)
 
 def find_dictionaries(registry):
+    # TODO: write comments
     def oor_name(name, element):
         return element.attributes['oor:name'].value.lower() == name
     
@@ -189,10 +191,14 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
         extension_path = os.path.join(oxt_path, extension_name)
         
         try:
-            extract(extension_path, extract_path, override)
-            yield BATCH_SUCCESS, extension_name, None
+            dictionaries = extract(extension_path, extract_path, override)
+            yield BATCH_SUCCESS, extension_name, None, dictionaries
+        # TODO: replace the exceptions with custom ones - bad xml file and
+        # bad extension file
+        except xml.parsers.expat.ExpatError as error:
+            yield BATCH_ERROR, extension_name, error, []
         except zipfile.BadZipFile as error:
-            yield BATCH_ERROR, extension_name, error        
+            yield BATCH_ERROR, extension_name, error, []     
         
         # move the extension after processing if user requires it
         if move_path is not None:
