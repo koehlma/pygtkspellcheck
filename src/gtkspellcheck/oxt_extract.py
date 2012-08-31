@@ -131,7 +131,7 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
     :param move_path: optional path to move the ``.oxt`` files after processing
     :rtype: generator over all extensions, yielding result, extension name and
         error - result would be :const:`BATCH_SUCCESS` for success and
-        :const`BATCH_ERROR` if some error happened
+        :const:`BATCH_ERROR` if some error happened
     
     This function extracts the Hunspell dictionaries (``.dic`` and ``.aff``
     files) from all the ``.oxt`` extensions found on ``oxt_path`` directory to
