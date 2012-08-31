@@ -19,6 +19,10 @@ API Reference
 
 .. autofunction:: gtkspellcheck.oxt_extract.extract
 
+.. autofunction:: gtkspellcheck.oxt_extract.BatchError
+
+.. autofunction:: gtkspellcheck.oxt_extract.batch_extract
+
 Development
 -----------
 Development happens at `GitHub`_.
