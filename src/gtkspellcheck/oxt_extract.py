@@ -142,9 +142,9 @@ def extract(filename, target, override=False):
                                              ).format(dict_file))
                 return extracted
     except zipfile.BadZipfile:
-        raise BadExtensionFile()
+        raise BadExtensionFile('extension is not a valid ZIP file')
     except xml.parsers.expat.ExpatError:
-        raise BadXml()
+        raise BadXml('dictionary registry is not valid XML')
 
 BATCH_SUCCESS = 'success'
 BATCH_ERROR = 'error'
@@ -212,7 +212,7 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
 
     # check that the extract path is a directory
     if not os.path.isdir(extract_path):
-        raise ExtractPathIsNoDirectory()
+        raise ExtractPathIsNoDirectory('extract path is not a valid directory')
     
     # get all .oxt extension at given path
     oxt_files = [extension for extension in os.listdir(oxt_path)
