@@ -247,12 +247,12 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
                 else:
                     logger.warning(('unable to move extension, file with same '
                                     'name exists within move_path'))
-                    yield (BATCH_WARNING, '',
+                    yield (BATCH_WARNING, extension_name,
                            ('unable to move extension, file with same name '
                             'exists within move_path'), [])
             else:
                 logger.warning(('unable to move extension, move_path is not a '
                                 'directory'))
-                yield (BATCH_WARNING, '',
+                yield (BATCH_WARNING, extension_name,
                            ('unable to move extension, move_path is not a '
                             'directory'), [])                
