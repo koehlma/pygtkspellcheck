@@ -1,0 +1,31 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+%:
+	dh $@ --with python2,python3,sphinxdoc
+
+override_dh_auto_build:
+	dh_auto_build
+
+	# Python3
+	set -ex; for python in $(shell py3versions -r); do \
+		$$python setup.py build; \
+	done;
+
+override_dh_auto_install:
+	dh_auto_install
+
+	# Python3
+	set -ex; for python in $(shell py3versions -r); do \
+		$$python setup.py install --root=$(CURDIR)/debian/tmp --install-layout=deb; \
+	done;
+
+override_dh_installdocs:
+	python setup.py build_sphinx
+	dh_installdocs
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf build *.egg-info

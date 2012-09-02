@@ -1,0 +1,4 @@
+usr/lib/python2*
+usr/share/locale/de/LC_MESSAGES/py2* usr/share/locale/de/LC_MESSAGES/
+usr/share/locale/en/LC_MESSAGES/py2* usr/share/locale/en/LC_MESSAGES/
+usr/share/locale/es/LC_MESSAGES/py2* usr/share/locale/es/LC_MESSAGES/

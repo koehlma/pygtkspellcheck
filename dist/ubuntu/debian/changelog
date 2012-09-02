@@ -1,0 +1,6 @@
+pygtkspellcheck (4.0a-1) precise; urgency=low
+
+  * Initial release. Closes: 681528
+
+ -- Maximilian Köhl <linuxmaxi@googlemail.com>  Son, 2 Sep 2012 16:59:24 +0200
+
