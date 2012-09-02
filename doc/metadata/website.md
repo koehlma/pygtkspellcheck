@@ -40,9 +40,32 @@ The documentation is available at [Read the Docs]({% documentation %}).
 
 ## Archlinux - AUR
 ### Python 3
-* `yaourt -S python-gtkspellcheck`
-* [AUR Package](https://aur.archlinux.org/packages.php?ID=61200)
+[AUR Package](https://aur.archlinux.org/packages.php?ID=61200)
+
+    yaourt -S python-gtkspellcheck
 
 ### Python 2
-* `yaourt -S python2-gtkspellcheck`
-* [AUR Package](https://aur.archlinux.org/packages.php?ID=61199)
+[AUR Package](https://aur.archlinux.org/packages.php?ID=61199)
+
+    yaourt -S python2-gtkspellcheck
+
+## Ubuntu / Debian
+### Ubuntu - Repository
+
+    sudo add-apt-repository ppa:koehlma/packages
+    sudo apt-get update
+
+### Debian - Repository
+    
+    sudo su
+    echo "deb http://ppa.launchpad.net/koehlma/packages/ubuntu precise main" >> /etc/apt/sources.list
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 775B7DF6
+    apt-get update
+
+### Python 2
+    
+    sudo apt-get install python-gtkspellcheck
+
+### Python3
+
+    sudo apt-get install python3-gtkspellcheck
