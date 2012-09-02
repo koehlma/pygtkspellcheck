@@ -33,4 +33,4 @@ debuild -S -sa
 
 echo "uploading source to launchpad"
 cd ../
-dput ppa:koehlma/projects pygtkspellcheck_4.0a-1_source.changes
+dput ppa:koehlma/packages pygtkspellcheck_*_source.changes
