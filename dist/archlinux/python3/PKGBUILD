@@ -1,6 +1,6 @@
 # Maintainer: Maximilian Köhl <linuxmaxi@googlemail.com>
 pkgname=python-gtkspellcheck
-pkgver=3.0
+pkgver=4.0a
 pkgrel=1
 pkgdesc="a simple but quite powerful Python spell checking library for GtkTextViews based on Enchant"
 arch=(any)
@@ -11,11 +11,11 @@ makedepends=('python-sphinx')
 optdepends=('gtk3: gtk 3 bindings'
             'gtk2: gtk 2 bindings')
 provides=('python-pylocales')
-source=(https://github.com/koehlma/pygtkspellcheck/tarball/v${pkgver})
-md5sums=('e559c75421c59d280bf4b3d495cc4ad0')
+source=()
+md5sums=()
 
 build() {
-    cd koehlma-pygtkspellcheck-*
+    cd ../../../../
     python3 setup.py install --root=${pkgdir}
 }
 
