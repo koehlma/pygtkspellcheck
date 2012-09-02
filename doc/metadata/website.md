@@ -34,7 +34,7 @@ The documentation is available at [Read the Docs]({% documentation %}).
 
 # Distribution
 ## Cheeseshop
-PyPI package is available at: http://pypi.python.org/pypi/pygtkspellcheck/
+[PyPI package](http://pypi.python.org/pypi/pygtkspellcheck/) is available: 
 
     pip install pygtkspellcheck
 
