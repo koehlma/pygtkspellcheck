@@ -26,9 +26,11 @@ Extensions could be found at:
 """
 
 import functools
+import gettext
 import logging
 import os
 import shutil
+import sys
 import xml.dom.minidom
 import xml.parsers.expat
 import zipfile
@@ -40,6 +42,10 @@ __all__ = ['extract_oxt', 'batch_extract', 'BadXml', 'BadExtensionFile',
 
 # logger
 logger = logging.getLogger(__name__)
+
+# translation
+locale_name = 'py{}gtkspellcheck'.format(sys.version_info.major)
+_ = gettext.translation(locale_name, fallback=True).gettext
 
 class BadXml(Exception):
     """
@@ -129,13 +135,18 @@ def extract(filename, target, override=False):
                 extracted = []
                 for dictionary in dictionaries:
                     for filename in dictionary:
-                        dict_file = os.path.join(target, os.path.basename(filename))
+                        dict_file = os.path.join(target,
+                                                 os.path.basename(filename))
                         if (not os.path.exists(dict_file) 
                                 or (override and os.path.isfile(dict_file))):
-                            with open(dict_file, 'wb') as _target:
-                                with extension.open(filename, 'r') as _source:
-                                    extracted.append(os.path.basename(filename))
-                                    _target.write(_source.read())
+                            if filename in files:
+                                with open(dict_file, 'wb') as _target:
+                                    with extension.open(filename, 'r') as _source:
+                                        extracted.append(os.path.basename(filename))
+                                        _target.write(_source.read())
+                            else:
+                                logger.warning('dictionary exists in registry '
+                                               'but not in the extension zip')
                         else:
                             logging.warning(('dictionary file "{}" already exists '
                                              'and not overriding it'
@@ -227,11 +238,15 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
         except BadExtensionFile as error:
             logger.error(('extension "{}" is not a valid ZIP file'
                           ).format(extension_name))
-            yield BATCH_ERROR, extension_name, error, []
+            yield (BATCH_ERROR, extension_name, error, [],
+                   _('extension "{}" is not a valid ZIP file'
+                     ).format(extension_name))
         except BadXml as error:
             logger.error(('extension "{}" has no valid XML dictionary registry'
                           ).format(extension_name))
-            yield BATCH_ERROR, extension_name, error, []     
+            yield (BATCH_ERROR, extension_name, error, [],
+                   _('extension "{}" has no valid XML dictionary registry'
+                     ).format(extension_name)) 
         
         # move the extension after processing if user requires it
         if move_path is not None:
@@ -249,10 +264,14 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
                                     'name exists within move_path'))
                     yield (BATCH_WARNING, extension_name,
                            ('unable to move extension, file with same name '
-                            'exists within move_path'), [])
+                            'exists within move_path'), [],
+                           _('unable to move extension, file with same name '
+                             'exists within move_path'))
             else:
                 logger.warning(('unable to move extension, move_path is not a '
                                 'directory'))
                 yield (BATCH_WARNING, extension_name,
-                           ('unable to move extension, move_path is not a '
-                            'directory'), [])                
+                       ('unable to move extension, move_path is not a '
+                        'directory'), [],
+                       _('unable to move extension, move_path is not a '
+                         'directory'))                

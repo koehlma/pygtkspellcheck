@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkspellchecker\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-30 20:01+0100\n"
-"PO-Revision-Date: 2012-08-30 20:01+0100\n"
+"POT-Creation-Date: 2012-09-15 10:14+0100\n"
+"PO-Revision-Date: 2012-09-15 10:16+0100\n"
 "Last-Translator: Maximilian Köhl <linuxmaxi@googlemail.com>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -14,6 +14,24 @@ msgstr ""
 "X-Poedit-Basepath: /home/maximilian/development/pygtkspellcheck/src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ./gtkspellcheck\n"
+
+#: gtkspellcheck/oxt_extract.py:242
+msgid "extension \"{}\" is not a valid ZIP file"
+msgstr "Extension  \"{}\" ist keine ZIP Datei"
+
+#: gtkspellcheck/oxt_extract.py:248
+msgid "extension \"{}\" has no valid XML dictionary registry"
+msgstr "Extension hat keine valide XML Registry"
+
+#: gtkspellcheck/oxt_extract.py:268
+msgid "unable to move extension, file with same name exists within move_path"
+msgstr ""
+"Extension kann nicht verschoben werden, es existiert bereits eine Datei mit "
+"gleichem Name in move_path"
+
+#: gtkspellcheck/oxt_extract.py:276
+msgid "unable to move extension, move_path is not a directory"
+msgstr "Extension kann nicht verschoben werden, move_path ist kein Verzeichnis"
 
 #: gtkspellcheck/spellcheck.py:467
 msgid "(no suggestions)"
