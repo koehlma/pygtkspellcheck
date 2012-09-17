@@ -1,6 +1,6 @@
 # Maintainer: Maximilian Köhl <linuxmaxi@googlemail.com>
 pkgname=python-gtkspellcheck
-pkgver=4.0a
+pkgver=4.0
 pkgrel=1
 pkgdesc="a simple but quite powerful Python spell checking library for GtkTextViews based on Enchant"
 arch=(any)
