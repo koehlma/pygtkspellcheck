@@ -3,14 +3,82 @@
 {% linkify(description['long'], 'rst') %}
 
 Features
-^^^^^^^^
+========
 {% '- ' + '\n- '.join(features) %}
 
 Documentation
-^^^^^^^^^^^^^
+=============
 The documentation is available at `Read the Docs`_.
 
 .. _Read the Docs: {% documentation %}
+
+Distribution
+============
+Cheeseshop
+^^^^^^^^^^
+`PyPI package`_ is available:
+
+.. _PyPI package: http://pypi.python.org/pypi/pygtkspellcheck/
+
+::
+
+    pip install pygtkspellcheck
+
+Archlinux - AUR
+^^^^^^^^^^^^^^^
+Python 3
+--------
+`AUR Package - Python 3`_
+
+.. _AUR Package - Python 3: https://aur.archlinux.org/packages.php?ID=61200
+
+::
+
+    yaourt -S python-gtkspellcheck
+
+Python 2
+--------
+`AUR Package - Python 2`_
+
+.. _AUR Package - Python 2: https://aur.archlinux.org/packages.php?ID=61199
+
+::
+
+    yaourt -S python2-gtkspellcheck
+
+Ubuntu / Debian
+^^^^^^^^^^^^^^^
+Ubuntu - Repository
+-------------------
+
+::
+
+    sudo add-apt-repository ppa:koehlma/packages
+    sudo apt-get update
+
+Debian - Repository
+-------------------
+
+::
+
+    sudo su
+    echo "deb http://ppa.launchpad.net/koehlma/packages/ubuntu precise main" >> /etc/apt/sources.list
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 775B7DF6
+    apt-get update
+
+Python 2
+--------
+
+::
+    
+    sudo apt-get install python-gtkspellcheck
+
+Python 3
+--------
+
+::
+
+    sudo apt-get install python3-gtkspellcheck
 
 Development
 ^^^^^^^^^^^

@@ -66,6 +66,6 @@ The documentation is available at [Read the Docs]({% documentation %}).
     
     sudo apt-get install python-gtkspellcheck
 
-### Python3
+### Python 3
 
     sudo apt-get install python3-gtkspellcheck
