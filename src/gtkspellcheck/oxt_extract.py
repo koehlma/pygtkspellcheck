@@ -170,10 +170,10 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
     :param override: override already existing files
     :param move_path: optional path to move the ``.oxt`` files after processing
     :rtype: generator over all extensions, yielding result, extension name,
-        error and extracted dictionaries - result would be
-        :const:`BATCH_SUCCESS` for success, :const:`BATCH_ERROR` if some error
-        happened or :const:`BATCH_WARNING` which contain some warning messages
-        instead of errors
+        error, extracted dictionaries and translated error message - result
+        would be :const:`BATCH_SUCCESS` for success, :const:`BATCH_ERROR` if
+        some error happened or :const:`BATCH_WARNING` which contain some warning
+        messages instead of errors
     
     This function extracts the Hunspell dictionaries (``.dic`` and ``.aff``
     files) from all the ``.oxt`` extensions found on ``oxt_path`` directory to
@@ -198,14 +198,16 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
     
     Example::
     
-        for result, name, error, dictionaries in oxt_extract.batch_extract(...):
+        for result, name, error, dictionaries, message in oxt_extract.batch_extract(...):
             if result == oxt_extract.BATCH_SUCCESS:
                 print('successfully extracted extension "{}"'.format(name))
             elif result == oxt_extract.BATCH_ERROR:
                 print('could not extract extension "{}"'.format(name))
+                print(message)
                 print('error {}'.format(error))
             elif result == oxt_extract.BATCH_WARNING:
                 print('warning during processing extension "{}"'.format(name))
+                print(message)
                 print(error)
         
     """
@@ -234,7 +236,7 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
         
         try:
             dictionaries = extract(extension_path, extract_path, override)
-            yield BATCH_SUCCESS, extension_name, None, dictionaries
+            yield BATCH_SUCCESS, extension_name, None, dictionaries, ''
         except BadExtensionFile as error:
             logger.error(('extension "{}" is not a valid ZIP file'
                           ).format(extension_name))
