@@ -70,7 +70,11 @@ if len(sys.argv) > 1 and sys.argv[1] == 'bdist_wininst':
                             for message_file in os.listdir(os.path.join(windows_locale, lang, 'LC_MESSAGES'))
                             if message_file.endswith('.mo')]))
     print('windows bdist_wininst include iso message files')
-    
+
+py_modules = []
+if sys.version_info.major == 2 and os.getenv('GTKSPELL').lower() == 'true':
+    py_modules.append('gtkspell')
+
 setup(name=gtkspellcheck.__short_name__,
       version=gtkspellcheck.__version__,
       description=gtkspellcheck.__desc_short__,
@@ -80,6 +84,7 @@ setup(name=gtkspellcheck.__short_name__,
       url=gtkspellcheck.__website__,
       download_url=gtkspellcheck.__download_url__,
       license='GPLv3+',
+      py_modules=py_modules,
       packages=['gtkspellcheck', 'pylocales'],
       package_dir={'': 'src'},
       package_data={'pylocales' : ['locales.db']},
