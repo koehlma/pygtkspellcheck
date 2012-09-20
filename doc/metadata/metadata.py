@@ -32,7 +32,8 @@ features = ['localized names of the available languages',
             'PyGObject and PyGtk compatible with automatic detection',
             'Python 2 and 3 support'
             'as Enchant, support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries',
-            'extract dictionaries out of LibreOffice extension files']
+            'extract dictionaries out of LibreOffice extension files',
+            'legacy API for Python GtkSpell']
 
 description = {'short': 'a simple but quite powerful Python spell checking library for GtkTextViews based on Enchant',
                'long': ('A simple but quite powerful spellchecking library written '

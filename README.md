@@ -10,6 +10,7 @@ A simple but quite powerful spellchecking library written in pure Python for Gtk
 * PyGObject and PyGtk compatible with automatic detection
 * Python 2 and 3 supportas Enchant, support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries
 * extract dictionaries out of LibreOffice extension files
+* legacy API for Python GtkSpell
 
 ## Documentation
 The documentation is available at [Read the Docs](http://pygtkspellcheck.readthedocs.org/).

@@ -16,6 +16,7 @@ Features
 - PyGObject and PyGtk compatible with automatic detection
 - Python 2 and 3 supportas Enchant, support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries
 - extract dictionaries out of LibreOffice extension files
+- legacy API for Python GtkSpell
 
 API Reference
 -------------
