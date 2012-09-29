@@ -65,8 +65,13 @@ try:
 except ImportError:
     _list = list
 
-# select base string
 if sys.version_info.major == 3:
+    _py3k = True
+else:
+    _py3k = False
+
+# select base string
+if _py3k:
     basestring = str
 
 # map between Gedit's translation and PyGtkSpellcheck's
@@ -519,7 +524,11 @@ class SpellChecker(object):
         if self._marks['click'].inside_word:
             start, end = self._marks['click'].word
             if start.has_tag(self._misspelled):
-                word = self._buffer.get_text(start, end, False)
+                if _py3k:
+                    word = self._buffer.get_text(start, end, False)
+                else:
+                    word = self._buffer.get_text(start, end,
+                                                 False).decode('utf-8')
                 items = self._suggestion_menu(word)
                 if self.collapse:
                     if _pygobject:
@@ -588,7 +597,10 @@ class SpellChecker(object):
         for tag in self.ignored_tags:
             if start.has_tag(tag):
                 return
-        word = self._buffer.get_text(start, end, False).strip()
+        if _py3k:
+            word = self._buffer.get_text(start, end, False).strip()
+        else:
+            word = self._buffer.get_text(start, end, False).decode('utf-8').strip()
         if len(self._filters[SpellChecker.FILTER_WORD]):
             if self._regexes[SpellChecker.FILTER_WORD].match(word):
                 return
@@ -596,7 +608,11 @@ class SpellChecker(object):
             line_start = self._buffer.get_iter_at_line(start.get_line())
             line_end = end.copy()
             line_end.forward_to_line_end()
-            line = self._buffer.get_text(line_start, line_end, False)
+            if _py3k:
+                line = self._buffer.get_text(line_start, line_end, False)
+            else:
+                line = self._buffer.get_text(line_start, line_end,
+                                             False).decode('utf-8')
             for match in self._regexes[SpellChecker.FILTER_LINE].finditer(line):
                 if match.start() <= start.get_line_offset() <= match.end():
                     start = self._buffer.get_iter_at_line_offset(
@@ -607,7 +623,11 @@ class SpellChecker(object):
                     return
         if len(self._filters[SpellChecker.FILTER_TEXT]):
             text_start, text_end = self._buffer.get_bounds()
-            text = self._buffer.get_text(text_start, text_end, False)
+            if _py3k:
+                text = self._buffer.get_text(text_start, text_end, False)
+            else:
+                text = self._buffer.get_text(text_start, text_end,
+                                             False).decode('utf-8')
             for match in self._regexes[SpellChecker.FILTER_TEXT].finditer(text):
                 if match.start() <= start.get_offset() <= match.end():
                     start = self._buffer.get_iter_at_offset(match.start())
