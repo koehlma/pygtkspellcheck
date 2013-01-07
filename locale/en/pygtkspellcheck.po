@@ -7,50 +7,54 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkspellcheck\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-15 10:16+0100\n"
-"PO-Revision-Date: 2012-09-15 10:16+0100\n"
+"POT-Creation-Date: 2013-01-07 23:31+0100\n"
+"PO-Revision-Date: 2013-01-07 23:31+0100\n"
 "Last-Translator: Maximilian Köhl <linuxmaxi@googlemail.com>\n"
 "Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Basepath: /home/maximilian/development/pygtkspellcheck/src\n"
+"X-Poedit-Basepath: /home/maximilian/Entwicklung/pygtkspellcheck/src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ./gtkspellcheck\n"
 
-#: gtkspellcheck/oxt_extract.py:242
-msgid "extension \"{}\" is not a valid ZIP file"
+#: gtkspellcheck/spellcheck.py:98
+msgid "Unknown"
 msgstr ""
 
-#: gtkspellcheck/oxt_extract.py:248
-msgid "extension \"{}\" has no valid XML dictionary registry"
-msgstr ""
-
-#: gtkspellcheck/oxt_extract.py:268
-msgid "unable to move extension, file with same name exists within move_path"
-msgstr ""
-
-#: gtkspellcheck/oxt_extract.py:276
-msgid "unable to move extension, move_path is not a directory"
-msgstr ""
-
-#: gtkspellcheck/spellcheck.py:467
+#: gtkspellcheck/spellcheck.py:480
 msgid "(no suggestions)"
 msgstr ""
 
-#: gtkspellcheck/spellcheck.py:489 gtkspellcheck/spellcheck.py:492
+#: gtkspellcheck/spellcheck.py:502 gtkspellcheck/spellcheck.py:505
 msgid "Add \"{}\" to Dictionary"
 msgstr ""
 
-#: gtkspellcheck/spellcheck.py:496 gtkspellcheck/spellcheck.py:498
+#: gtkspellcheck/spellcheck.py:509 gtkspellcheck/spellcheck.py:511
 msgid "Ignore All"
 msgstr ""
 
-#: gtkspellcheck/spellcheck.py:513 gtkspellcheck/spellcheck.py:515
+#: gtkspellcheck/spellcheck.py:526 gtkspellcheck/spellcheck.py:528
 msgid "Languages"
 msgstr ""
 
-#: gtkspellcheck/spellcheck.py:527 gtkspellcheck/spellcheck.py:530
+#: gtkspellcheck/spellcheck.py:544 gtkspellcheck/spellcheck.py:547
 msgid "Suggestions"
+msgstr ""
+
+#: gtkspellcheck/oxt_extract.py:244
+msgid "extension \"{}\" is not a valid ZIP file"
+msgstr ""
+
+#: gtkspellcheck/oxt_extract.py:250
+msgid "extension \"{}\" has no valid XML dictionary registry"
+msgstr ""
+
+#: gtkspellcheck/oxt_extract.py:270
+msgid "unable to move extension, file with same name exists within move_path"
+msgstr ""
+
+#: gtkspellcheck/oxt_extract.py:278
+msgid "unable to move extension, move_path is not a directory"
 msgstr ""

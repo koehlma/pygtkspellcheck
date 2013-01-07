@@ -1,9 +1,9 @@
-pygtkspellcheck (4.0-1) precise; urgency=low
+pygtkspellcheck (4.0.1-1) precise; urgency=low
   
   * msi distribution
   * setup.py includes message files
   * api change, replaced oxt_import with oxt_extract (advanced batch functionality)
   * initial release
 
- -- Maximilian Köhl <linuxmaxi@googlemail.com>  Mon, 17 Sep 2012 16:49:43 +0200
+ -- Maximilian Köhl <linuxmaxi@googlemail.com>  Mon, 07 Jan 2013 23:28:05 +0200
 
