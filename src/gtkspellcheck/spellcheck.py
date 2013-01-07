@@ -29,7 +29,8 @@ import logging
 import re
 import sys
 
-from pylocales import code_to_name
+from pylocales import code_to_name as _code_to_name
+from pylocales import LanguageNotFound, CountryNotFound
 
 # public objects
 __all__ = ['SpellChecker', 'NoDictionariesFound', 'NoGtkBindingFound']
@@ -79,7 +80,8 @@ _GEDIT_MAP = {'Languages' : 'Languages',
               'Ignore All' : 'Ignore _All',
               'Suggestions' : 'Suggestions',
               '(no suggestions)' : '(no suggested words)',
-              'Add "{}" to Dictionary' : 'Add w_ord'}
+              'Add "{}" to Dictionary' : 'Add w_ord',
+              'Unknown' : 'Unknown'}
 
 # translation
 if gettext.find('gedit'):
@@ -88,6 +90,12 @@ if gettext.find('gedit'):
 else:
     locale_name = 'py{}gtkspellcheck'.format(sys.version_info.major)
     _ = gettext.translation(locale_name, fallback=True).gettext
+
+def code_to_name(code, separator='_'):
+    try:
+        return _code_to_name(code, separator)
+    except (LanguageNotFound, CountryNotFound):
+        return '{} ({})'.format(_('Unknown'), code)
 
 class SpellChecker(object):
     """
