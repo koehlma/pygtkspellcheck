@@ -28,23 +28,15 @@ Archlinux - AUR
 ^^^^^^^^^^^^^^^
 Python 3
 --------
-`AUR Package - Python 3`_
-
-.. _AUR Package - Python 3: https://aur.archlinux.org/packages.php?ID=61200
 
 ::
-
-    yaourt -S python-gtkspellcheck
+    pacman -S python-gtkspellcheck
 
 Python 2
 --------
-`AUR Package - Python 2`_
-
-.. _AUR Package - Python 2: https://aur.archlinux.org/packages.php?ID=61199
 
 ::
-
-    yaourt -S python2-gtkspellcheck
+    pacman -S python2-gtkspellcheck
 
 Ubuntu / Debian
 ^^^^^^^^^^^^^^^
