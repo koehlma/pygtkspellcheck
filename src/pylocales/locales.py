@@ -27,6 +27,7 @@ import gettext
 import logging
 import os
 import sqlite3
+import sys
 
 # public objects
 __all__ = ['Country', 'Language', 'LanguageNotFound',
@@ -46,7 +47,14 @@ if hasattr(os.path, 'get_module_path'):
     if not os.path.isfile(os.path.join(__path__, 'locales.db')):
         __path__ = None
 if __path__ is None:
-    __path__ = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
+    frozen = getattr(sys, 'frozen', None)
+    if frozen in ('dll', 'console_exe', 'windows_exe'):
+        __path__ = os.path.abspath(os.path.dirname(sys.executable))
+    elif frozen == 'macosx_app':
+        __path__ = os.path.abspath(os.environ['RESOURCEPATH'])
+    else:
+        __path__ = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
+    
 
 # loading the database
 _database = sqlite3.connect(os.path.join(__path__, 'locales.db'))
