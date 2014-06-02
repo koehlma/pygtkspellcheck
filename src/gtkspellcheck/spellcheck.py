@@ -49,15 +49,25 @@ class NoGtkBindingFound(Exception):
     Could not find any loaded Gtk binding.
     """
 
-# find any loaded gtk binding
-if 'gi.repository.Gtk' in sys.modules:
-    gtk = sys.modules['gi.repository.Gtk']
-    _pygobject = True
-elif 'gtk' in sys.modules:
-    gtk = sys.modules['gtk']
-    _pygobject = False
+if sys.version_info.major == 3:
+    _py3k = True
 else:
-    raise NoGtkBindingFound('could not find any loaded Gtk binding')
+    _py3k = False
+    
+if _py3k:
+    # there is only the gi binding for Python 3
+    from gi.repository import Gtk as gtk
+    _pygobject = True
+else:
+    # find any loaded gtk binding
+    if 'gi.repository.Gtk' in sys.modules:
+        gtk = sys.modules['gi.repository.Gtk']
+        _pygobject = True
+    elif 'gtk' in sys.modules:
+        gtk = sys.modules['gtk']
+        _pygobject = False
+    else:
+        raise NoGtkBindingFound('could not find any loaded Gtk binding')
 
 # select base list class
 try:
@@ -66,10 +76,7 @@ try:
 except ImportError:
     _list = list
 
-if sys.version_info.major == 3:
-    _py3k = True
-else:
-    _py3k = False
+
 
 # select base string
 if _py3k:
