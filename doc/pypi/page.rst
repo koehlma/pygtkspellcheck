@@ -54,24 +54,6 @@ Python 2
 
 Ubuntu / Debian
 ^^^^^^^^^^^^^^^
-Ubuntu - Repository
--------------------
-
-::
-
-    sudo add-apt-repository ppa:koehlma/packages
-    sudo apt-get update
-
-Debian - Repository
--------------------
-
-::
-
-    sudo su
-    echo "deb http://ppa.launchpad.net/koehlma/packages/ubuntu precise main" >> /etc/apt/sources.list
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 775B7DF6
-    apt-get update
-
 Python 2
 --------
 
