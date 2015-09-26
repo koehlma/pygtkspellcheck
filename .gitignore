@@ -12,6 +12,7 @@ __pycache__
 .pydevproject
 .settings
 .directory
+.idea
 
 # Debian
 dist/*.tar.gz
