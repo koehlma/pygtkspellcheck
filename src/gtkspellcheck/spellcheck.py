@@ -190,12 +190,6 @@ class SpellChecker(object):
         self._view.connect('popup-menu', self._click_move_popup)
         self._view.connect('button-press-event', self._click_move_button)
         self._prefix = prefix
-        if _pygobject:
-            self._misspelled = gtk.TextTag.new('{}-misspelled'\
-                                               .format(self._prefix))
-        else:
-            self._misspelled = gtk.TextTag('{}-misspelled'.format(self._prefix))
-        self._misspelled.set_property('underline', 4)
         self._broker = enchant.Broker()
         for param, value in params.items(): self._broker.set_param(param, value)
         self.languages = SpellChecker._LanguageList.from_broker(self._broker)
@@ -262,6 +256,12 @@ class SpellChecker(object):
         have associated a new GtkTextBuffer with the GtkTextView call this
         method.
         """
+        if _pygobject:
+            self._misspelled = gtk.TextTag.new('{}-misspelled'\
+                                               .format(self._prefix))
+        else:
+            self._misspelled = gtk.TextTag('{}-misspelled'.format(self._prefix))
+        self._misspelled.set_property('underline', 4)
         self._buffer = self._view.get_buffer()
         self._buffer.connect('insert-text', self._before_text_insert)
         self._buffer.connect_after('insert-text', self._after_text_insert)
