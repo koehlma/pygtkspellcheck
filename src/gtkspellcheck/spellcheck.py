@@ -616,6 +616,8 @@ class SpellChecker(object):
             word = self._buffer.get_text(start, end, False).strip()
         else:
             word = self._buffer.get_text(start, end, False).decode('utf-8').strip()
+        if not word:
+            return
         if len(self._filters[SpellChecker.FILTER_WORD]):
             if self._regexes[SpellChecker.FILTER_WORD].match(word):
                 return
