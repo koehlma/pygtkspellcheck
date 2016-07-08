@@ -574,7 +574,10 @@ class SpellChecker(object):
             if self._deferred_check:  self._check_deferred_range(True)
             x, y = self._view.window_to_buffer_coords(2, int(event.x),
                                                       int(event.y))
-            self._marks['click'].move(self._view.get_iter_at_location(x, y))
+            iter = self._view.get_iter_at_location(x, y)
+            if isinstance(iter, tuple):
+                iter = iter[1]
+            self._marks['click'].move(iter)
         return False
 
     def _before_text_insert(self, textbuffer, location, text, length):
