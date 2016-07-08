@@ -18,7 +18,7 @@
 
 from __future__ import unicode_literals
 
-__version__ = '4.0.2'
+__version__ = '4.0.3'
 __project__ = 'Python GTK Spellcheck'
 __short_name__ = 'pygtkspellcheck'
 __authors__ = 'Maximilian Köhl & Carlos Jenkins'
