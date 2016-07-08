@@ -1,9 +1,0 @@
-pygtkspellcheck (4.0-1) unstable; urgency=low
-  
-  * msi distribution
-  * setup.py includes message files
-  * api change, replaced oxt_import with oxt_extract (advanced batch functionality)
-  * Initial release. Closes: 681528
-
- -- Carlos Miguel Jenkins Pérez <carlos@jenkins.co.cr>  Sat, 18 Aug 2012 09:09:23 -0600
-
