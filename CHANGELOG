@@ -1,0 +1,3 @@
+== 4.0 ==
+- caused by: API incompatible changes in `oxt_extract`
+- SpellChecker API remains compatible to version 3
