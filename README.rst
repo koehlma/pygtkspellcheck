@@ -30,6 +30,25 @@ Features
 .. _ISO-Codes: http://pkg-isocodes.alioth.debian.org/
 
 
+Showcase
+--------
+- `Nested Editor`_: “Specialized editor for structured documents.”
+- `Cherry Tree`_: “A hierarchical note taking application, […].”
+- `Zim`_: “Zim is a graphical text editor used to maintain a collection of wiki pages.”
+- `REMARKABLE`_: “The best markdown editor for Linux and Windows.”
+- `RedNotebook`_: “RedNotebook is a modern journal.”
+- `Reportbug`_: “Reports bugs in the Debian distribution.”
+- `UberWriter`_: “UberWriter is a writing application for markdown.”
+
+.. _Nested Editor: http://nestededitor.sourceforge.net/about.html
+.. _Cherry Tree: http://www.giuspen.com/cherrytree/
+.. _Zim: http://zim-wiki.org/
+.. _REMARKABLE: http://remarkableapp.github.io/
+.. _RedNotebook: http://rednotebook.sourceforge.net/
+.. _Reportbug: https://packages.debian.org/stretch/reportbug
+.. _UberWriter: http://uberwriter.wolfvollprecht.de/
+
+
 Versions
 --------
 Version numbers follow `Semantic Versioning`_. However version change from 3 to 4 pertains
