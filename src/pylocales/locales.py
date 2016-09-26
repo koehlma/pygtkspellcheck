@@ -52,6 +52,9 @@ if __path__ is None:
         __path__ = os.path.abspath(os.path.dirname(sys.executable))
     elif frozen == 'macosx_app':
         __path__ = os.path.abspath(os.environ['RESOURCEPATH'])
+    elif frozen is True:
+        # Handle executables produced by PyInstaller.
+        __path__ = sys._MEIPASS
     else:
         __path__ = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
     
