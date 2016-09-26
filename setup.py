@@ -24,7 +24,10 @@ import distutils.command.install_data
 import os
 import sys
 
-from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
 commands = {}
 try:
@@ -90,6 +93,10 @@ setup(name=gtkspellcheck.__short_name__,
       package_dir={'': 'src'},
       package_data={'pylocales' : ['locales.db']},
       data_files=data_files,
+      install_requires=['pyenchant'],
+      extras_require={
+          'building the documentation': ['sphinx']
+      },
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Environment :: X11 Applications :: Gnome',
                    'Intended Audience :: Developers',
