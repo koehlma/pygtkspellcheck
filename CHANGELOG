@@ -1,3 +1,7 @@
+== 4.0.5 ==
+- add support for PyInstaller (issue #30)
+- deprecate oxt_extract and pylocales functionality
+
 == 4.0 ==
 - caused by: API incompatible changes in `oxt_extract`
 - SpellChecker API remains compatible to version 3
