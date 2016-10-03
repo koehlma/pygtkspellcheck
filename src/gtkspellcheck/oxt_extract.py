@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 #
 # Copyright (C) 2012, Carlos Jenkins <carlos@jenkins.co.cr>
-# Copyright (C) 2012, Maximilian Köhl <linuxmaxi@googlemail.com>
+# Copyright (C) 2012-2016, Maximilian Köhl <mail@koehlma.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,9 +31,13 @@ import logging
 import os
 import shutil
 import sys
+import warnings
 import xml.dom.minidom
 import xml.parsers.expat
 import zipfile
+
+# enable deprecation warnings
+warnings.simplefilter('always', DeprecationWarning)
 
 # public objects
 __all__ = ['extract_oxt', 'batch_extract', 'BadXml', 'BadExtensionFile',
@@ -119,6 +123,11 @@ def extract(filename, target, override=False):
 
         http://extensions.services.openoffice.org/dictionary
     """
+    # TODO 5.0: remove this function
+    warnings.warn(('call to deprecated function "{}", '
+                   'moved to separate package "oxt_extract", '
+                   'will be removed in pygtkspellcheck 5.0').format(extract.__name__),
+                  category=DeprecationWarning)
     try:
         with zipfile.ZipFile(filename, 'r') as extension:
             files = extension.namelist()
@@ -211,6 +220,12 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
                 print(error)
         
     """
+
+    # TODO 5.0: remove this function
+    warnings.warn(('call to deprecated function "{}", '
+                   'moved to separate package "oxt_extract", '
+                   'will be removed in pygtkspellcheck 5.0').format(extract.__name__),
+                  category=DeprecationWarning)
 
     # get the real, absolute and normalized path
     oxt_path = os.path.normpath(os.path.abspath(os.path.realpath(oxt_path)))
