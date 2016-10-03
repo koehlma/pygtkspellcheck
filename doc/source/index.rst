@@ -26,7 +26,16 @@ API Reference
 .. autoclass:: gtkspellcheck.spellcheck.NoDictionariesFound
 
 .. autoclass:: gtkspellcheck.spellcheck.NoGtkBindingFound
-	
+
+
+Deprecated API Reference
+------------------------
+.. warning::
+
+   The following functions are deprecated since version 4.0.5, they will be removed
+   from "pygtkspellcheck" in 5.0.
+
+
 .. autofunction:: pylocales.code_to_name
 
 .. autofunction:: gtkspellcheck.oxt_extract.extract
