@@ -61,11 +61,6 @@ Download last sources in a `ZIP`_ or `Tarball`_ file.
 .. _ZIP: https://github.com/koehlma/pygtkspellcheck/zipball/master
 .. _Tarball: https://github.com/koehlma/pygtkspellcheck/tarball/master
 
-Website
--------
-Checkout the `official project website`_ for additional information.
-
-.. _official project website: http://koehlma.github.com/projects/pygtkspellcheck.html
 
 Examples
 --------
