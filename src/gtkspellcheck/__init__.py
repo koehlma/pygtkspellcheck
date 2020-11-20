@@ -28,14 +28,15 @@ __download_url__ = 'https://github.com/koehlma/pygtkspellcheck/tarball/master'
 __source__ = 'https://github.com/koehlma/pygtkspellcheck/'
 __vcs__ = 'git://github.com/koehlma/pygtkspellcheck.git'
 __copyright__ = '2012, Maximilian Köhl & Carlos Jenkins'
-__desc_short__ = ('a simple but quite powerful Python spell checking library '
-                  'for GtkTextViews based on Enchant')
-__desc_long__ = ('A simple but quite powerful spellchecking library written in '
-                 'pure Python for Gtk based on Enchant. It supports PyGObject '
-                 'as well as PyGtk for Python 2 and 3 with automatic switching '
-                 'and binding detection. For automatic translation of the user '
-                 'interface it can use Gedit’s translation files.')
-
+__desc_short__ = '''
+A Python spell-checking library for GtkTextViews based on Enchant
+'''
+__desc_long__ = '''
+A simple but quite powerful spellchecking library written in pure Python for
+Gtk based on Enchant. It supports PyGObject as well as PyGtk for Python 2 and
+3 with automatic switching and binding detection. For automatic translation of
+the user interface it can use Gedit’s translation files.
+'''
 __metadata__ = {'__version__' : __version__,
                 '__project__' : __project__,
                 '__short_name__' : __short_name__,
