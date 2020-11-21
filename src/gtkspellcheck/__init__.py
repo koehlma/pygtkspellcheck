@@ -18,11 +18,11 @@
 
 from __future__ import unicode_literals
 
-__version__ = '4.0.5'
+__version__ = '4.0.6'
 __project__ = 'Python GTK Spellcheck'
 __short_name__ = 'pygtkspellcheck'
-__authors__ = 'Maximilian Köhl & Carlos Jenkins'
-__emails__ = 'linuxmaxi@googlemail.com & carlos@jenkins.co.cr'
+__authors__ = 'Maximilian Köhl'
+__emails__ = 'mail@koehlma.de'
 __website__ = 'http://koehlma.github.com/projects/pygtkspellcheck.html'
 __download_url__ = 'https://github.com/koehlma/pygtkspellcheck/tarball/master'
 __source__ = 'https://github.com/koehlma/pygtkspellcheck/'
