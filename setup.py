@@ -22,6 +22,7 @@ import distutils.cmd
 import distutils.command.install
 import distutils.command.install_data
 import os
+import re
 import sys
 
 try:
@@ -37,15 +38,36 @@ except ImportError:
     print('build_sphinx command is unavailable, please install Sphinx to solve this')
 
 __path__ = os.path.dirname(__file__)
+variables = {}
 
-sys.path.insert(0, os.path.join(__path__, 'src'))
+def read_variables():
+    filepath = os.path.join(__path__, 'src', 'gtkspellcheck', '__init__.py')
+    with open(filepath, 'r') as fh:
+        contents = fh.read()
 
-sys.modules['gtk'] = None
-import gtkspellcheck
-    
+    mapping = {
+        '__short_name__': 'name',
+        '__version__': 'version',
+        '__desc_short__': 'description',
+        '__desc_long__': 'long_description',
+        '__authors__': 'author',
+        '__emails__': 'author_email',
+        '__website__': 'url',
+        '__download_url__': 'download_url',
+    }
+    for src, dst in mapping.items():
+        pattern = "\n{} = ('+)(.+?)\\1".format(src)
+        match = re.search(pattern, contents, re.DOTALL)
+        if match:
+            variables[dst] = match.group(2).strip()
+        else:
+            raise RuntimeError('Unable to find {} string'.format(src))
+read_variables()
+
+
 if len(sys.argv) > 1 and sys.argv[1] == 'register':
     with open(os.path.join(__path__, 'doc', 'pypi', 'page.rst'), 'rb') as _pypi:
-        gtkspellcheck.__desc_long__ = _pypi.read().decode('utf-8')
+        variables['long_description']= _pypi.read().decode('utf-8')
     print('pypi registration: override `long_description`')
 
 class InstallLocale(distutils.command.install_data.install_data):
@@ -59,7 +81,7 @@ class InstallLocale(distutils.command.install_data.install_data):
             self.copy_file(os.path.join(__path__, 'locale', lang,
                                         'pygtkspellcheck.mo'),
                            os.path.join(path, locale_name))
-            
+
 commands['install_locale'] = InstallLocale
 distutils.command.install.install.sub_commands.append(('install_locale',
                                                        lambda self: True))
@@ -79,14 +101,14 @@ gtkspell = os.getenv('GTKSPELL')
 if sys.version_info.major == 2 and gtkspell is not None and gtkspell.lower() == 'true':
     py_modules.append('gtkspell')
 
-setup(name=gtkspellcheck.__short_name__,
-      version=gtkspellcheck.__version__,
-      description=gtkspellcheck.__desc_short__,
-      long_description=gtkspellcheck.__desc_long__,
-      author=gtkspellcheck.__authors__,
-      author_email=gtkspellcheck.__emails__,
-      url=gtkspellcheck.__website__,
-      download_url=gtkspellcheck.__download_url__,
+setup(name=variables['name'],
+      version=variables['version'],
+      description=variables['description'],
+      long_description=variables['long_description'],
+      author=variables['author'],
+      author_email=variables['author_email'],
+      url=variables['url'],
+      download_url=variables['download_url'],
       license='GPLv3+',
       py_modules=py_modules,
       packages=['gtkspellcheck', 'pylocales'],
