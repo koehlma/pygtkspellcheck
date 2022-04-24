@@ -14,6 +14,9 @@ __pycache__
 .directory
 .idea
 
+# Virtual Environment
+.venv
+
 # Debian
 dist/*.tar.gz
 dist/debian/build
