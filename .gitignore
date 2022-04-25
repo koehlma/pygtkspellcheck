@@ -17,6 +17,9 @@ __pycache__
 # Virtual Environment
 .venv
 
+# Poetry Lock (This is a library. Hence, versions should not be pinned.)
+poetry.lock
+
 # Debian
 dist/*.tar.gz
 dist/debian/build
