@@ -23,26 +23,27 @@ Legacy API for old Python GtkSpell:
 http://www.pygtk.org/pygtkspell/class-gtkspell.html
 """
 
-class Spell():
-    def __init__(self, textview, language='en'):
-        if hasattr(textview, 'spell'):
+
+class Spell:
+    def __init__(self, textview, language="en"):
+        if hasattr(textview, "spell"):
             self.spellchecker = textview.spell.spellchecker
             self.spellchecker.enable()
         else:
             self.spellchecker = gtkspellcheck.SpellChecker(textview, language)
         self.textview = textview
         self.textview.spell = self
-    
+
     def set_language(self, language):
         self.spellchecker.language = language
-    
+
     def recheck_all(self):
         self.spellchecker.recheck()
-    
+
     def detach(self):
         self.spellchecker.disable()
 
+
 def get_from_text_view(textview):
-    if hasattr(textview, 'spell'):
+    if hasattr(textview, "spell"):
         return textview.spell
-        

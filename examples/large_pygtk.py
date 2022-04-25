@@ -19,7 +19,8 @@
 # Load example if running from source, ignore this
 import sys
 from os.path import join, dirname
-sys.path.append(join(dirname(__file__), '../src/'))
+
+sys.path.append(join(dirname(__file__), "../src/"))
 
 import locale
 
@@ -27,21 +28,22 @@ import gtk
 
 from gtkspellcheck import SpellChecker
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+
     def quit(*args):
         gtk.main_quit()
-    
+
     window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-    window.set_title('PyGtkSpellCheck Example')
+    window.set_title("PyGtkSpellCheck Example")
     view = gtk.TextView()
-    
+
     spellchecker = SpellChecker(view, locale.getdefaultlocale()[0], collapse=False)
-        
+
     for code, name in spellchecker.languages:
-        print('code: %5s, language: %s' % (code, name))
-    
+        print("code: %5s, language: %s" % (code, name))
+
     window.set_default_size(600, 400)
     window.add(view)
     window.show_all()
-    window.connect('delete-event', quit)
+    window.connect("delete-event", quit)
     gtk.main()

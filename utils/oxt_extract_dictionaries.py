@@ -19,25 +19,27 @@
 import sys
 import argparse
 
-sys.modules['gtk'] = None
+sys.modules["gtk"] = None
 import gtkspellcheck.oxt_extract
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('extension', nargs='+',
-                        help='extension to extract')
-    parser.add_argument('target',
-                        help='target directory')
-    
+    parser.add_argument("extension", nargs="+", help="extension to extract")
+    parser.add_argument("target", help="target directory")
+
     arguments = parser.parse_args()
     for extension in arguments.extension:
         try:
             gtkspellcheck.oxt_extract.extract(extension, arguments.target)
         except gtkspellcheck.oxt_extract.BadXml:
-            print(gtkspellcheck.oxt_extract._('extension "{}" has no valid XML '
-                                              'dictionary registry'
-                                              ).format(extension))
+            print(
+                gtkspellcheck.oxt_extract._(
+                    'extension "{}" has no valid XML ' "dictionary registry"
+                ).format(extension)
+            )
         except gtkspellcheck.oxt_extract.BadExtensionFile:
-            print(gtkspellcheck.oxt_extract._('extension "{}" is not a valid '
-                                              'ZIP file'
-                                              ).format(extension))
+            print(
+                gtkspellcheck.oxt_extract._(
+                    'extension "{}" is not a valid ' "ZIP file"
+                ).format(extension)
+            )

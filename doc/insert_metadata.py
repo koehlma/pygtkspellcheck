@@ -17,36 +17,46 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ENCODING = 'UTF-8'
+ENCODING = "UTF-8"
 
 import sys
 import argparse
 
 # Python 2/3 unicode
 import sys
+
 if sys.version_info.major == 3:
     io_in = lambda x: x
     io_out = io_in
 else:
     io_in = lambda x: x.decode(ENCODING)
-    io_out = lambda x: x.encode(ENCODING)   
+    io_out = lambda x: x.encode(ENCODING)
 
 # Pipes Python enconding nightmare
 if sys.stdout.encoding is None:
     import codecs
+
     sys.stdout = codecs.getwriter(ENCODING)(sys.stdout)
 
 # Find metadata dict
 from os.path import join, dirname
-sys.path.append(join(dirname(__file__), '../src/'))
+
+sys.path.append(join(dirname(__file__), "../src/"))
 from gtkspellcheck import __metadata__
 
 # Parse command line
-parser = argparse.ArgumentParser(description='Insert metadata into plain text files.')
-parser.add_argument('infile', type=argparse.FileType('r'),
-                     help='path to the template file or stdin pipe.')
-parser.add_argument('-w', '--writeback', action='store_true',
-                     help='write the output back to the input file.')
+parser = argparse.ArgumentParser(description="Insert metadata into plain text files.")
+parser.add_argument(
+    "infile",
+    type=argparse.FileType("r"),
+    help="path to the template file or stdin pipe.",
+)
+parser.add_argument(
+    "-w",
+    "--writeback",
+    action="store_true",
+    help="write the output back to the input file.",
+)
 args = parser.parse_args()
 
 # Read content
@@ -61,10 +71,10 @@ for key, value in __metadata__.items():
 # Print/Write new content
 if args.writeback:
     try:
-        with open(args.infile.name, 'w') as out_handler:
+        with open(args.infile.name, "w") as out_handler:
             out_handler.write(io_out(out_content))
     except Exception as e:
-        sys.stderr.write(str(e) + '\n')
+        sys.stderr.write(str(e) + "\n")
         sys.exit(-1)
 else:
     print(out_content)
