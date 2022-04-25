@@ -5,6 +5,7 @@ MANIFEST
 
 # Python
 *.pyc
+dist
 __pycache__
 
 # IDE
