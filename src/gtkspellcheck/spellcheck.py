@@ -59,7 +59,7 @@ else:
 
 if _py3k:
     # there is only the gi binding for Python 3
-    from gi.repository import Gtk as gtk
+    from gi.repository import Gtk as gtk  # noqa: N813
 
     _pygobject = True
 else:
@@ -99,7 +99,10 @@ _GEDIT_MAP = {
 # translation
 if gettext.find("gedit"):
     _gedit = gettext.translation("gedit", fallback=True).gettext
-    _ = lambda message: _gedit(_GEDIT_MAP[message]).replace("_", "")
+
+    def _(message):
+        return _gedit(_GEDIT_MAP[message]).replace("_", "")
+
 else:
     locale_name = "py{}gtkspellcheck".format(sys.version_info.major)
     _ = gettext.translation(locale_name, fallback=True).gettext
@@ -200,7 +203,7 @@ class SpellChecker(object):
             self._buffer.move_mark(self._mark, location)
 
     def __init__(
-        self, view, language="en", prefix="gtkspellchecker", collapse=True, params={}
+        self, view, language="en", prefix="gtkspellchecker", collapse=True, params=None
     ):
         self._view = view
         self.collapse = collapse
@@ -211,8 +214,9 @@ class SpellChecker(object):
         self._view.connect("button-press-event", self._click_move_button)
         self._prefix = prefix
         self._broker = enchant.Broker()
-        for param, value in params.items():
-            self._broker.set_param(param, value)
+        if params is not None:
+            for param, value in params.items():
+                self._broker.set_param(param, value)
         self.languages = SpellChecker._LanguageList.from_broker(self._broker)
         if self.languages.exists(language):
             self._language = language
@@ -315,7 +319,7 @@ class SpellChecker(object):
         self.ignored_tags = []
 
         def tag_added(tag, *args):
-            if hasattr(tag, "spell_check") and not getattr(tag, "spell_check"):
+            if hasattr(tag, "spell_check") and not tag.spell_check:
                 self.ignored_tags.append(tag)
 
         def tag_removed(tag, *args):

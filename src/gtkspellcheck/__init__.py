@@ -57,3 +57,5 @@ from gtkspellcheck.spellcheck import (
     NoDictionariesFound,
     NoGtkBindingFound,
 )
+
+__all__ = ["SpellChecker", "NoDictionariesFound", "NoGtkBindingFound"]

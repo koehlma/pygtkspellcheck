@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-This module extracts the .dic and .aff (Hunspell) dictionaries from any given 
+This module extracts the .dic and .aff (Hunspell) dictionaries from any given
 .oxt extension.
 
 Extensions could be found at:
@@ -41,7 +41,7 @@ warnings.simplefilter("always", DeprecationWarning)
 
 # public objects
 __all__ = [
-    "extract_oxt",
+    "extract",
     "batch_extract",
     "BadXml",
     "BadExtensionFile",
@@ -150,7 +150,7 @@ def extract(filename, target, override=False):
             files = extension.namelist()
 
             registry = "dictionaries.xcu"
-            if not registry in files:
+            if registry not in files:
                 for filename in files:
                     if filename.lower().endswith(registry):
                         registry = filename

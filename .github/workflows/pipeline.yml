@@ -18,3 +18,19 @@ jobs:
     - name: Run Black
       run: |
         black --check --diff .
+  
+  lint_flake8:
+    name: Lint (flake8)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install Flake8
+      run: |
+        pip install flake8 flake8-bugbear pep8-naming
+    - name: Run Flake8
+      run: |
+        flake8 src/gtkspellcheck
