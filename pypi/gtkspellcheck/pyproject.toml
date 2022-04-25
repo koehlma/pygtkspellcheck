@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "gtkspellcheck"
+version = "0.0.0"
+description = "A placeholder for `pygtkspellcheck` which is imported as `gtkspellcheck`."
+authors = [
+    "Maximilian Köhl <mail@koehlma.de>"
+]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+repository = "https://github.com/koehlma/pygtkspellcheck.git"
+homepage = "https://github.com/koehlma/pygtkspellcheck"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
