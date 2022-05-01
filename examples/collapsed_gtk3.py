@@ -27,18 +27,18 @@ import locale
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk as gtk
+from gi.repository import Gtk
 
 from gtkspellcheck import SpellChecker
 
 if __name__ == "__main__":
 
     def quit(*args):
-        gtk.main_quit()
+        Gtk.main_quit()
 
-    window = gtk.Window.new(gtk.WindowType.TOPLEVEL)
+    window = Gtk.Window.new(Gtk.WindowType.TOPLEVEL)
     window.set_title("PyGtkSpellCheck Example")
-    view = gtk.TextView.new()
+    view = Gtk.TextView.new()
 
     spellchecker = SpellChecker(view, locale.getdefaultlocale()[0])
 
@@ -49,4 +49,4 @@ if __name__ == "__main__":
     window.add(view)
     window.show_all()
     window.connect("delete-event", quit)
-    gtk.main()
+    Gtk.main()
