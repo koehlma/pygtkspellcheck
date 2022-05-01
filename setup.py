@@ -113,9 +113,6 @@ if len(sys.argv) > 1 and sys.argv[1] == "bdist_wininst":
     print("windows bdist_wininst include iso message files")
 
 py_modules = []
-gtkspell = os.getenv("GTKSPELL")
-if sys.version_info.major == 2 and gtkspell is not None and gtkspell.lower() == "true":
-    py_modules.append("gtkspell")
 
 setup(
     name=variables["name"],

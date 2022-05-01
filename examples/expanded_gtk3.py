@@ -24,6 +24,9 @@ sys.path.append(join(dirname(__file__), "../src/"))
 
 import locale
 
+import gi
+
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk as gtk
 
 from gtkspellcheck import SpellChecker
@@ -37,7 +40,7 @@ if __name__ == "__main__":
     window.set_title("PyGtkSpellCheck Example")
     view = gtk.TextView.new()
 
-    spellchecker = SpellChecker(view, locale.getdefaultlocale()[0])
+    spellchecker = SpellChecker(view, locale.getdefaultlocale()[0], collapse=False)
 
     for code, name in spellchecker.languages:
         print("code: %5s, language: %s" % (code, name))
