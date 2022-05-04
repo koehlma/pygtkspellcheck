@@ -585,7 +585,7 @@ class SpellChecker(GObject.Object):
                         suggestion, f"spelling.replace-word('{escaped}')"
                     )
                 menu.append(item)
-        add_to_dict_menu_label = _('Add "{}" to Dictionary').format(word)
+        add_to_dict_menu_label = _("Add to Dictionary")
         word_escaped = word.replace("'", "\\'")
         if _IS_GTK3:
             menu.append(Gtk.SeparatorMenuItem.new())
