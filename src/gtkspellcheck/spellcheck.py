@@ -69,6 +69,9 @@ _GEDIT_MAP = {
     "Unknown": "Unknown",
 }
 
+_BATCHING_THRESHOLD_CHARS = 1500
+_BATCH_SIZE_CHARS = 1000
+
 # translation
 if gettext.find("gedit"):
     _gedit = gettext.translation("gedit", fallback=True).gettext
@@ -229,6 +232,8 @@ class SpellChecker(GObject.Object):
             ),
         }
 
+        self._batched_rechecking = False
+
         self._languages_menu = None
         # GTK 4-only extra menu population, gesture creation and action setup. GTK 3
         # uses signals, above.
@@ -277,6 +282,17 @@ class SpellChecker(GObject.Object):
             self.enable()
         elif not enabled and self._enabled:
             self.disable()
+
+    @GObject.Property(type=bool, default=False)
+    def batched_rechecking(self):
+        """
+        Whether to enable batched rechecking of large buffers.
+        """
+        return self._batched_rechecking
+
+    @batched_rechecking.setter
+    def batched_rechecking(self, val):
+        self._batched_rechecking = val
 
     def buffer_initialize(self):
         """
@@ -329,7 +345,16 @@ class SpellChecker(GObject.Object):
         Rechecks the spelling of the whole text.
         """
         start, end = self._buffer.get_bounds()
-        self.check_range(start, end, True)
+
+        batched = False
+        if self._batched_rechecking:
+            if end.get_offset() > _BATCHING_THRESHOLD_CHARS:
+                batched = True
+                end = start.copy()
+                end.forward_chars(_BATCH_SIZE_CHARS)
+                end.forward_to_line_end()
+
+        self.check_range(start, end, force_all=True, batched_recheck=batched)
 
     def disable(self):
         """
@@ -437,7 +462,7 @@ class SpellChecker(GObject.Object):
         self._dictionary.add_to_session(word)
         self.recheck()
 
-    def check_range(self, start, end, force_all=False):
+    def check_range(self, start, end, force_all=False, batched_recheck=False):
         """
         Checks a specified range between two GtkTextIters.
 
@@ -480,6 +505,12 @@ class SpellChecker(GObject.Object):
             if word_start.equal(word_end):
                 break
             word_start = word_end.copy()
+
+        if batched_recheck and not end.is_end():
+            start = end.copy()
+            start.forward_char()
+            start_mark = self._buffer.create_mark(None, start)
+            GLib.idle_add(self._continue_batched_recheck, start_mark)
 
     def _gtk4_setup_actions(self) -> None:
         action_group = Gio.SimpleActionGroup.new()
@@ -766,3 +797,11 @@ class SpellChecker(GObject.Object):
                     return
         if not self._dictionary.check(word):
             self._buffer.apply_tag(self._misspelled, start, end)
+
+    def _continue_batched_recheck(self, start_mark):
+        start = self._buffer.get_iter_at_mark(start_mark)
+        self._buffer.delete_mark(start_mark)
+        end = start.copy()
+        end.forward_chars(_BATCH_SIZE_CHARS)
+        end.forward_to_line_end()
+        self.check_range(start, end, force_all=True, batched_recheck=True)
