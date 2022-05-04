@@ -3,23 +3,22 @@ Python GTK Spellcheck
 
 |pypi| |docs|
 
-Python GTK Spellcheck is a simple but quite powerful spellchecking library for GTK written
-in pure Python. It's spellchecking component is based on Enchant_ and it supports both GTK
-3 and 4 via PyGObject_ with Python 3.
+Python GTK Spellcheck is a simple but quite powerful spellchecking library for GTK written in pure Python. It's spellchecking component is based on Enchant_ and it supports both GTK 3 and 4 via PyGObject_.
+
+.. _Enchant: http://www.abisource.com/projects/enchant/
+.. _PyGObject: https://live.gnome.org/PyGObject/
 
 
 Features
 --------
 - **spellchecking** based on Enchant_ for `GtkTextViews`
 - support for word, line and multiple line **ignore regular expressions**
-- GTK 3 or 4
-- PyGObject_ with Python 3
+- support for both **GTK 3 or 4** via PyGObject_ for Python 3
 - localized names of the available languages based on ISO-Codes_
 - support for custom ignore tags and hot swap of `GtkTextBuffers`
 - enable and disable of spellchecking with preferences memory
 - support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries
 - supports extraction of dictionaries out of LibreOffice extension files
-- legacy API for Python GtkSpell
 
 .. image:: https://raw.githubusercontent.com/koehlma/pygtkspellcheck/master/doc/screenshots/screenshot.png
     :alt: Python GTK Spellcheck Screenshot

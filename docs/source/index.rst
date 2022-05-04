@@ -1,22 +1,41 @@
-Python GTK Spellchecker
-=======================
-A simple but quite powerful spellchecking library written in pure Python for Gtk based on `Enchant`_. It supports `PyGObject`_ as well as `PyGtk`_ for Python 2 and 3 with automatic switching and binding detection. For automatic translation of the user interface it can use Gedit’s translation files.
+Python GTK Spellcheck
+=====================
 
-.. _PyGObject: https://live.gnome.org/PyGObject/
+Python GTK Spellcheck is a simple but quite powerful spellchecking library for GTK written in pure Python. It's spellchecking component is based on Enchant_ and it supports both GTK 3 and 4 via PyGObject_.
+
 .. _Enchant: http://www.abisource.com/projects/enchant/
-.. _PyGtk: http://www.pygtk.org/
+.. _PyGObject: https://live.gnome.org/PyGObject/
+
 
 Features
 --------
-- localized names of the available languages
-- supports word, line and multiple line ignore regular expressions
-- supports ignore custom tags on GtkTextBuffer
+- **spellchecking** based on Enchant_ for `GtkTextViews`
+- support for word, line and multiple line **ignore regular expressions**
+- support for both **GTK 3 or 4** via PyGObject_ for Python 3
+- localized names of the available languages based on ISO-Codes_
+- support for custom ignore tags and hot swap of `GtkTextBuffers`
 - enable and disable of spellchecking with preferences memory
-- supports hotswap of GtkTextBuffers
-- PyGObject and PyGtk compatible with automatic detection
-- Python 2 and 3 supportas Enchant, support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries
-- extract dictionaries out of LibreOffice extension files
-- legacy API for Python GtkSpell
+- support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries
+- supports extraction of dictionaries out of LibreOffice extension files
+
+
+Automatic Version Detection
+---------------------------
+
+Python GTK Spellcheck will automatically detect the version of GKT (3 or 4) used by your project. To this end, you have to import GTK before importing `gtkspellcheck`. For example:
+
+
+.. code::
+   import gi
+
+   gi.require_version("Gtk", "4.0")
+   from gi.repository import Gtk
+
+   from gtkspellcheck import SpellChecker
+
+
+Python GTK Spellcheck will configure itself to use GTK 4 for the example above.
+
 
 API Reference
 -------------
