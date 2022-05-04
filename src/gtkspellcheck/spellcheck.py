@@ -44,6 +44,8 @@ else:
     gi.require_version("Gtk", "3.0")
     from gi.repository import Gtk  # noqa: N813
 
+_IS_GTK3 = Gtk.MAJOR_VERSION < 4
+
 # public objects
 __all__ = ["SpellChecker", "NoDictionariesFound"]
 
@@ -177,7 +179,8 @@ class SpellChecker(GObject.Object):
         super().__init__()
         self._view = view
         self.collapse = collapse
-        if Gtk.MAJOR_VERSION < 4:
+        # GTK 3-only signals. GTK 4 uses actions, below.
+        if _IS_GTK3:
             self._view.connect(
                 "populate-popup", lambda entry, menu: self._extend_menu(menu)
             )
@@ -228,7 +231,9 @@ class SpellChecker(GObject.Object):
         }
 
         self._languages_menu = None
-        if Gtk.MAJOR_VERSION > 3:
+        # GTK 4-only extra menu population, gesture creation and action setup. GTK 3
+        # uses signals, above.
+        if not _IS_GTK3:
             extra_menu = self._view.get_extra_menu()
             if extra_menu is None:
                 extra_menu = Gio.Menu()
@@ -505,17 +510,15 @@ class SpellChecker(GObject.Object):
         self._view.insert_action_group("spelling", action_group)
 
     def _get_languages_menu(self):
-        if Gtk.MAJOR_VERSION > 3:
+        if _IS_GTK3:
+            return self._build_languages_menu()
+        else:
             if self._languages_menu is None:
                 self._languages_menu = self._build_languages_menu()
             return self._languages_menu
-        else:
-            return self._build_languages_menu()
 
     def _build_languages_menu(self):
-        if Gtk.MAJOR_VERSION > 3:
-            menu = Gio.Menu.new()
-        else:
+        if _IS_GTK3:
 
             def _set_language(item, code):
                 self.language = code
@@ -523,34 +526,36 @@ class SpellChecker(GObject.Object):
             menu = Gtk.Menu.new()
             group = []
             connect = []
+        else:
+            menu = Gio.Menu.new()
 
         for code, name in self.languages:
-            if Gtk.MAJOR_VERSION > 3:
-                item = Gio.MenuItem.new(name, None)
-                item.set_action_and_target_value(
-                    "spelling.language", GLib.Variant.new_string(code)
-                )
-                menu.append_item(item)
-            else:
+            if _IS_GTK3:
                 item = Gtk.RadioMenuItem.new_with_label(group, name)
                 group.append(item)
                 if code == self.language:
                     item.set_active(True)
                 connect.append((item, code))
                 menu.append(item)
-        if Gtk.MAJOR_VERSION < 4:
+            else:
+                item = Gio.MenuItem.new(name, None)
+                item.set_action_and_target_value(
+                    "spelling.language", GLib.Variant.new_string(code)
+                )
+                menu.append_item(item)
+        if _IS_GTK3:
             for item, code in connect:
                 item.connect("activate", _set_language, code)
-
-        if Gtk.MAJOR_VERSION > 3:
+            return menu
+        else:
             return Gio.MenuItem.new_submenu(_("Languages"), menu)
-        return menu
 
     def _suggestion_menu(self, word):
         menu = []
         suggestions = self._dictionary.suggest(word)
         if not suggestions:
-            if Gtk.MAJOR_VERSION < 4:
+            # Show GTK 3 no suggestions item (removed for GTK 4)
+            if _IS_GTK3:
                 item = Gtk.MenuItem.new()
                 label = Gtk.Label.new("")
                 try:
@@ -562,12 +567,7 @@ class SpellChecker(GObject.Object):
                 menu.append(item)
         else:
             for suggestion in suggestions:
-                if Gtk.MAJOR_VERSION > 3:
-                    escaped = suggestion.replace("'", "\\'")
-                    item = Gio.MenuItem.new(
-                        suggestion, f"spelling.replace-word('{escaped}')"
-                    )
-                else:
+                if _IS_GTK3:
                     item = Gtk.MenuItem.new()
                     label = Gtk.Label.new("")
                     label.set_markup("<b>{text}</b>".format(text=suggestion))
@@ -579,39 +579,43 @@ class SpellChecker(GObject.Object):
                     item.connect(
                         "activate", lambda *args: self._replace_word(suggestion)
                     )
+                else:
+                    escaped = suggestion.replace("'", "\\'")
+                    item = Gio.MenuItem.new(
+                        suggestion, f"spelling.replace-word('{escaped}')"
+                    )
                 menu.append(item)
         add_to_dict_menu_label = _('Add "{}" to Dictionary').format(word)
         word_escaped = word.replace("'", "\\'")
-        if Gtk.MAJOR_VERSION > 3:
-            item = Gio.MenuItem.new(
-                add_to_dict_menu_label, f"spelling.add-to-dictionary('{word_escaped}')"
-            )
-        else:
+        if _IS_GTK3:
             menu.append(Gtk.SeparatorMenuItem.new())
             item = Gtk.MenuItem.new_with_label(add_to_dict_menu_label)
             item.connect("activate", lambda *args: self.add_to_dictionary(word))
+        else:
+            item = Gio.MenuItem.new(
+                add_to_dict_menu_label, f"spelling.add-to-dictionary('{word_escaped}')"
+            )
         menu.append(item)
         ignore_menu_label = _("Ignore All")
-        if Gtk.MAJOR_VERSION > 3:
+        if _IS_GTK3:
+            item = Gtk.MenuItem.new_with_label(ignore_menu_label)
+            item.connect("activate", lambda *args: self.ignore_all(word))
+        else:
             item = Gio.MenuItem.new(
                 ignore_menu_label, f"spelling.ignore-all('{word_escaped}')"
             )
-        else:
-            item = Gtk.MenuItem.new_with_label(ignore_menu_label)
-            item.connect("activate", lambda *args: self.ignore_all(word))
         menu.append(item)
         return menu
 
     def _extend_menu(self, menu):
-        if Gtk.MAJOR_VERSION > 3:
+        # In GTK 4 our existing menu needs to be cleared, providing for disabling
+        if not _IS_GTK3:
             menu.remove_all()
 
         if not self._enabled:
             return
 
-        if Gtk.MAJOR_VERSION > 3:
-            menu.append_item(self._get_languages_menu())
-        else:
+        if _IS_GTK3:
             separator = Gtk.SeparatorMenuItem.new()
             separator.show()
             menu.prepend(separator)
@@ -619,6 +623,8 @@ class SpellChecker(GObject.Object):
             languages.set_submenu(self._get_languages_menu())
             languages.show_all()
             menu.prepend(languages)
+        else:
+            menu.append_item(self._get_languages_menu())
 
         if self._marks["click"].inside_word:
             start, end = self._marks["click"].word
@@ -627,31 +633,31 @@ class SpellChecker(GObject.Object):
                 items = self._suggestion_menu(word)
                 if self.collapse:
                     menu_label = _("Suggestions")
-                    if Gtk.MAJOR_VERSION > 3:
-                        suggestions = Gio.MenuItem.new(menu_label, None)
-                        submenu = Gio.Menu.new()
-                    else:
+                    if _IS_GTK3:
                         suggestions = Gtk.MenuItem.new_with_label(menu_label)
                         submenu = Gtk.Menu.new()
-                    for item in items:
-                        if Gtk.MAJOR_VERSION > 3:
-                            submenu.append_item(item)
-                        else:
-                            submenu.append(item)
-                    suggestions.set_submenu(submenu)
-                    if Gtk.MAJOR_VERSION > 3:
-                        menu.prepend_item(suggestions)
                     else:
+                        suggestions = Gio.MenuItem.new(menu_label, None)
+                        submenu = Gio.Menu.new()
+                    for item in items:
+                        if _IS_GTK3:
+                            submenu.append(item)
+                        else:
+                            submenu.append_item(item)
+                    suggestions.set_submenu(submenu)
+                    if _IS_GTK3:
                         suggestions.show_all()
                         menu.prepend(suggestions)
+                    else:
+                        menu.prepend_item(suggestions)
                 else:
                     items.reverse()
                     for item in items:
-                        if Gtk.MAJOR_VERSION > 3:
-                            menu.prepend_item(item)
-                        else:
+                        if _IS_GTK3:
                             menu.prepend(item)
                             menu.show_all()
+                        else:
+                            menu.prepend_item(item)
 
     def _click_move_popup(self, *args):
         self._marks["click"].move(
@@ -723,27 +729,29 @@ class SpellChecker(GObject.Object):
             if self._regexes[SpellChecker.FILTER_WORD].match(word):
                 return
         if len(self._filters[SpellChecker.FILTER_LINE]):
-            if Gtk.MAJOR_VERSION > 3:
-                _success, line_start = self._buffer.get_iter_at_line(start.get_line())
-            else:
+            if _IS_GTK3:
                 line_start = self._buffer.get_iter_at_line(start.get_line())
+            else:
+                _success, line_start = self._buffer.get_iter_at_line(start.get_line())
             line_end = end.copy()
             line_end.forward_to_line_end()
             line = self._buffer.get_text(line_start, line_end, False)
             for match in self._regexes[SpellChecker.FILTER_LINE].finditer(line):
                 if match.start() <= start.get_line_offset() <= match.end():
-                    if Gtk.MAJOR_VERSION > 3:
-                        _success, start = self._buffer.get_iter_at_line_offset(
-                            start.get_line(), match.start()
-                        )
-                        _success, end = self._buffer.get_iter_at_line_offset(
-                            start.get_line(), match.end()
-                        )
-                    else:
+                    if _IS_GTK3:
                         start = self._buffer.get_iter_at_line_offset(
                             start.get_line(), match.start()
                         )
                         end = self._buffer.get_iter_at_line_offset(
+                            start.get_line(), match.end()
+                        )
+                    else:
+                        # Success is not verified here as the locations come directly
+                        # from the buffer
+                        _success, start = self._buffer.get_iter_at_line_offset(
+                            start.get_line(), match.start()
+                        )
+                        _success, end = self._buffer.get_iter_at_line_offset(
                             start.get_line(), match.end()
                         )
                     self._buffer.remove_tag(self._misspelled, start, end)
