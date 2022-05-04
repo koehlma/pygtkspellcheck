@@ -238,10 +238,10 @@ class SpellChecker(GObject.Object):
 
             controller = Gtk.GestureClick()
             controller.set_button(0)
-            controller.connect("pressed", self.__on_click_pressed)
+            controller.connect("pressed", self._gtk4_on_textview_click)
             self._view.add_controller(controller)
 
-            self._setup_actions()
+            self._gtk4_setup_actions()
 
         self._enabled = True
         self.buffer_initialize()
@@ -477,7 +477,7 @@ class SpellChecker(GObject.Object):
                 break
             word_start = word_end.copy()
 
-    def _setup_actions(self) -> None:
+    def _gtk4_setup_actions(self) -> None:
         action_group = Gio.SimpleActionGroup.new()
 
         action = Gio.SimpleAction.new("ignore-all", GLib.VariantType("s"))
@@ -673,14 +673,7 @@ class SpellChecker(GObject.Object):
             iter = iter[1]
         self._marks["click"].move(iter)
 
-    def __on_click_pressed(self, click, n_press, x, y) -> None:
-        # TODO this type of approach would be better (and is eg. what gnome-text-editor uses)
-        #      but get_current_sequence always returns null
-        # sequence = click.get_current_sequence()
-        # event = click.get_last_event(sequence)
-        # if n_press != 1 or not Gdk.Event.triggers_context_menu(event):
-        #     return
-
+    def _gtk4_on_textview_click(self, click, n_press, x, y) -> None:
         if n_press != 1 or click.get_current_button() != 3:
             return
 
