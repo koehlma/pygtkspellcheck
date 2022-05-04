@@ -18,9 +18,8 @@
 
 """
 A simple but quite powerful spellchecking library written in pure Python for Gtk
-based on Enchant. It supports PyGObject as well as PyGtk for Python 2 and 3 with
-automatic switching and binding detection. For automatic translation of the user
-interface it can use Gedit’s translation files.
+based on Enchant. It supports both GTK 3 and 4 via PyGObject with Python 3. For
+automatic translation of the user interface it can use Gedit’s translation files.
 """
 
 import enchant
