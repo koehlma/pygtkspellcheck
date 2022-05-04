@@ -24,26 +24,37 @@ sys.path.append(join(dirname(__file__), "../src/"))
 
 import locale
 
-import gtk
+import gi
+
+gi.require_version("Gtk", "4.0")
+from gi.repository import Gtk
 
 from gtkspellcheck import SpellChecker
 
+
+class TestApp(Gtk.Application):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.connect("activate", self.activate)
+
+    def activate(self, _app: Gtk.Application):
+        window = Gtk.Window()
+        window.set_title("PyGtkSpellCheck GTK Example")
+        view = Gtk.TextView()
+
+        self.spellchecker = SpellChecker(
+            view, locale.getdefaultlocale()[0], collapse=False
+        )
+        for code, name in self.spellchecker.languages:
+            print("code: %5s, language: %s" % (code, name))
+
+        self.view = view
+        window.set_child(view)
+        window.set_default_size(600, 400)
+        self.add_window(window)
+        window.present()
+
+
 if __name__ == "__main__":
-
-    def quit(*args):
-        gtk.main_quit()
-
-    window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-    window.set_title("PyGtkSpellCheck Example")
-    view = gtk.TextView()
-
-    spellchecker = SpellChecker(view, locale.getdefaultlocale()[0])
-
-    for code, name in spellchecker.languages:
-        print("code: %5s, language: %s" % (code, name))
-
-    window.set_default_size(600, 400)
-    window.add(view)
-    window.show_all()
-    window.connect("delete-event", quit)
-    gtk.main()
+    app = TestApp()
+    app.run()

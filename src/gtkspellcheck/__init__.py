@@ -55,7 +55,6 @@ __metadata__ = {
 from gtkspellcheck.spellcheck import (
     SpellChecker,
     NoDictionariesFound,
-    NoGtkBindingFound,
 )
 
-__all__ = ["SpellChecker", "NoDictionariesFound", "NoGtkBindingFound"]
+__all__ = ["SpellChecker", "NoDictionariesFound"]
