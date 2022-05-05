@@ -350,7 +350,7 @@ class SpellChecker(GObject.Object):
             start_mark = self._buffer.create_mark(None, start)
             self._continue_batched_recheck(start_mark)
         else:
-            end = self.check_range(start, end, True)
+            self.check_range(start, end, True)
 
     def disable(self):
         """
