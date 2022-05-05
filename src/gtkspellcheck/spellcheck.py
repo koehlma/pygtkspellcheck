@@ -789,6 +789,8 @@ class SpellChecker(GObject.Object):
             self._buffer.apply_tag(self._misspelled, start, end)
 
     def _continue_batched_recheck(self, start_mark):
+        if start_mark.get_buffer() != self._buffer:
+            return
         start = self._buffer.get_iter_at_mark(start_mark)
         self._buffer.delete_mark(start_mark)
 
