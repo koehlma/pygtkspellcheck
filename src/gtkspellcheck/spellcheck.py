@@ -476,12 +476,12 @@ class SpellChecker(GObject.Object):
         if not self._enabled:
             return
         if end.inside_word():
-            end.forward_word_end()
+            SpellChecker._iter_forward_word_end(end)
         if start.inside_word() or start.ends_word():
-            start.backward_word_start()
+            SpellChecker._iter_backward_word_start(start)
         if not start.starts_word():
-            start.forward_word_end()
-            start.backward_word_start()
+            SpellChecker._iter_forward_word_end(start)
+            SpellChecker._iter_backward_word_start(start)
         self._buffer.remove_tag(self._misspelled, start, end)
         cursor = self._buffer.get_iter_at_mark(self._buffer.get_insert())
         precursor = cursor.copy()
@@ -492,7 +492,7 @@ class SpellChecker(GObject.Object):
         word_start = start.copy()
         while word_start.compare(end) < 0:
             word_end = word_start.copy()
-            word_end.forward_word_end()
+            SpellChecker._iter_forward_word_end(word_end)
             in_word = (word_start.compare(cursor) < 0) and (
                 cursor.compare(word_end) <= 0
             )
@@ -504,8 +504,8 @@ class SpellChecker(GObject.Object):
             else:
                 self._check_word(word_start, word_end)
                 self._deferred_check = False
-            word_end.forward_word_end()
-            word_end.backward_word_start()
+            SpellChecker._iter_forward_word_end(word_end)
+            SpellChecker._iter_backward_word_start(word_end)
             if word_start.equal(word_end):
                 break
             word_start = word_end.copy()
@@ -823,3 +823,71 @@ class SpellChecker(GObject.Object):
             end.forward_char()
             start_mark = self._buffer.create_mark(None, end)
             GLib.idle_add(self._continue_batched_recheck, start_mark)
+
+    @staticmethod
+    def _between_middle_and_end_of_word(loc):
+        if loc.starts_word():
+            if loc.is_start():
+                return False
+
+            # Determine if actually in word after extra chars
+            loc = loc.copy()
+            loc.backward_char()
+            if not SpellChecker._is_extra_word_char(loc):
+                return False
+
+            if loc.is_start():
+                return False
+            loc.backward_char()
+            return loc.inside_word()
+        else:
+            return loc.inside_word() or loc.ends_word()
+
+    @staticmethod
+    def _is_extra_word_char(loc):
+        ch = loc.get_char()
+
+        if ch == " " or ch == "\n" or ch == "\t" or ch == "\r":
+            return False
+
+        if ch == "'":
+            return True
+
+        # Language extra chararacters should also be processed once Enchant's
+        # enchant_dict_get_extra_word_characters is exposed in PyEnchant
+
+        return False
+
+    @staticmethod
+    def _iter_forward_word_end(loc):
+        tmp = loc.copy()
+        if loc.forward_word_end():
+            tmp = loc.copy()
+
+            if SpellChecker._is_extra_word_char(tmp):
+                if SpellChecker._iter_forward_word_end(tmp):
+                    loc.assign(tmp)
+
+            return True
+
+        if loc.is_end() and loc.ends_word() and not tmp.equal(loc):
+            return True
+
+        return False
+
+    @staticmethod
+    def _iter_backward_word_start(loc):
+        tmp = loc.copy()
+        if loc.backward_word_start():
+            tmp = loc.copy()
+
+            if tmp.backward_char() and SpellChecker._is_extra_word_char(tmp):
+                if SpellChecker._iter_backward_word_start(tmp):
+                    loc.assign(tmp)
+
+            return True
+
+        if loc.is_start() and loc.starts_word() and not tmp.equal(loc):
+            return True
+
+        return False
