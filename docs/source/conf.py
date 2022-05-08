@@ -41,14 +41,13 @@ class Mock(object):
             return Mock()
 
 
-MOCK_MODULES = ["enchant"]
+MOCK_MODULES = ["enchant", "gi.repository.Gtk"]
 for mod_name in MOCK_MODULES:
     try:
         __import__(mod_name)
     except:
         sys.modules[mod_name] = Mock()
 
-sys.modules["gtk"] = None
 import gtkspellcheck as m
 import pylocales
 
