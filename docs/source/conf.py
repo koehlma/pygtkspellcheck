@@ -48,7 +48,13 @@ for mod_name in MOCK_MODULES:
     except:
         sys.modules[mod_name] = Mock()
 
-sys.modules["gtk"] = None
+
+class GtkMock:
+    MAJOR_VERSION = 3
+
+
+sys.modules["gi.repository.Gtk"] = GtkMock()
+
 import gtkspellcheck as m
 import pylocales
 
