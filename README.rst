@@ -20,7 +20,7 @@ Features
 - support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries
 - supports extraction of dictionaries out of LibreOffice extension files
 
-.. image:: https://raw.githubusercontent.com/koehlma/pygtkspellcheck/master/doc/screenshots/screenshot.png
+.. image:: https://raw.githubusercontent.com/koehlma/pygtkspellcheck/master/docs/screenshots/screenshot.png
     :alt: Python GTK Spellcheck Screenshot
     :align: center
 
