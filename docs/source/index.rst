@@ -25,8 +25,8 @@ Automatic Version Detection
 Python GTK Spellcheck will automatically detect the version of GKT (3 or 4) used by your project. To this end, you have to import GTK before importing `gtkspellcheck`. For example:
 
 
-.. code-block::
-   
+.. code-block:: python
+
    import gi
 
    gi.require_version("Gtk", "4.0")
