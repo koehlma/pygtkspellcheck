@@ -444,11 +444,22 @@ class SpellChecker(GObject.Object):
         :param start: Start iter - checking starts here.
         :param end: End iter - checking ends here.
         """
+        logger.debug(
+            "Check range called with range %d:%d to %d:%d and force all set to %s.",
+            start.get_line(),
+            start.get_line_offset(),
+            end.get_line(),
+            end.get_line_offset(),
+            force_all,
+        )
         if not self._enabled:
             return
         if end.inside_word():
             end.forward_word_end()
-        if not start.starts_word() and (start.inside_word() or start.ends_word()):
+        if start.inside_word() or start.ends_word():
+            start.backward_word_start()
+        if not start.starts_word():
+            start.forward_word_end()
             start.backward_word_start()
         self._buffer.remove_tag(self._misspelled, start, end)
         cursor = self._buffer.get_iter_at_mark(self._buffer.get_insert())
@@ -457,9 +468,6 @@ class SpellChecker(GObject.Object):
         highlight = cursor.has_tag(self._misspelled) or precursor.has_tag(
             self._misspelled
         )
-        if not start.get_offset():
-            start.forward_word_end()
-            start.backward_word_start()
         word_start = start.copy()
         while word_start.compare(end) < 0:
             word_end = word_start.copy()
@@ -722,6 +730,14 @@ class SpellChecker(GObject.Object):
             if start.has_tag(tag):
                 return
         word = self._buffer.get_text(start, end, False).strip()
+        logger.debug(
+            "Checking word %s in range %d:%d to %d:%d.",
+            word,
+            start.get_line(),
+            start.get_line_offset(),
+            end.get_line(),
+            end.get_line_offset(),
+        )
         if not word:
             return
         if len(self._filters[SpellChecker.FILTER_WORD]):
