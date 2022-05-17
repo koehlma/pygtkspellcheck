@@ -183,16 +183,10 @@ class SpellChecker(GObject.Object):
             self._extra_word_chars = extra_word_chars
 
         def is_extra_word_char(self, loc):
-            ch = loc.get_char()
-
-            # Handle end of buffer
-            if ch == "":
-                return False
-
             # Language extra chararacters should also be processed once Enchant's
             # enchant_dict_get_extra_word_characters is exposed in PyEnchant
 
-            return ch in self._extra_word_chars
+            return loc.get_char() in list(self._extra_word_chars)
 
         def inside_word(self, loc):
             if loc.inside_word():
