@@ -221,36 +221,24 @@ class SpellChecker(GObject.Object):
                 return False
 
         def forward_word_end(self, loc):
-            tmp = loc.copy()
-            if loc.forward_word_end():
-                tmp = loc.copy()
-
-                if self.is_extra_word_char(tmp):
-                    if self.forward_word_end(tmp):
-                        loc.assign(tmp)
-
-                return True
-
-            if loc.is_end() and loc.ends_word() and not tmp.equal(loc):
-                return True
-
-            return False
+            loc.forward_word_end()
+            while self.is_extra_word_char(loc):
+                loc.forward_char()
+                loc.forward_word_end()
+                if loc.is_end():
+                    break
 
         def backward_word_start(self, loc):
+            loc.backward_word_start()
             tmp = loc.copy()
-            if loc.backward_word_start():
-                tmp = loc.copy()
-
-                if tmp.backward_char() and self.is_extra_word_char(tmp):
-                    if self.backward_word_start(tmp):
-                        loc.assign(tmp)
-
-                return True
-
-            if loc.is_start() and loc.starts_word() and not tmp.equal(loc):
-                return True
-
-            return False
+            tmp.backward_char()
+            while self.is_extra_word_char(tmp):
+                loc.assign(tmp)
+                loc.backward_word_start()
+                if loc.is_start():
+                    break
+                tmp.assign(loc)
+                tmp.backward_char()
 
         def sync_extra_chars(self, obj, value):
             self._extra_word_chars = obj.extra_chars
