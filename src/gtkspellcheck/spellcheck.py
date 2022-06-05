@@ -187,7 +187,7 @@ class SpellChecker(GObject.Object):
             # enchant_dict_get_extra_word_characters is exposed in PyEnchant
 
             char = loc.get_char()
-            return char != '' and char in self._extra_word_chars
+            return char != "" and char in self._extra_word_chars
 
         def inside_word(self, loc):
             if loc.inside_word():
