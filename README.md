@@ -22,7 +22,7 @@ Python GTK Spellcheck is a simple but quite powerful spellchecking library for G
 
 ## 🚀 Getting Started
 
-Python GTK Spellcheck is available from the [Python Package Index](https://pypi.org/):
+Python GTK Spellcheck is available from the [Python Package Index](https://pypi.python.org/pypi/pygtkspellcheck):
 ```sh
 pip install pygtkspellcheck
 ```
