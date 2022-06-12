@@ -32,7 +32,7 @@ For instance, on Debian you may want to install the [`python3-gtkspellcheck`](ht
 
 ## 🥳 Showcase
 
-Over time, several project have used Python GTK Spellcheck or are still using it. Among those are:
+Over time, several projects have used Python GTK Spellcheck or are still using it. Among those are:
 
 - [Nested Editor](http://nestededitor.sourceforge.net/about.html): “Specialized editor for structured documents.”
 - [Cherry Tree](http://www.giuspen.com/cherrytree/): “A hierarchical note taking application, […].”
