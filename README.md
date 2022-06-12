@@ -15,8 +15,9 @@ Python GTK Spellcheck is a simple but quite powerful spellchecking library for G
 - support for custom ignore tags and hot swap of `GtkTextBuffer`
 - support for Hunspell (LibreOffice) and Aspell (GNU) dictionaries
 
-
-![Screenshot](https://raw.githubusercontent.com/koehlma/pygtkspellcheck/master/docs/screenshots/screenshot.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/koehlma/pygtkspellcheck/master/docs/screenshots/screenshot.png" alt="Screenshot" />
+</p>
 
 
 ## 🚀 Getting Started
