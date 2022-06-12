@@ -6,7 +6,7 @@ authors = [
     "Maximilian Köhl <mail@koehlma.de>"
 ]
 license = "GPL-3.0-or-later"
-readme = "README.rst"
+readme = "README.md"
 repository = "https://github.com/koehlma/pygtkspellcheck.git"
 homepage = "https://github.com/koehlma/pygtkspellcheck"
 classifiers = [
