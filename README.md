@@ -27,7 +27,7 @@ Python GTK Spellcheck is available from the [Python Package Index](https://pypi.
 pip install pygtkspellcheck
 ```
 Depending on your distribution, you may also find Python GTK Spellcheck in your package manager.
-For instance, on Debian you may want to install [`python3-gtkspellcheck`](https://packages.debian.org/bullseye/python3-gtkspellcheck) package.
+For instance, on Debian you may want to install the [`python3-gtkspellcheck`](https://packages.debian.org/bullseye/python3-gtkspellcheck) package.
 
 
 ## 🥳 Showcase
