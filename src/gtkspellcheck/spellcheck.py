@@ -128,6 +128,8 @@ class SpellChecker(GObject.Object):
         FILTER_TEXT: [],
     }
 
+    DEFAULT_EXTRA_CHARS = "'"
+
     class _LanguageList(UserList):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -149,10 +151,11 @@ class SpellChecker(GObject.Object):
             return language in self.mapping
 
     class _Mark:
-        def __init__(self, buffer, name, start):
+        def __init__(self, buffer, name, start, iter_worker):
             self._buffer = buffer
             self._name = name
             self._mark = self._buffer.create_mark(self._name, start, True)
+            self._iter_worker = iter_worker
 
         @property
         def iter(self):
@@ -160,20 +163,105 @@ class SpellChecker(GObject.Object):
 
         @property
         def inside_word(self):
-            return self.iter.inside_word()
+            return self._iter_worker.inside_word(self.iter)
 
         @property
         def word(self):
             start = self.iter
-            if not start.starts_word():
-                start.backward_word_start()
+            if not self._iter_worker.starts_word(start):
+                self._iter_worker.backward_word_start(start)
             end = self.iter
-            if end.inside_word():
-                end.forward_word_end()
+            if self._iter_worker.inside_word(end):
+                self._iter_worker.forward_word_start(end)
             return start, end
 
         def move(self, location):
             self._buffer.move_mark(self._mark, location)
+
+    class _IterWorker:
+        def __init__(self, extra_word_chars):
+            self._extra_word_chars = extra_word_chars
+
+        def is_extra_word_char(self, loc):
+            # Language extra chararacters should also be processed once Enchant's
+            # enchant_dict_get_extra_word_characters is exposed in PyEnchant
+
+            char = loc.get_char()
+            return char != "" and char in self._extra_word_chars
+
+        def inside_word(self, loc):
+            if loc.inside_word():
+                return True
+            elif self.starts_word(loc):
+                return True
+            elif loc.ends_word() and not self.ends_word(loc):
+                return True
+            else:
+                return False
+
+        def starts_word(self, loc):
+            if loc.starts_word():
+                if loc.is_start():
+                    return True
+                else:
+                    tmp = loc.copy()
+                    tmp.backward_char()
+                    return not self.is_extra_word_char(tmp)
+            else:
+                return False
+
+        def ends_word(self, loc):
+            if loc.ends_word():
+                if loc.is_end():
+                    return True
+                else:
+                    tmp = loc.copy()
+                    tmp.forward_char()
+                    return not self.is_extra_word_char(tmp)
+            else:
+                return False
+
+        def forward_word_end(self, loc):
+            def move_through_extra_chars():
+                moved = False
+                while self.is_extra_word_char(loc):
+                    if not loc.forward_char():
+                        break
+                    moved = True
+                return moved
+
+            tmp = loc.copy()
+            tmp.backward_char()
+            loc.forward_word_end()
+            while move_through_extra_chars():
+                if loc.is_end() or not loc.inside_word() or not loc.forward_word_end():
+                    break
+
+        def backward_word_start(self, loc):
+            def move_through_extra_chars():
+                tmp = loc.copy()
+                tmp.backward_char()
+                moved = False
+                while self.is_extra_word_char(tmp):
+                    moved = True
+                    loc.assign(tmp)
+                    if not tmp.backward_char():
+                        break
+                return moved
+
+            loc.backward_word_start()
+            while move_through_extra_chars():
+                tmp = loc.copy()
+                tmp.backward_char()
+                if (
+                    loc.is_start()
+                    or not tmp.inside_word()
+                    or not loc.backward_word_start()
+                ):
+                    break
+
+        def sync_extra_chars(self, obj, value):
+            self._extra_word_chars = obj.extra_chars
 
     def __init__(
         self, view, language="en", prefix="gtkspellchecker", collapse=True, params=None
@@ -231,6 +319,10 @@ class SpellChecker(GObject.Object):
                 "|".join(self._filters[SpellChecker.FILTER_TEXT]), re.MULTILINE
             ),
         }
+
+        self._extra_chars = SpellChecker.DEFAULT_EXTRA_CHARS
+        self._iter_worker = SpellChecker._IterWorker(self._extra_chars)
+        self.connect("notify::extra-chars", self._iter_worker.sync_extra_chars)
 
         self._batched_rechecking = False
 
@@ -294,6 +386,22 @@ class SpellChecker(GObject.Object):
     def batched_rechecking(self, val):
         self._batched_rechecking = val
 
+    @GObject.Property(type=str, default=",")
+    def extra_chars(self):
+        """
+        Fetch the list of extra characters beyond which words are extended.
+        """
+        return self._extra_chars
+
+    @extra_chars.setter
+    def extra_chars(self, chars):
+        """
+        Set the list of extra characters beyond which words are extended.
+
+        :param val: String containing list of characters
+        """
+        self._extra_chars = chars
+
     def buffer_initialize(self):
         """
         Initialize the GtkTextBuffer associated with the GtkTextView. If you
@@ -310,13 +418,19 @@ class SpellChecker(GObject.Object):
         start = self._buffer.get_bounds()[0]
         self._marks = {
             "insert-start": SpellChecker._Mark(
-                self._buffer, "{}-insert-start".format(self._prefix), start
+                self._buffer,
+                "{}-insert-start".format(self._prefix),
+                start,
+                self._iter_worker,
             ),
             "insert-end": SpellChecker._Mark(
-                self._buffer, "{}-insert-end".format(self._prefix), start
+                self._buffer,
+                "{}-insert-end".format(self._prefix),
+                start,
+                self._iter_worker,
             ),
             "click": SpellChecker._Mark(
-                self._buffer, "{}-click".format(self._prefix), start
+                self._buffer, "{}-click".format(self._prefix), start, self._iter_worker
             ),
         }
         self._table = self._buffer.get_tag_table()
@@ -475,13 +589,13 @@ class SpellChecker(GObject.Object):
         )
         if not self._enabled:
             return
-        if end.inside_word():
-            end.forward_word_end()
-        if start.inside_word() or start.ends_word():
-            start.backward_word_start()
-        if not start.starts_word():
-            start.forward_word_end()
-            start.backward_word_start()
+        if self._iter_worker.inside_word(end):
+            self._iter_worker.forward_word_end(end)
+        if self._iter_worker.inside_word(start) or self._iter_worker.ends_word(start):
+            self._iter_worker.backward_word_start(start)
+        if not self._iter_worker.starts_word(start):
+            self._iter_worker.forward_word_end(start)
+            self._iter_worker.backward_word_start(start)
         self._buffer.remove_tag(self._misspelled, start, end)
         cursor = self._buffer.get_iter_at_mark(self._buffer.get_insert())
         precursor = cursor.copy()
@@ -492,7 +606,7 @@ class SpellChecker(GObject.Object):
         word_start = start.copy()
         while word_start.compare(end) < 0:
             word_end = word_start.copy()
-            word_end.forward_word_end()
+            self._iter_worker.forward_word_end(word_end)
             in_word = (word_start.compare(cursor) < 0) and (
                 cursor.compare(word_end) <= 0
             )
@@ -504,8 +618,8 @@ class SpellChecker(GObject.Object):
             else:
                 self._check_word(word_start, word_end)
                 self._deferred_check = False
-            word_end.forward_word_end()
-            word_end.backward_word_start()
+            self._iter_worker.forward_word_end(word_end)
+            self._iter_worker.backward_word_start(word_end)
             if word_start.equal(word_end):
                 break
             word_start = word_end.copy()
@@ -815,7 +929,7 @@ class SpellChecker(GObject.Object):
 
         end = start.copy()
         end.forward_chars(_BATCH_SIZE_CHARS)
-        end.forward_word_end()
+        self._iter_worker.forward_word_end(end)
 
         self.check_range(start, end, True)
 
