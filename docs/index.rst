@@ -40,31 +40,14 @@ Python GTK Spellcheck will configure itself to use GTK 4 for the example above.
 
 API Reference
 -------------
+```{eval-rst}
 .. autoclass:: gtkspellcheck.spellcheck.SpellChecker
    :members:
    
 .. autoclass:: gtkspellcheck.spellcheck.NoDictionariesFound
+```
 
 
-Deprecated API Reference
-------------------------
-.. warning::
-
-   The following functions are deprecated since version 4.0.5, they will be removed
-   from "pygtkspellcheck" in 5.0.
-
-
-.. autofunction:: pylocales.code_to_name
-
-.. autofunction:: gtkspellcheck.oxt_extract.extract
-
-.. autofunction:: gtkspellcheck.oxt_extract.batch_extract
-
-.. autoclass:: gtkspellcheck.oxt_extract.BadXml
-
-.. autoclass:: gtkspellcheck.oxt_extract.BadExtensionFile
-
-.. autoclass:: gtkspellcheck.oxt_extract.ExtractPathIsNoDirectory
 
 Development
 -----------

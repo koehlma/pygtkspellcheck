@@ -49,7 +49,7 @@ __metadata__ = {
     "__desc_long__": __desc_long__,
 }
 
-from pylocales.locales import (
+from .locales import (
     Country,
     Language,
     LanguageNotFound,

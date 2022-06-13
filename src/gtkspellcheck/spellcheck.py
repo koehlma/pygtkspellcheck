@@ -29,8 +29,8 @@ import re
 import sys
 from collections import UserList
 
-from pylocales import code_to_name as _code_to_name
-from pylocales import LanguageNotFound, CountryNotFound
+from ._pylocales import code_to_name as _code_to_name
+from ._pylocales import LanguageNotFound, CountryNotFound
 
 from gi.repository import Gio, GLib, GObject
 

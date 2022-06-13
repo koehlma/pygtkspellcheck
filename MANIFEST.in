@@ -2,6 +2,7 @@ include LICENSE.txt
 include MANIFEST.in
 include README.md
 graft examples
-graft doc
+graft docs
+graft placeholders
 graft locale
-prune doc/build
+prune docs/build

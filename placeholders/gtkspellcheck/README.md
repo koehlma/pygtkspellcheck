@@ -1,0 +1,1 @@
+This package exists just to reserve the name `gtkspellcheck`. [Python GTK Spellcheck](https://pypi.org/project/pygtkspellcheck/) provides a package with this name.

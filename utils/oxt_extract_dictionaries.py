@@ -20,7 +20,7 @@ import sys
 import argparse
 
 sys.modules["gtk"] = None
-import gtkspellcheck.oxt_extract
+import gtkspellcheck._oxt_extract
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -30,16 +30,16 @@ if __name__ == "__main__":
     arguments = parser.parse_args()
     for extension in arguments.extension:
         try:
-            gtkspellcheck.oxt_extract.extract(extension, arguments.target)
-        except gtkspellcheck.oxt_extract.BadXml:
+            gtkspellcheck._oxt_extract.extract(extension, arguments.target)
+        except gtkspellcheck._oxt_extract.BadXml:
             print(
-                gtkspellcheck.oxt_extract._(
+                gtkspellcheck._oxt_extract._(
                     'extension "{}" has no valid XML ' "dictionary registry"
                 ).format(extension)
             )
-        except gtkspellcheck.oxt_extract.BadExtensionFile:
+        except gtkspellcheck._oxt_extract.BadExtensionFile:
             print(
-                gtkspellcheck.oxt_extract._(
+                gtkspellcheck._oxt_extract._(
                     'extension "{}" is not a valid ' "ZIP file"
                 ).format(extension)
             )

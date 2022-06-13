@@ -2,27 +2,25 @@
 name = "pygtkspellcheck"
 version = "5.0.0"
 description = "A simple but quite powerful spellchecking library for GTK written in pure Python."
-authors = [
-    "Maximilian Köhl <mail@koehlma.de>"
-]
+authors = ["Maximilian Köhl <mail@koehlma.de>"]
 license = "GPL-3.0-or-later"
 readme = "README.md"
 repository = "https://github.com/koehlma/pygtkspellcheck.git"
 homepage = "https://github.com/koehlma/pygtkspellcheck"
 classifiers = [
-    'Development Status :: 5 - Production/Stable',
-    'Environment :: X11 Applications :: Gnome',
-    'Intended Audience :: Developers',
-    'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-    'Operating System :: MacOS :: MacOS γ',
-    'Operating System :: Microsoft :: Windows',
-    'Operating System :: POSIX',
-    'Programming Language :: Python :: 3',
-    'Topic :: Software Development :: Localization'
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: X11 Applications :: Gnome",
+    "Environment :: X11 Applications :: GTK",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: MacOS :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Localization"
 ]
 packages = [
-    { include = "gtkspellcheck", from = "src" },
-    { include = "pylocales", from = "src" },
+    { include = "gtkspellcheck", from = "src" }
 ]
 
 [tool.poetry.dependencies]
@@ -30,6 +28,7 @@ python = "^3.7"
 pyenchant = "^3.0"
 PyGObject = "^3.42.1"
 sphinx = { version = "^4.5.0", optional = true }
+myst-parser = { version = "^0.18.0", optional = true }
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
@@ -37,9 +36,10 @@ flake8 = "*"
 flake8-bugbear = "*"
 pep8-naming = "*"
 mypy = "*"
+sphinx-rtd-theme = "^1.0.0"
 
 [tool.poetry.extras]
-docs = ["sphinx"]
+docs = ["sphinx", "myst-parser"]
 
 [build-system]
 requires = ["poetry_core>=1.0.0"]

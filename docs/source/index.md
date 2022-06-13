@@ -5,10 +5,6 @@
 
 Python GTK Spellcheck is a simple but quite powerful spellchecking library for GTK written in pure Python. It's spellchecking component is based on [Enchant](http://www.abisource.com/projects/enchant/) and it supports both GTK 3 and 4 via [PyGObject](https://live.gnome.org/PyGObject/).
 
-**⚡️ News:** Thanks to [@cheywood](https://github.com/cheywood), Python GTK Spellcheck now supports GTK 4! 🎉
-
-**🟢 Status:** This project is mature, actively maintained, and open to contributions and co-maintainership.
-
 
 ## ✨ Features
 
@@ -34,6 +30,41 @@ Depending on your distribution, you may also find Python GTK Spellcheck in your 
 For instance, on Debian you may want to install the [`python3-gtkspellcheck`](https://packages.debian.org/bullseye/python3-gtkspellcheck) package.
 
 
+## 📚 Documentation
+
+### Automatic GTK Version Detection
+
+
+Python GTK Spellcheck will automatically detect the version of GTK (3 or 4) used by your project. To this end, you have to import GTK before importing `gtkspellcheck`. For example:
+
+
+```python
+import gi
+
+gi.require_version("Gtk", "4.0")
+from gi.repository import Gtk
+
+from gtkspellcheck import SpellChecker
+```
+
+Python GTK Spellcheck will configure itself to use GTK 4 for the example above.
+
+
+### API Reference
+
+```{eval-rst}
+.. autoclass:: gtkspellcheck.spellcheck.SpellChecker
+   :members:
+   
+.. autoclass:: gtkspellcheck.spellcheck.NoDictionariesFound
+```
+
+
+### Examples
+
+We also have [examples](http://github.com/koehlma/pygtkspellcheck/examples) demonstrating various configurations and and how Python GTK Spellcheck can be used.
+
+
 ## 🥳 Showcase
 
 Over time, several projects have used Python GTK Spellcheck or are still using it. Among those are:
@@ -50,18 +81,11 @@ Over time, several projects have used Python GTK Spellcheck or are still using i
 
 ## 🔖 Versions
 
-Version numbers follow [Semantic Versioning](http://semver.org/). However, the update from 3 to 4 pertains only API incompatible changes in `oxt_extract` and not the spellchecking component. The update from 4 to 5 removed support for Python 2, GTK 2, `pylocales`, and the `oxt_extract` API.
-
-
-## 📚 Documentation
-
-The documentation is available at [Read the Docs](http://pygtkspellcheck.readthedocs.org/).
+Version numbers follow [Semantic Versioning](http://semver.org/). However, the version change from 3 to 4 pertains only API incompatible changes in `oxt_extract` and not the spellchecking component. The update from 4 to 5 removed support for Python 2, GTK 2, `pylocales`, and the `oxt_extract` API.
 
 
 ## 🏗 Contributing
 
 We welcome all kinds of contributions! ❤️
 
-For minor changes and bug fixes feel free to simply open a pull request. For major changes impacting the overall design of Python GTK Spellcheck, please first [start a discussion](https://github.com/koehlma/pygtkspellcheck/discussions/new?category=ideas) outlining your idea.
-
-By submitting a PR, you agree to license your contributions under “GPLv3 or later”.
+For details, checkout our [GitHub Repository](https://github.com/koehlma/pygtkspellcheck).
