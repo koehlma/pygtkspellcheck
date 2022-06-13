@@ -222,24 +222,46 @@ class SpellChecker(GObject.Object):
                 return False
 
         def forward_word_end(self, loc):
-            loc.forward_word_end()
-            while self.is_extra_word_char(loc):
-                loc.forward_char()
-                loc.forward_word_end()
-                if loc.is_end():
-                    break
+            def move_through_extra_chars():
+                moved = False
+                while self.is_extra_word_char(loc):
+                    moved = True
+                    if not loc.forward_char():
+                        break
+                return moved
 
-        def backward_word_start(self, loc):
-            loc.backward_word_start()
             tmp = loc.copy()
             tmp.backward_char()
-            while self.is_extra_word_char(tmp):
-                loc.assign(tmp)
-                loc.backward_word_start()
-                if loc.is_start():
+            loc.forward_word_end()
+            while move_through_extra_chars():
+                if loc.is_end() or not loc.inside_word() or not loc.forward_word_end():
                     break
-                tmp.assign(loc)
+
+            tmp = loc.copy()
+            tmp.backward_char()
+
+        def backward_word_start(self, loc):
+            def move_through_extra_chars():
+                tmp = loc.copy()
                 tmp.backward_char()
+                moved = False
+                while self.is_extra_word_char(tmp):
+                    moved = True
+                    loc.assign(tmp)
+                    if not tmp.backward_char():
+                        break
+                return moved
+
+            loc.backward_word_start()
+            while move_through_extra_chars():
+                tmp = loc.copy()
+                tmp.backward_char()
+                if (
+                    loc.is_start()
+                    or not tmp.inside_word()
+                    or not loc.backward_word_start()
+                ):
+                    break
 
         def sync_extra_chars(self, obj, value):
             self._extra_word_chars = obj.extra_chars
