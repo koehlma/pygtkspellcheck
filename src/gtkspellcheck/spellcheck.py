@@ -225,9 +225,9 @@ class SpellChecker(GObject.Object):
             def move_through_extra_chars():
                 moved = False
                 while self.is_extra_word_char(loc):
-                    moved = True
                     if not loc.forward_char():
                         break
+                    moved = True
                 return moved
 
             tmp = loc.copy()
