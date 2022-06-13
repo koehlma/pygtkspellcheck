@@ -237,9 +237,6 @@ class SpellChecker(GObject.Object):
                 if loc.is_end() or not loc.inside_word() or not loc.forward_word_end():
                     break
 
-            tmp = loc.copy()
-            tmp.backward_char()
-
         def backward_word_start(self, loc):
             def move_through_extra_chars():
                 tmp = loc.copy()
