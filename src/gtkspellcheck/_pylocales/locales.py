@@ -131,11 +131,11 @@ class Language(object):
         raise LanguageNotFound("code: %s, codec: %s" % (code, codec))
 
     @classmethod
-    def by_iso_639_2B(cls, code):
+    def by_iso_639_2b(cls, code):
         return Language.get_language(code, "iso_639_2B")
 
     @classmethod
-    def by_iso_639_2T(cls, code):
+    def by_iso_639_2t(cls, code):
         return Language.get_language(code, "iso_639_2T")
 
     @classmethod
