@@ -172,7 +172,7 @@ class SpellChecker(GObject.Object):
                 self._iter_worker.backward_word_start(start)
             end = self.iter
             if self._iter_worker.inside_word(end):
-                self._iter_worker.forward_word_start(end)
+                self._iter_worker.forward_word_end(end)
             return start, end
 
         def move(self, location):
