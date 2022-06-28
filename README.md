@@ -50,7 +50,7 @@ Over time, several projects have used Python GTK Spellcheck or are still using i
 
 ## 🔖 Versions
 
-Version numbers follow [Semantic Versioning](http://semver.org/). However, the update from 3 to 4 pertains only API incompatible changes in `oxt_extract` and not the spellchecking component. The update from 4 to 5 removed support for Python 2, GTK 2, `pylocales`, and the `oxt_extract` API.
+Version numbers follow [Semantic Versioning](http://semver.org/). However, the update from 3 to 4 pertains only API incompatible changes in `oxt_extract` and not the spellchecking component. The update from 4 to 5 removed support for Python 2, GTK 2, `pylocales`, and the `oxt_extract` API. Otherwise, the API is still compatible with version 3.
 
 
 ## 📚 Documentation

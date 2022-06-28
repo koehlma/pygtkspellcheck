@@ -1,8 +1,0 @@
-include LICENSE.txt
-include MANIFEST.in
-include README.md
-graft examples
-graft docs
-graft placeholders
-graft locale
-prune docs/build

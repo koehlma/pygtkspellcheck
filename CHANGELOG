@@ -5,3 +5,10 @@
 == 4.0 ==
 - caused by: API incompatible changes in `oxt_extract`
 - SpellChecker API remains compatible to version 3
+
+== 5.0 ==
+- removed `oxt_extract` and `pylocales` API
+- removed support for Python 2 and GTK 2
+- add support for GTK 4
+- add support for extra word characters
+- add support for batch rechecking of large buffers
