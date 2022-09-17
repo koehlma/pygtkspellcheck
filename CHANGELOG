@@ -12,3 +12,6 @@
 - add support for GTK 4
 - add support for extra word characters
 - add support for batch rechecking of large buffers
+
+== 5.0.1 ==
+- minor bug fixes
