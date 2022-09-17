@@ -589,6 +589,8 @@ class SpellChecker(GObject.Object):
         )
         if not self._enabled:
             return
+        start = start.copy()
+        end = end.copy()
         if self._iter_worker.inside_word(end):
             self._iter_worker.forward_word_end(end)
         if self._iter_worker.inside_word(start) or self._iter_worker.ends_word(start):
