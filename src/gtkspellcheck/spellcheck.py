@@ -718,9 +718,11 @@ class SpellChecker(GObject.Object):
                     except AttributeError:
                         label.set_alignment(0.0, 0.5)
                     item.add(label)
-                    item.connect(
-                        "activate", lambda *args: self._replace_word(suggestion)
-                    )
+
+                    def _make_on_activate(word):
+                        return lambda *args: self._replace_word(word)
+
+                    item.connect("activate", _make_on_activate(word))
                 else:
                     escaped = suggestion.replace("'", "\\'")
                     item = Gio.MenuItem.new(
