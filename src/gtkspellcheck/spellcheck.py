@@ -272,7 +272,7 @@ class SpellChecker(GObject.Object):
         # GTK 3-only signals. GTK 4 uses actions, below.
         if _IS_GTK3:
             self._view.connect(
-                "populate-popup", lambda entry, menu: self._extend_menu(menu)
+                "populate-popup", lambda entry, menu: self.populate_menu(menu)
             )
             self._view.connect("popup-menu", self._click_move_popup)
             self._view.connect("button-press-event", self._click_move_button)
@@ -626,6 +626,71 @@ class SpellChecker(GObject.Object):
                 break
             word_start = word_end.copy()
 
+    def populate_menu(self, menu):
+        """
+        Populate the provided menu with spelling items.
+
+        :param menu: The menu to populate.
+        """
+        # In GTK 4 our existing menu needs to be cleared, providing for disabling
+        if not _IS_GTK3:
+            menu.remove_all()
+
+        if not self._enabled:
+            return
+
+        if _IS_GTK3:
+            separator = Gtk.SeparatorMenuItem.new()
+            separator.show()
+            menu.prepend(separator)
+            languages = Gtk.MenuItem.new_with_label(_("Languages"))
+            languages.set_submenu(self._get_languages_menu())
+            languages.show_all()
+            menu.prepend(languages)
+        else:
+            menu.append_item(self._get_languages_menu())
+
+        if self._marks["click"].inside_word:
+            start, end = self._marks["click"].word
+            if start.has_tag(self._misspelled):
+                word = self._buffer.get_text(start, end, False)
+                items = self._suggestion_menu(word)
+                if self.collapse:
+                    menu_label = _("Suggestions")
+                    if _IS_GTK3:
+                        suggestions = Gtk.MenuItem.new_with_label(menu_label)
+                        submenu = Gtk.Menu.new()
+                    else:
+                        suggestions = Gio.MenuItem.new(menu_label, None)
+                        submenu = Gio.Menu.new()
+                    for item in items:
+                        if _IS_GTK3:
+                            submenu.append(item)
+                        else:
+                            submenu.append_item(item)
+                    suggestions.set_submenu(submenu)
+                    if _IS_GTK3:
+                        suggestions.show_all()
+                        menu.prepend(suggestions)
+                    else:
+                        menu.prepend_item(suggestions)
+                else:
+                    items.reverse()
+                    for item in items:
+                        if _IS_GTK3:
+                            menu.prepend(item)
+                            menu.show_all()
+                        else:
+                            menu.prepend_item(item)
+
+    def move_click_mark(self, iter):
+        """
+        Move the "click" mark, used to determine the word being checked.
+
+        :param iter: TextIter for the new location
+        """
+        self._marks["click"].move(iter)
+
     def _gtk4_setup_actions(self) -> None:
         action_group = Gio.SimpleActionGroup.new()
 
@@ -753,62 +818,8 @@ class SpellChecker(GObject.Object):
         menu.append(item)
         return menu
 
-    def _extend_menu(self, menu):
-        # In GTK 4 our existing menu needs to be cleared, providing for disabling
-        if not _IS_GTK3:
-            menu.remove_all()
-
-        if not self._enabled:
-            return
-
-        if _IS_GTK3:
-            separator = Gtk.SeparatorMenuItem.new()
-            separator.show()
-            menu.prepend(separator)
-            languages = Gtk.MenuItem.new_with_label(_("Languages"))
-            languages.set_submenu(self._get_languages_menu())
-            languages.show_all()
-            menu.prepend(languages)
-        else:
-            menu.append_item(self._get_languages_menu())
-
-        if self._marks["click"].inside_word:
-            start, end = self._marks["click"].word
-            if start.has_tag(self._misspelled):
-                word = self._buffer.get_text(start, end, False)
-                items = self._suggestion_menu(word)
-                if self.collapse:
-                    menu_label = _("Suggestions")
-                    if _IS_GTK3:
-                        suggestions = Gtk.MenuItem.new_with_label(menu_label)
-                        submenu = Gtk.Menu.new()
-                    else:
-                        suggestions = Gio.MenuItem.new(menu_label, None)
-                        submenu = Gio.Menu.new()
-                    for item in items:
-                        if _IS_GTK3:
-                            submenu.append(item)
-                        else:
-                            submenu.append_item(item)
-                    suggestions.set_submenu(submenu)
-                    if _IS_GTK3:
-                        suggestions.show_all()
-                        menu.prepend(suggestions)
-                    else:
-                        menu.prepend_item(suggestions)
-                else:
-                    items.reverse()
-                    for item in items:
-                        if _IS_GTK3:
-                            menu.prepend(item)
-                            menu.show_all()
-                        else:
-                            menu.prepend_item(item)
-
     def _click_move_popup(self, *args):
-        self._marks["click"].move(
-            self._buffer.get_iter_at_mark(self._buffer.get_insert())
-        )
+        self.move_click_mark(self._buffer.get_iter_at_mark(self._buffer.get_insert()))
         return False
 
     def _click_move_button(self, widget, event):
@@ -823,14 +834,14 @@ class SpellChecker(GObject.Object):
         iter = self._view.get_iter_at_location(x, y)
         if isinstance(iter, tuple):
             iter = iter[1]
-        self._marks["click"].move(iter)
+        self.move_click_mark(iter)
 
     def _gtk4_on_textview_click(self, click, n_press, x, y) -> None:
         if n_press != 1 or click.get_current_button() != 3:
             return
 
         self._move_mark_for_input(x, y)
-        self._extend_menu(self._spelling_menu)
+        self.populate_menu(self._spelling_menu)
 
     def _before_text_insert(self, textbuffer, location, text, length):
         self._marks["insert-start"].move(location)
