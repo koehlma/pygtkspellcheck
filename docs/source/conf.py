@@ -25,6 +25,7 @@ sys.path.append(os.path.join(doc_directory, "..", "..", "src"))
 
 import sys
 
+
 # Support for readthedocs.org
 class Mock(object):
     def __init__(self, *args, **kwargs):
