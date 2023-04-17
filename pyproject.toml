@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pygtkspellcheck"
-version = "5.0.1"
+version = "5.0.2"
 description = "A simple but quite powerful spellchecking library for GTK written in pure Python."
 authors = ["Maximilian Köhl <mail@koehlma.de>"]
 license = "GPL-3.0-or-later"
