@@ -143,6 +143,7 @@ def extract(filename, target, override=False):
             'moved to separate package "oxt_extract", '
             "will be removed in pygtkspellcheck 5.0"
         ).format(extract.__name__),
+        stacklevel=2,
         category=DeprecationWarning,
     )
     try:
@@ -252,6 +253,7 @@ def batch_extract(oxt_path, extract_path, override=False, move_path=None):
             'moved to separate package "oxt_extract", '
             "will be removed in pygtkspellcheck 5.0"
         ).format(extract.__name__),
+        stacklevel=2,
         category=DeprecationWarning,
     )
 
