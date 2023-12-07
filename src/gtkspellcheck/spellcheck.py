@@ -65,7 +65,7 @@ _GEDIT_MAP = {
     "Ignore All": "Ignore _All",
     "Suggestions": "Suggestions",
     "(no suggestions)": "(no suggested words)",
-    'Add "{}" to Dictionary': "Add w_ord",
+    "Add to Dictionary": "Add w_ord",
     "Unknown": "Unknown",
 }
 
