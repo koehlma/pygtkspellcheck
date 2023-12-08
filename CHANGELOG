@@ -18,3 +18,6 @@
 
 == 5.0.2 ==
 - feature: add `move_click_mark` and `populate_menu` to public API
+
+== 5.0.3 ==
+- fix: fix issue with Gedit based translation
