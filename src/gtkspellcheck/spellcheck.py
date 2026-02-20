@@ -930,8 +930,13 @@ class SpellChecker(GObject.Object):
                     end = self._buffer.get_iter_at_offset(match.end())
                     self._buffer.remove_tag(self._misspelled, start, end)
                     return
-        if not self._dictionary.check(word):
-            self._buffer.apply_tag(self._misspelled, start, end)
+        try:
+            correct = self._dictionary.check(word)
+        except enchant.Error as e:
+            logger.warning("failure checking word: {}".format(e))
+        else:
+            if not correct:
+                self._buffer.apply_tag(self._misspelled, start, end)
 
     def _continue_batched_recheck(self, start_mark):
         if start_mark.get_buffer() != self._buffer:
