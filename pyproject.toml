@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pygtkspellcheck"
-version = "5.0.3"
+version = "5.0.4"
 description = "A simple but quite powerful spellchecking library for GTK written in pure Python."
 authors = ["Maximilian Köhl <mail@koehlma.de>"]
 license = "GPL-3.0-or-later"
@@ -17,11 +17,9 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX",
     "Programming Language :: Python :: 3",
-    "Topic :: Software Development :: Localization"
+    "Topic :: Software Development :: Localization",
 ]
-packages = [
-    { include = "gtkspellcheck", from = "src" }
-]
+packages = [{ include = "gtkspellcheck", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -30,7 +28,7 @@ PyGObject = "^3.42.1"
 sphinx = { version = "^4.5.0", optional = true }
 myst-parser = { version = "^0.18.0", optional = true }
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^22.3.0"
 flake8 = "*"
 flake8-bugbear = "*"

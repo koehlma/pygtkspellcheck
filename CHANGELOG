@@ -21,3 +21,6 @@
 
 == 5.0.3 ==
 - fix: fix issue with Gedit based translation
+
+== 5.0.4 ==
+- fix: catch unhandled Enchant exceptions
