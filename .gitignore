@@ -38,3 +38,14 @@ dist/archlinux/python3/src
 dist/archlinux/python3/v*
 dist/archlinux/python3/*.pkg.tar.xz
 dist/archlinux/python3/*.src.tar.gz
+
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
